@@ -8,13 +8,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
 Django 1.11
+
 Python 3.4 or greater
 
 If using Anaconda, run
 `conda create --name explainableml django`
 
 ### Deploying
-Run `python manage.py runserver `
+Run `python manage.py runserver`
