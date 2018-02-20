@@ -19,5 +19,6 @@ from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.model_viewer, name='model_viewer')
+    url(r'^$', views.model_viewer, name='model_viewer'),
+    url(r'^modelViewer.js$', views.model_viewer_js, name='model_viewer_js')
 ]

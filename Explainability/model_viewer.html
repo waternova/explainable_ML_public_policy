@@ -1,1 +1,45 @@
-<html><body>This is the model viewer page.</body></html>
+<html>
+<head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/modelViewer.js"></script>
+<body>
+    <h1>Model View</h1>
+    <p>Accuracy: 62%</p>
+    <table id="myTable" class="" border="1">
+      <thead>
+            <tr>
+                <td>Factor</td>
+                <td width="150px">Graph</td>
+                <td>Actions</td>
+                <td>Weight</td>
+                <td>Intercept</td>
+            </tr>
+      </thead>
+      <tbody>
+            <tr>
+                <td>Factor 1</td>
+                <td><div style="width: 100px; height: 10px; background-color: blue;"></div></td>
+                <td>Icons</td>
+                <td><input value="1"></input></td>
+                <td>0.1</td>
+            </tr>
+            <tr>
+                <td>Factor 2</td>
+                <td><div style="width: 50px; height: 10px; background-color: blue;"></div></td>
+                <td>Icons</td>
+                <td><input value="0.5"></input></td>
+                <td>0.1</td>
+            </tr>
+            <tr>
+                <td>Factor 3</td>
+                <td><div style="width: 30px; height: 10px; background-color: blue;"></div></td>
+                <td>Icons</td>
+                <td><input value="0.3"></input></td>
+                <td>0.1</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <button>Re-Fit</button>
+</body>
+</html>
