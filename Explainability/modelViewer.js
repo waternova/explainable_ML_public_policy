@@ -274,11 +274,12 @@ $(function() {
   $("input").on("change", function() {
     let bar = $(this).parent().prev().prev().children().first();
     let newValue = +$(this).val();
-    bar.width(100 * newValue);
     if (newValue > 0) {
       bar.css('background-color', "blue");
+      bar.width(100 * newValue);
     } else {
       bar.css('background-color', "purple");
+      bar.width(-100 * newValue);
     }
   });
 });
