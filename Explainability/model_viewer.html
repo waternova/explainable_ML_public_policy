@@ -2,17 +2,25 @@
 <head>
     <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="/modelViewer.js"></script>
+    <style>
+        thead tr {background-color: #dcdee2; border-bottom: 1px solid #555; text-align: left;}
+        thead th {padding: 5px;}
+        /*tbody tr:nth-child(even) {background-color: #efefef;}*/
+        tbody td {padding: 3px;}
+        tbody tr {border-bottom: 1px solid #555;}
+        table {border-collapse: collapse;}
+    </style>
 <body>
     <h1>Model View</h1>
     <p>Accuracy: 62%</p>
-    <table id="myTable" class="" border="1">
+    <table id="myTable" class="">
         <thead>
             <tr>
-                <td>Factor</td>
-                <td width="150px">Graph</td>
-                <td>Actions</td>
-                <td>Weight</td>
-                <td>Intercept</td>
+                <th>Factor</th>
+                <th width="150px">Graph</th>
+                <th>Actions</th>
+                <th>Weight</th>
+                <th>Intercept</th>
             </tr>
         </thead>
         <tbody>

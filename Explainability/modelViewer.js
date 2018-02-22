@@ -259,11 +259,14 @@ $(function() {
     }
   ];
 
-  var $tbody = $("tbody");
+  const positiveColor = "#75acff";
+  const negativeColor = "#aa6bf9";
+  // Set up rows in table
+  let $tbody = $("tbody");
   for (let row of inputCsv) {
-    var newRow = `<tr>
+    let newRow = `<tr>
       <td>${row.independent_variable}<button>...</button></td>
-      <td><div style="width: ${100 * Math.abs(row.value)}px; height: 10px; background-color: ${row.value > 0 ? "blue":"purple"};"></div></td>
+      <td><div style="width: ${100 * Math.abs(row.value)}px; height: 10px; background-color: ${row.value > 0 ? positiveColor:negativeColor};"></div></td>
       <td><button>Comments...</button><button>Balance Model</button></td>
       <td><input value="${row.value}"></input></td>
       <td>0.0</td>
@@ -271,14 +274,15 @@ $(function() {
     $tbody.append(newRow);
   }
 
+  // Set up bars to change on weight update
   $("input").on("change", function() {
     let bar = $(this).parent().prev().prev().children().first();
     let newValue = +$(this).val();
     if (newValue > 0) {
-      bar.css('background-color', "blue");
+      bar.css('background-color', positiveColor);
       bar.width(100 * newValue);
     } else {
-      bar.css('background-color', "purple");
+      bar.css('background-color', negativeColor);
       bar.width(-100 * newValue);
     }
   });
