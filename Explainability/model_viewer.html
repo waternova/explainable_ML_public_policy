@@ -1,14 +1,22 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="/modelViewer.js"></script>
+    <meta charset="UTF-8">
+    <title>Model Viewer</title>
+    <script src="http://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://unpkg.com/popper.js@1.12.9/dist/umd/popper.js"></script>
+    <script src="https://unpkg.com/tooltip.js@1.1.7/dist/umd/tooltip.js"></script>
+    <script src="/modelViewer.js"></script>
     <style>
         thead tr {background-color: #dcdee2; border-bottom: 1px solid #555; text-align: left;}
         thead th {padding: 5px;}
         /*tbody tr:nth-child(even) {background-color: #efefef;}*/
         tbody td {padding: 3px;}
-        tbody tr {border-bottom: 1px solid #555;}
+        tbody tr {border-bottom: 1px solid #c1c1c1;}
         table {border-collapse: collapse;}
+        .comment-tooltip {background-color: white; border: 1px solid #555; width: 100px; height: 100px; padding: 10px}
+        .comment-tooltip p {font-size: 0.8em;}
+        .comment-tooltip input {width: 80px;}
     </style>
 <body>
     <h1>Model View</h1>
