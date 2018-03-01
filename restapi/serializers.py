@@ -7,24 +7,24 @@ from restapi.models import Factor
 from restapi.models import Comment
 from restapi.models import User
 
-class MlModelSerializer(serializers.HyperlinkedModelSerializer):
+class MlModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = MlModel
-        fields = ('name', 'description', 'accuracy', 'parent_id')
+        fields = ('id', 'name', 'description', 'accuracy', 'parent_id')
 
 
-class FactorSerializer(serializers.HyperlinkedModelSerializer):
+class FactorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Factor
-        fields = ('org_name', 'name', 'description', 'weight', 'intercept', 'balanced', 'enabled', 'model_id')
+        fields = ('id', 'org_name', 'name', 'description', 'weight', 'intercept', 'balanced', 'enabled', 'model_id')
 
-class CommentSerializer(serializers.HyperlinkedModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('user_name', 'updated_datetime', 'comment_text', 'factor_id')
+        fields = ('id', 'user_name', 'updated_datetime', 'comment_text', 'factor_id')
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('user_name', 'password', 'user_type')
+        fields = ('id', 'user_name', 'password', 'user_type')
 
