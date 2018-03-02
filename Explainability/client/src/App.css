@@ -72,3 +72,9 @@ input {
 .wrapper {
   padding: 30px;
 }
+
+.box-icon {
+  float: left;
+  height: 15px;
+  width: 15px;
+}

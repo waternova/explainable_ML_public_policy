@@ -26,7 +26,6 @@ class Row extends Component {
         <td><div className="chart-bar" style={barChartStyle}></div></td>
         <td><CommentDropdown /><input type="submit" value="Balance Model" className="balance-button" /></td>
         <td><input defaultValue={this.state.weight} onChange={this.handleChange}></input></td>
-        <td>0.0</td>
       </tr>
     );
   }
@@ -52,6 +51,8 @@ class App extends Component {
     return (
       <div className="wrapper">
         <h1>Model View</h1>
+        <div className="box-icon" style={{"background": "#75acff"}}></div><div>Less likely to fail class</div>
+        <div className="box-icon" style={{"background": "#aa6bf9"}}></div><div>More likely to fail class</div>
         <p>Accuracy: 62%</p>
         <table id="myTable" className="myTable">
             <thead>
@@ -60,7 +61,6 @@ class App extends Component {
                     <th width="150px">Graph</th>
                     <th>Actions</th>
                     <th>Weight</th>
-                    <th>Intercept</th>
                 </tr>
             </thead>
             <tbody>
