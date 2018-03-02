@@ -1,0 +1,70 @@
+/*.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+*/
+
+body {
+  font-size: 14px;
+}
+
+thead tr {background-color: #dcdee2; border-bottom: 1px solid #555; text-align: left;}
+thead th {padding: 5px;}
+/*tbody tr:nth-child(even) {background-color: #efefef;}*/
+tbody td {padding: 3px;}
+tbody tr {border-bottom: 1px solid #c1c1c1;}
+table {border-collapse: collapse;}
+.comment-tooltip {background-color: white; border: 1px solid #555; width: 100px; height: 100px; padding: 10px}
+.comment-tooltip p {font-size: 0.8em;}
+.comment-tooltip input {width: 80px;}
+.chart-bar {
+  height: 10px;
+}
+
+.balance-button {
+  position: relative;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  box-sizing: border-box;
+  color: #333;
+  cursor: default;
+  outline: none;
+  padding: 3px 6px 4px 6px;
+  transition: all 200ms ease;
+  font-size: 14px;
+  margin-left: 6px;
+}
+
+.balance-button:hover {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+
+input {
+  font-size: 14px;
+  padding: 2px 3px 3px 3px;
+}
