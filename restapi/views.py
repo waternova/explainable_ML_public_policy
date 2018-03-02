@@ -41,7 +41,7 @@ from rest_framework.response import Response
 @api_view(['GET'])
 def GetFactors(request):
     if request.method == 'GET':
-        model_id = request.GET.get('id')
+        model_id = request.GET.get('model_id')
         if model_id is not None:
             factor_obj = Factor.objects.filter(model_id=int(model_id))
             factor_serializer = FactorSerializer(factor_obj, many=True)
@@ -52,7 +52,7 @@ def GetFactors(request):
 @api_view(['GET'])
 def GetComments(request):
     if request.method == 'GET':
-        factor_id = request.GET.get('id')
+        factor_id = request.GET.get('factor_id')
         if factor_id is not None:
             comment_obj = Comment.objects.filter(factor_id=int(factor_id))
             comment_serializer = CommentSerializer(comment_obj, many=True)
