@@ -50,7 +50,7 @@ class App extends Component {
     // const options = ['one', 'two', 'three'];
 
     return (
-      <div>
+      <div className="wrapper">
         <h1>Model View</h1>
         <p>Accuracy: 62%</p>
         <table id="myTable" className="myTable">

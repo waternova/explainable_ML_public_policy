@@ -52,7 +52,7 @@ table {border-collapse: collapse;}
   border-radius: 2px;
   box-sizing: border-box;
   color: #333;
-  cursor: default;
+  cursor: pointer;
   outline: none;
   padding: 3px 6px 4px 6px;
   transition: all 200ms ease;
@@ -67,4 +67,8 @@ table {border-collapse: collapse;}
 input {
   font-size: 14px;
   padding: 2px 3px 3px 3px;
+}
+
+.wrapper {
+  padding: 30px;
 }
