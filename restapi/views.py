@@ -17,14 +17,45 @@ class MlModelViewSet(viewsets.ModelViewSet):
     queryset = MlModel.objects.all()
     serializer_class = MlModelSerializer
 
+
 class FactorViewSet(viewsets.ModelViewSet):
     queryset = Factor.objects.all()
     serializer_class = FactorSerializer
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+
+@api_view(['GET'])
+def GetFactors(request):
+    if request.method == 'GET':
+        model_id = request.GET.get('id')
+        if model_id is not None:
+            factor_obj = Factor.objects.filter(model_id=int(model_id))
+            factor_serializer = FactorSerializer(factor_obj, many=True)
+            return Response(factor_serializer.data, status=status.HTTP_200_OK)
+    return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def GetComments(request):
+    if request.method == 'GET':
+        factor_id = request.GET.get('id')
+        if factor_id is not None:
+            comment_obj = Comment.objects.filter(factor_id=int(factor_id))
+            comment_serializer = CommentSerializer(comment_obj, many=True)
+            return Response(comment_serializer.data, status=status.HTTP_200_OK)
+    return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
+

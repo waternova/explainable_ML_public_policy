@@ -6,7 +6,7 @@ from django.db import models
 class MlModel(models.Model):
     #id = models.AutoField() --> Default id will be added by Django
     name = models.CharField(max_length=255)
-    description = models.TextField(max_length=65535)
+    description = models.TextField(max_length=65535, null=True)
     accuracy = models.FloatField()
     parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
@@ -14,7 +14,7 @@ class MlModel(models.Model):
 class Factor(models.Model):
     org_name = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    description = models.TextField(max_length=65535)
+    description = models.TextField(max_length=65535, null=True)
     weight = models.FloatField()
     intercept = models.FloatField()
     balanced = models.BooleanField()

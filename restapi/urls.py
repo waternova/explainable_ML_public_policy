@@ -24,6 +24,8 @@ router.register(r'comment', views.CommentViewSet)
 router.register(r'user', views.UserViewSet)
 
 urlpatterns = [
+    url(r'^getfactors/', views.GetFactors, name='GetFactors'),
+    url(r'^getcomments/', views.GetComments, name='GetComments'),
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
