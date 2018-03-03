@@ -16,7 +16,34 @@ If using Anaconda, run
 `conda create --name explainableml django`
 
 ### Deploying
+
 Run `python manage.py runserver`
+
+### Development
+
+First, set up your python environment. If using Anaconda, run
+`conda create --name explainableml django`
+
+To install all node_modules for the frontend, use
+```
+cd Explainability/client
+npm install
+cd ../..
+```
+
+Then start the python api server with `python manage.py runserver`
+
+And (in a separate terminal) start the frontend server with
+```
+cd Explainability/client
+npm start
+```
+
+The frontend server at `http://localhost:3000/` will automatically load in your default browser.
+
+The frontend will automatically refresh the page when JavaScript files are changed.
+
+You can view api documentation at `http://localhost:8000/`
 
 ### Documents
 
