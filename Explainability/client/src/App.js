@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 import './Dropdown.css';
 import CommentDropdown from './CommentDropdown.js';
+// import axios from 'axios'
 
 class Row extends Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class Row extends Component {
     this.state = {
       weight: this.props.value.value,
       visibleName: this.props.value.visible_name,
+      independent_variable: this.props.value.independent_variable,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -33,12 +35,46 @@ class Row extends Component {
   handleChange(event) {
     this.setState({
       weight: event.target.value,
+      independent_variable: this.state.independent_variable,
       visibleName: this.state.visibleName,
     })
   }
 }
 
 class App extends Component {
+    constructor (props)
+    {
+        super(props);
+        this.state = {
+            model_name: "Original Model",
+            model_id: 1,
+            model_description: "Sample description about the model",
+            accuracy: 62,
+            };
+        this.testModel = this.testModel.bind(this);
+        this.retrainModel = this.retrainModel.bind(this);
+    }
+
+    //Handler for Retrain Button
+    retrainModel ()
+    {
+    }
+
+  //Handler for Test Button
+    testModel ()
+    {
+        fetch ("/api/post/testmodel/",
+            {
+                method: "POST",
+                headers: {"Content-Type" : "application/json;charset=UTF-8"},
+                body: JSON.stringify(inputCsv)
+            }).then( res => res.json()).then(data =>
+            {
+                this.setState({accuracy: parseFloat(data.accuracy)});
+                console.log(data);
+            }).catch(error => console.log('Request failed', error));
+    }
+
   render() {
     const rows = inputCsv.map((entry, number) => {
       return (
@@ -46,14 +82,13 @@ class App extends Component {
       );
     })
 
-    // const options = ['one', 'two', 'three'];
-
     return (
       <div className="wrapper">
-        <h1>Model View</h1>
+        <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
+        <h3> {this.state.model_description}</h3>
+        <h2>Accuracy: {this.state.accuracy}%</h2>
         <div className="box-icon" style={{"background": "#75acff"}}></div><div>Less likely to fail class</div>
         <div className="box-icon" style={{"background": "#aa6bf9"}}></div><div>More likely to fail class</div>
-        <p>Accuracy: 62%</p>
         <table id="myTable" className="myTable">
             <thead>
                 <tr>
@@ -68,7 +103,12 @@ class App extends Component {
             </tbody>
         </table>
         <br />
-        <button>Re-Fit</button>
+        <p>
+             <button onClick={this.retrainModel}>Re-Fit</button>
+        </p>
+        <p>
+            <button onClick={this.testModel}>Test Model</button>
+        </p>
       </div>
     );
   }
@@ -76,6 +116,7 @@ class App extends Component {
 
 // Note: this could be replaced by calls to an api that gets factors by model id
 // fetch('/api/user/?format=json').then(response=>response.text()).then(data=>console.log(data));
+
 let inputCsv = [
     {
      "visible_name": "Number of classes failed",
