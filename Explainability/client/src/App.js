@@ -8,79 +8,88 @@ import CommentDropdown from './CommentDropdown.js';
 class Row extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      weight: this.props.value.value,
-      visibleName: this.props.value.visible_name,
-      independent_variable: this.props.value.independent_variable,
-    };
+    // this.state = {
+    //   weight: this.props.value.value,
+    //   visibleName: this.props.value.visible_name,
+    //   independent_variable: this.props.value.independent_variable,
+    // };
     this.handleChange = this.handleChange.bind(this);
   }
   render() {
     const positiveColor = "#75acff";
     const negativeColor = "#aa6bf9";
     const barChartStyle = {
-      backgroundColor: this.state.weight > 0 ? positiveColor:negativeColor,
-      width: String(100 * Math.abs(this.state.weight)) + 'px',
+      backgroundColor: this.props.value.value > 0 ? positiveColor:negativeColor,
+      width: String(100 * Math.abs(this.props.value.value)) + 'px',
     }
     return (
       <tr>
-        <td>{this.state.visibleName}<button>...</button></td>
+        <td>{this.props.value.visible_name}<button>...</button></td>
         <td><div className="chart-bar" style={barChartStyle}></div></td>
         <td><CommentDropdown /><input type="submit" value="Balance Model" className="balance-button" /></td>
-        <td><input defaultValue={this.state.weight} onChange={this.handleChange}></input></td>
+        <td><input defaultValue={this.props.value.value} onChange={this.handleChange}></input></td>
       </tr>
     );
   }
 
   handleChange(event) {
-    this.setState({
-      weight: event.target.value,
-      independent_variable: this.state.independent_variable,
-      visibleName: this.state.visibleName,
+    this.props.onChange({
+      value: +event.target.value,
+      independent_variable: this.props.value.independent_variable,
+      visible_name: this.props.value.visible_name,
     })
   }
 }
 
 class App extends Component {
-    constructor (props)
-    {
-        super(props);
-        this.state = {
-            model_name: "Original Model",
-            model_id: 1,
-            model_description: "Sample description about the model",
-            accuracy: .61,
-            };
-        this.testModel = this.testModel.bind(this);
-        this.retrainModel = this.retrainModel.bind(this);
-    }
+  constructor (props) {
+    super(props);
+    this.state = {
+      model_name: "Original Model",
+      model_id: 1,
+      model_description: "Sample description about the model",
+      accuracy: .61,
+      factors: inputCsv.slice()
+    };
+    this.testModel = this.testModel.bind(this);
+    this.retrainModel = this.retrainModel.bind(this);
+  }
 
-    //Handler for Retrain Button
-    retrainModel ()
-    {
-    }
+  //Handler for Retrain Button
+  retrainModel ()
+  {
+  }
 
   //Handler for Test Button
-    testModel ()
-    {
-        fetch ("/api/post/testmodel/",
-            {
-                method: "POST",
-                headers: {"Content-Type" : "application/json;charset=UTF-8"},
-                body: JSON.stringify(inputCsv)
-            }).then( res => res.json()).then(data =>
-            {
-                this.setState({accuracy: parseFloat(data.accuracy)});
-                console.log(data);
-            }).catch(error => console.log('Request failed', error));
-    }
+  testModel () {
+    fetch ("/api/post/testmodel/",
+      {
+        method: "POST",
+        headers: {"Content-Type" : "application/json;charset=UTF-8"},
+        body: JSON.stringify(this.state.factors)
+      }).then( res => res.json()).then(data =>
+      {
+        this.setState({accuracy: parseFloat(data.accuracy)});
+      }).catch(error => console.log('Request failed', error));
+  }
+
+  handleChange(rowNumber, newEntry) {
+    const factors = this.state.factors.slice();
+    factors[rowNumber] = newEntry;
+    // TODO: update to look up factor by id
+    this.setState({factors: factors});
+  }
 
   render() {
-    const rows = inputCsv.map((entry, number) => {
+    const rows = this.state.factors.map((entry, rowNumber) => {
       return (
-        <Row key={entry.visible_name} value={entry} />
+        <Row 
+          key={rowNumber} 
+          value={entry} 
+          onChange={(newEntry) => this.handleChange(rowNumber, newEntry)} 
+        />
       );
-    })
+    });
 
     return (
       <div className="wrapper">

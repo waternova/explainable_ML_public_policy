@@ -19,7 +19,6 @@ def preparedata(df):
 
 #preparing list of coefficents
 def preparelist(coefdata, cols):
-    print(coefdata)
     coef_df = pd.DataFrame(coefdata)
     coeflist= []
     for col in cols:
