@@ -7,7 +7,7 @@ Research Project on the explainability and interpretability of machine learning 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 ### Prerequisites
-(Appilication/Backednd)
+(Appilication/Backend)
 
   Python 3.4 or greater
   
@@ -17,12 +17,12 @@ These instructions will get you a copy of the project up and running on your loc
 
   <a href="https://nodejs.org/en/download/">node.js</a>
 
-* If using Anaconda, run
-`conda create --name explainableml django`
+* If using Anaconda, run `conda create --name explainableml django`
 
 ### Deploying
-
-Run `python manage.py runserver`
+Appilication/Backednd: Run `python manage.py runserver`
+WebUI/Frontend: Run 'npm start' in Explainability/client directory
+* Use different terminal instance for each
 
 ### Development
 
@@ -54,7 +54,7 @@ You can view api documentation at `http://localhost:8000/`
 
 <a href="https://drive.google.com/open?id=1mvqfzQ_mZhfX1jMKooT67kJvRwBtw27upqGH7I-9D44"> User Story Map </a> <br>
 <a href="https://drive.google.com/open?id=1-lky_fUsFvXq8yCx_ntPu27eIgZT6C3BqkOzpVsHK7s"> UI Wireframe </a>
-
+<a href="https://drive.google.com/open?id=1IAgED8UqGe9xtYx7QaCvNz9XhzNlivJJkf72wv6CMRA4"> ERD and Internal Interface Overview</a><br>
 
 ### Notes
 
