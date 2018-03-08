@@ -11,6 +11,7 @@ class Row extends Component {
       weight: this.props.value.weight,
       alias: this.props.value.alias,
       name: this.props.value.name,
+      index: this.props.index,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -30,14 +31,10 @@ class Row extends Component {
       </tr>
     );
   }
-
-  handleChange(event) {
-    this.setState({
-      weight: event.target.value,
-      name: this.state.name,
-      alias: this.state.alias,
-    })
-  }
+   handleChange(event) {
+        this.setState({weight: event.target.value});
+        this.props.onChange({index: this.state.index, value: event.target.value});
+    }
 }
 
 class App extends Component {
@@ -66,7 +63,7 @@ class App extends Component {
                     accuracy: parseFloat(data.accuracy),
                     parent_id: data.parent_id
                 });
-                console.log(data);
+                console.log("Model Loaded:", data);
             }).catch(error => console.log('Request failed', error));
         fetch ("/api/getfactors/?model_id=1&format=json",
             {
@@ -74,20 +71,22 @@ class App extends Component {
                 headers: {"Content-Type" : "application/json;charset=UTF-8"},
             }).then( res => res.json()).then(data =>
             {
+                this.setState({rows: []});
                 for (var i=0; i<data.factors.length; i++)
                 {
                     this.setState({rows:this.state.rows.concat(data.factors[i])});
                 }
-                console.log(data);
+                console.log("Factors Loaded:", data);
             }).catch(error => console.log('Request failed', error));
 
         this.testModel = this.testModel.bind(this);
         this.retrainModel = this.retrainModel.bind(this);
+        this.updateWeight = this.updateWeight.bind(this);
     }
 
     render() {
         const rows = this.state.rows.map((entry, number) => {
-        return (<Row key={entry.alias} value={entry} />);
+        return (<Row key={entry.name} index={number} value={entry} onChange={this.updateWeight}/>);
     })
 
     return (
@@ -118,8 +117,16 @@ class App extends Component {
             <button onClick={this.testModel}>Test Model</button>
         </p>
       </div>
-    );
-  }
+        );
+    }
+    //Handler for Weight modification
+    updateWeight(event) {
+        let copyRows = [...this.state.rows];
+        console.log("Weight of factor["+event.index+"] is changed from "
+            + copyRows[event.index].weight + " to "+ event.value);
+        copyRows[event.index].weight = event.value;
+        this.setState({rows: copyRows});
+    }
     //Handler for Retrain Button
     retrainModel ()
     {
@@ -128,15 +135,18 @@ class App extends Component {
   //Handler for Test Button
     testModel ()
     {
+        var factors = JSON.stringify(this.state.rows)
+        console.log("Test request:", this.state.model_name);
+        console.log("Accuracy before test:", this.state.accuracy);
         fetch ("/api/post/testmodel/",
             {
                 method: "POST",
                 headers: {"Content-Type" : "application/json;charset=UTF-8"},
-                body: JSON.stringify(this.state.rows)
+                body: factors
             }).then( res => res.json()).then(data =>
             {
                 this.setState({accuracy: parseFloat(data.accuracy)});
-                console.log(data);
+                console.log("Accuracy after test:", this.state.accuracy);
             }).catch(error => console.log('Request failed', error));
     }
 
