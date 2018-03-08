@@ -45,7 +45,7 @@ def GetFactors(request):
         if model_id is not None:
             factor_obj = Factor.objects.filter(model_id=int(model_id))
             factor_serializer = FactorSerializer(factor_obj, many=True)
-            return Response(factor_serializer.data, status=status.HTTP_200_OK)
+            return Response({'factors': factor_serializer.data}, status=status.HTTP_200_OK)
     return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -56,7 +56,7 @@ def GetComments(request):
         if factor_id is not None:
             comment_obj = Comment.objects.filter(factor_id=int(factor_id))
             comment_serializer = CommentSerializer(comment_obj, many=True)
-            return Response(comment_serializer.data, status=status.HTTP_200_OK)
+            return Response({'comments': comment_serializer.data}, status=status.HTTP_200_OK)
     return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
 
 import json

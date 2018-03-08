@@ -3,15 +3,14 @@ import React, { Component } from 'react';
 import './App.css';
 import './Dropdown.css';
 import CommentDropdown from './CommentDropdown.js';
-// import axios from 'axios'
 
 class Row extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      weight: this.props.value.value,
-      visibleName: this.props.value.visible_name,
-      independent_variable: this.props.value.independent_variable,
+      weight: this.props.value.weight,
+      alias: this.props.value.alias,
+      name: this.props.value.name,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -24,7 +23,7 @@ class Row extends Component {
     }
     return (
       <tr>
-        <td>{this.state.visibleName}<button>...</button></td>
+        <td>{this.state.alias}<button>...</button></td>
         <td><div className="chart-bar" style={barChartStyle}></div></td>
         <td><CommentDropdown /><input type="submit" value="Balance Model" className="balance-button" /></td>
         <td><input defaultValue={this.state.weight} onChange={this.handleChange}></input></td>
@@ -35,8 +34,8 @@ class Row extends Component {
   handleChange(event) {
     this.setState({
       weight: event.target.value,
-      independent_variable: this.state.independent_variable,
-      visibleName: this.state.visibleName,
+      name: this.state.name,
+      alias: this.state.alias,
     })
   }
 }
@@ -46,46 +45,55 @@ class App extends Component {
     {
         super(props);
         this.state = {
-            model_name: "Original Model",
-            model_id: 1,
-            model_description: "Sample description about the model",
-            accuracy: 62,
+            model_id: 0,
+            model_name: "",
+            description: "",
+            accuracy: 0.0,
+            parent_id: null,
+            rows: []
             };
+
+        fetch ("/api/model/1/?format=json",
+            {
+                method: "GET",
+                headers: {"Content-Type" : "application/json;charset=UTF-8"},
+            }).then( res => res.json()).then(data =>
+            {
+                this.setState({
+                    model_id: data.id,
+                    model_name: data.name,
+                    description: data.description,
+                    accuracy: parseFloat(data.accuracy),
+                    parent_id: data.parent_id
+                });
+                console.log(data);
+            }).catch(error => console.log('Request failed', error));
+        fetch ("/api/getfactors/?model_id=1&format=json",
+            {
+                method: "GET",
+                headers: {"Content-Type" : "application/json;charset=UTF-8"},
+            }).then( res => res.json()).then(data =>
+            {
+                for (var i=0; i<data.factors.length; i++)
+                {
+                    this.setState({rows:this.state.rows.concat(data.factors[i])});
+                }
+                console.log(data);
+            }).catch(error => console.log('Request failed', error));
+
         this.testModel = this.testModel.bind(this);
         this.retrainModel = this.retrainModel.bind(this);
     }
 
-    //Handler for Retrain Button
-    retrainModel ()
-    {
-    }
-
-  //Handler for Test Button
-    testModel ()
-    {
-        fetch ("/api/post/testmodel/",
-            {
-                method: "POST",
-                headers: {"Content-Type" : "application/json;charset=UTF-8"},
-                body: JSON.stringify(inputCsv)
-            }).then( res => res.json()).then(data =>
-            {
-                this.setState({accuracy: parseFloat(data.accuracy)});
-                console.log(data);
-            }).catch(error => console.log('Request failed', error));
-    }
-
-  render() {
-    const rows = inputCsv.map((entry, number) => {
-      return (
-        <Row key={entry.visible_name} value={entry} />
-      );
+    render() {
+        const rows = this.state.rows.map((entry, number) => {
+        return (<Row key={entry.alias} value={entry} />);
     })
 
     return (
       <div className="wrapper">
         <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
-        <h3> {this.state.model_description}</h3>
+        <h3> {this.state.description}</h3>
         <h2>Accuracy: {this.state.accuracy}%</h2>
         <div className="box-icon" style={{"background": "#75acff"}}></div><div>Less likely to fail class</div>
         <div className="box-icon" style={{"background": "#aa6bf9"}}></div><div>More likely to fail class</div>
@@ -112,12 +120,32 @@ class App extends Component {
       </div>
     );
   }
+    //Handler for Retrain Button
+    retrainModel ()
+    {
+    }
+
+  //Handler for Test Button
+    testModel ()
+    {
+        fetch ("/api/post/testmodel/",
+            {
+                method: "POST",
+                headers: {"Content-Type" : "application/json;charset=UTF-8"},
+                body: JSON.stringify(this.state.rows)
+            }).then( res => res.json()).then(data =>
+            {
+                this.setState({accuracy: parseFloat(data.accuracy)});
+                console.log(data);
+            }).catch(error => console.log('Request failed', error));
+    }
+
 }
 
 // Note: this could be replaced by calls to an api that gets factors by model id
 // fetch('/api/user/?format=json').then(response=>response.text()).then(data=>console.log(data));
 
-let inputCsv = [
+/*let inputCsv = [
     {
      "visible_name": "Number of classes failed",
      "independent_variable": "failures",
@@ -438,6 +466,6 @@ let inputCsv = [
      "independent_variable": "C(Medu)[T.3]",
      "value": 0.001833777
     }
-];
+];*/
 
 export default App;

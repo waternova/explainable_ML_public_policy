@@ -10,13 +10,13 @@ from restapi.models import User
 class MlModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = MlModel
-        fields = ('id', 'name', 'description', 'accuracy', 'parent_id')
+        fields = ('id', 'name', 'description', 'accuracy', 'parent_id', 'intercept')
 
 
 class FactorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Factor
-        fields = ('id', 'org_name', 'name', 'description', 'weight', 'intercept', 'balanced', 'enabled', 'model_id')
+        fields = ('id', 'alias', 'name', 'description', 'weight', 'balanced', 'enabled', 'model_id')
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
