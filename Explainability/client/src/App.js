@@ -152,9 +152,6 @@ class App extends Component {
 
 }
 
-// Note: this could be replaced by calls to an api that gets factors by model id
-// fetch('/api/user/?format=json').then(response=>response.text()).then(data=>console.log(data));
-
 /*let inputCsv = [
     {
      "visible_name": "Number of classes failed",

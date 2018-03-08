@@ -68,6 +68,4 @@ def TestModel(request):
         coefdata = json.loads(request.body.decode('utf-8'))
         res = {'accuracy': logreg(coefdata)}
         return Response(res, status=status.HTTP_200_OK)
-
     return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
-

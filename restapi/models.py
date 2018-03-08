@@ -8,8 +8,8 @@ class MlModel(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(max_length=65535, null=True)
     accuracy = models.FloatField(null=True)
-    parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     intercept = models.FloatField(null=True)
+    parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
 
 class Factor(models.Model):
