@@ -22,11 +22,17 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Deploying
 
-Appilication/Backednd: Run `python manage.py runserver`
+Appilication/Backednd: Run 
 
-WebUI/Frontend: Run 'npm start' in Explainability/client directory
+`python manage.py runserver`
 
-* Use different terminal instance for each
+WebUI/Frontend: Run 
+
+`npm start` 
+
+in Explainability/client directory
+
+* Use different terminal instances for each
 
 ### Development
 
