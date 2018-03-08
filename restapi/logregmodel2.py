@@ -18,7 +18,7 @@ def preparedata(df):
 
 #preparing list of coefficents
 def preparelist(coefdata, cols):
-    factors = pd.DataFrame(coefdata)
+    factors = pd.DataFrame(coefdata)  #valiable name changed
     coeflist= []
     for col in cols:
         if col == 'Intercept':
