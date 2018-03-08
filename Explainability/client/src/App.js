@@ -33,7 +33,7 @@ class Row extends Component {
   }
    handleChange(event) {
         this.setState({weight: event.target.value});
-        this.props.onChange({index: this.state.index, value: event.target.value});
+        this.props.onChange({index: this.state.index, value: +event.target.value});
     }
 }
 
@@ -93,7 +93,7 @@ class App extends Component {
       <div className="wrapper">
         <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
         <h3> {this.state.description}</h3>
-        <h2>Accuracy: {this.state.accuracy}%</h2>
+        <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
         <div className="box-icon" style={{"background": "#75acff"}}></div><div>Less likely to fail class</div>
         <div className="box-icon" style={{"background": "#aa6bf9"}}></div><div>More likely to fail class</div>
         <table id="myTable" className="myTable">
