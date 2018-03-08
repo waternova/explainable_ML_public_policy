@@ -49,7 +49,7 @@ class App extends Component {
             model_name: "Original Model",
             model_id: 1,
             model_description: "Sample description about the model",
-            accuracy: 62,
+            accuracy: .61,
             };
         this.testModel = this.testModel.bind(this);
         this.retrainModel = this.retrainModel.bind(this);
@@ -86,7 +86,7 @@ class App extends Component {
       <div className="wrapper">
         <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
         <h3> {this.state.model_description}</h3>
-        <h2>Accuracy: {this.state.accuracy}%</h2>
+        <h2>Accuracy: {Math.round(this.state.accuracy * 100, 0)}%</h2>
         <div className="box-icon" style={{"background": "#75acff"}}></div><div>Less likely to fail class</div>
         <div className="box-icon" style={{"background": "#aa6bf9"}}></div><div>More likely to fail class</div>
         <table id="myTable" className="myTable">
