@@ -22,7 +22,7 @@ Run `python manage.py runserver`
 ### Development
 
 First, set up your python environment. If using Anaconda, run
-`conda create --name explainableml django`
+`conda create --name explainableml django numpy pandas patsy sklearn scikit-learn`
 
 To install all node_modules for the frontend, use
 ```
