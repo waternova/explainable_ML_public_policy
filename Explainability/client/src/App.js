@@ -18,9 +18,15 @@ class Row extends Component {
   render() {
     const positiveColor = "#75acff";
     const negativeColor = "#aa6bf9";
+    const width = 100 * Math.abs(this.state.weight);
+    let leftMargin = 150;
+    if (this.state.weight < 0) {
+      leftMargin = 150 - width;
+    }
     const barChartStyle = {
       backgroundColor: this.state.weight > 0 ? positiveColor:negativeColor,
-      width: String(100 * Math.abs(this.state.weight)) + 'px',
+      width: String(width) + 'px',
+      "margin-left": String(leftMargin) + 'px'
     }
     return (
       <tr>
@@ -94,13 +100,11 @@ class App extends Component {
         <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
         <h3> {this.state.description}</h3>
         <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
-        <div className="box-icon" style={{"background": "#75acff"}}></div><div>Less likely to fail class</div>
-        <div className="box-icon" style={{"background": "#aa6bf9"}}></div><div>More likely to fail class</div>
         <table id="myTable" className="myTable">
             <thead>
                 <tr>
                     <th>Factor</th>
-                    <th width="150px">Graph</th>
+                    <th width="300px" style={{"text-align": "center"}}><span>Less likely</span><span> &lt;- Passing -&gt; </span><span>More likely</span></th>
                     <th>Actions</th>
                     <th>Weight</th>
                 </tr>
