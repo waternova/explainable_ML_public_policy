@@ -78,3 +78,20 @@ input {
   height: 15px;
   width: 15px;
 }
+
+.balance-button:disabled {
+  background-color: lightgray;
+  color: gray;
+}
+
+.balance-button.selected {
+  background-color: palegreen;
+}
+
+.factor-detail .Dropdown-control {
+  padding-right: 6px;
+}
+
+.factor-detail {
+  cursor: pointer;
+}

@@ -4,9 +4,9 @@ import classNames from 'classnames'
 
 // https://github.com/fraserxu/react-dropdown/blob/master/index.js
 
-const DEFAULT_PLACEHOLDER_STRING = 'Comments'
+const DEFAULT_PLACEHOLDER_STRING = ''
 
-class CommentDropdown extends AbstractDropdown {
+class FactorDropdown extends AbstractDropdown {
   constructor (props) {
     super(props)
     this.state = {
@@ -26,55 +26,16 @@ class CommentDropdown extends AbstractDropdown {
   }
 
   buildMenu () {
-    let comments = this.state.comments.map((comment) => {
-      console.log(comment);
-      const dateString = new Date(comment.date).toString();
-      return (
-        <li key={comment.date}>
-          <strong>{comment.username}: </strong>
-          {comment.text}
-          <em> ({dateString})</em>
-        </li>
-      );
-    })
+    // TODO: add Cancel button to reset description to original
     return (
       <div>
-      <ul>
-      {comments}
-      </ul>
-      <form onSubmit={this.handleNewComment}>
-        <label>
-          Your comment:
-          <textarea value={this.state.newComment} onChange={this.handleNewCommentChange} />
-        </label>
-        <input type="submit" value="Submit" />
+      <form onSubmit={this.props.saveNewDescription}>
+        <div>Original Name: {this.props.originalName}</div>
+        <label>Description: </label><textarea value={this.props.description} onChange={this.props.handleNewDescriptionUpdate} />
+        <input type="submit" value="Save" />
       </form>
       </div>
     );
-  }
-
-  handleNewComment(event) {
-    event.preventDefault();
-    const newComment = {
-      username: 'User1',
-      text: this.state.newComment,
-      date: Date.now(),
-    }
-    this.setState({
-      selected: {label: DEFAULT_PLACEHOLDER_STRING, value: ''},
-      isOpen: true,
-      comments: this.state.comments.concat([newComment]),
-      newComment: '',
-    });
-  }
-
-  handleNewCommentChange(event) {
-    this.setState({
-      selected: {label: DEFAULT_PLACEHOLDER_STRING, value: ''},
-      isOpen: true,
-      comments: this.state.comments.slice(),
-      newComment: event.target.value,
-    });
   }
 
   render () {
@@ -96,10 +57,6 @@ class CommentDropdown extends AbstractDropdown {
       [`${baseClassName}-menu`]: true,
       [menuClassName]: !!menuClassName
     })
-    const arrowClass = classNames({
-      [`${baseClassName}-arrow`]: true,
-      [arrowClassName]: !!arrowClassName
-    })
 
     const value = (<div className={placeholderClass}>{placeHolderValue}</div>)
     const menu = this.state.isOpen ? <div className={menuClass}>{this.buildMenu()}</div> : null
@@ -108,7 +65,6 @@ class CommentDropdown extends AbstractDropdown {
       <div className={dropdownClass}>
         <div className={`${baseClassName}-control ${disabledClass}`} onMouseDown={this.handleMouseDown.bind(this)} onTouchEnd={this.handleMouseDown.bind(this)}>
           {value}
-          <span className={arrowClass} />
         </div>
         {menu}
       </div>
@@ -116,5 +72,5 @@ class CommentDropdown extends AbstractDropdown {
   }
 }
 
-CommentDropdown.defaultProps = { baseClassName: 'Dropdown' }
-export default CommentDropdown
+FactorDropdown.defaultProps = { baseClassName: 'Dropdown' }
+export default FactorDropdown
