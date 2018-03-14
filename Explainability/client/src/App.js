@@ -4,6 +4,7 @@ import './App.css';
 import './Dropdown.css';
 import CommentDropdown from './CommentDropdown.js';
 import FactorDropdown from './FactorDropdown.js';
+import Header from './header.js';
 
 class Row extends Component {
   constructor(props) {
@@ -128,10 +129,14 @@ class App extends Component {
     render() {
         const rows = this.state.rows.map((entry, number) => {
         return (<Row key={entry.id} index={number} value={entry} onChange={this.updateWeight}/>);
-    })
+        })
 
     return (
-      <div className="wrapper">
+        <div>
+            <Header/>
+            {this.props.children}
+        </div>
+/*      <div className="wrapper">
         <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
         <h3> {this.state.description}</h3>
         <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
@@ -155,7 +160,7 @@ class App extends Component {
         <p>
             <button onClick={this.testModel}>Test Model</button>
         </p>
-      </div>
+      </div>*/
         );
     }
     //Handler for Weight modification
