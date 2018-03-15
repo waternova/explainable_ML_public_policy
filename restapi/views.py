@@ -48,6 +48,16 @@ def GetFactors(request):
             return Response({'factors': factor_serializer.data}, status=status.HTTP_200_OK)
     return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+def GetModels(request):
+    if request.method == 'GET':
+        #model_id = request.GET.get('model_id')
+        #//if model_id is not None:
+        model_obj = MlModel.objects.all()
+        model_serializer = MlModelSerializer(model_obj, many=True)
+        return Response({'models': model_serializer.data}, status=status.HTTP_200_OK)
+    return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def GetComments(request):

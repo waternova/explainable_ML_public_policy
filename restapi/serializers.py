@@ -10,7 +10,7 @@ from restapi.models import User
 class MlModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = MlModel
-        fields = ('id', 'name', 'description', 'accuracy', 'parent_id', 'intercept')
+        fields = ('id', 'name', 'description', 'accuracy', 'parent_id', 'intercept', 'modified')
 
 
 class FactorSerializer(serializers.ModelSerializer):

@@ -24,6 +24,7 @@ router.register(r'comment', views.CommentViewSet)
 router.register(r'user', views.UserViewSet)
 
 urlpatterns = [
+    url(r'^getmodels/', views.GetModels, name='GetModels'),
     url(r'^getfactors/', views.GetFactors, name='GetFactors'),
     url(r'^getcomments/', views.GetComments, name='GetComments'),
     url(r'^post/testmodel/', views.TestModel, name='TestModel'),

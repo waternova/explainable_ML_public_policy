@@ -15,8 +15,9 @@ const Header = () => {
                 Explainable Machine Learning
             </div>
             <div className="menu">
-                <MenuItem to={'/home'}>Home</MenuItem>
-                <MenuItem to={'/models'}>Models</MenuItem>
+                <MenuItem to={'/'}>Home</MenuItem>
+                <MenuItem to={'/ModelList'}>Model List</MenuItem>
+                <MenuItem to={'/ModelView'}>Model View</MenuItem>
             </div>
         </div>
     );
