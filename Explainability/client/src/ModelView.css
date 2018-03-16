@@ -93,3 +93,8 @@ input {
 .factor-detail {
   cursor: pointer;
 }
+
+.toolbar {
+    width: 120px;
+    height: 50px;
+}

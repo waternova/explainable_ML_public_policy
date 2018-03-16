@@ -53,14 +53,16 @@ class Row extends Component {
   }
 
   handleChange(event) {
-    this.setState({weight: event.target.value});
-    this.props.onChange({index: this.state.index, value: event.target.value});
+    var newWeight = parseFloat(event.target.value);
+    if (isNaN (newWeight) == false)
+    {
+        this.setState({weight: newWeight} );
+        this.props.onChange({index: this.state.index, value: newWeight});
+    }
   }
 
   updateFactorDescription(event) {
-    this.setState({
-      newDescription: event.target.value
-    });
+    this.setState({newDescription: event.target.value});
   }
 
   saveNewDescription(event) {
@@ -81,16 +83,18 @@ class ModelView extends Component {
     constructor (props)
     {
         super(props);
+        console.log(props);
         this.state = {
-            model_id: 0,
+            model_id: props.match.params.id,
             model_name: "",
             description: "",
             accuracy: 0.0,
+            modified: "",
             parent_id: null,
             rows: []
             };
 
-        fetch ("/api/model/1/?format=json",
+        fetch ("/api/model/" + this.state.model_id + "/?format=json",
             {
                 method: "GET",
                 headers: {"Content-Type" : "application/json;charset=UTF-8"},
@@ -101,11 +105,12 @@ class ModelView extends Component {
                     model_name: data.name,
                     description: data.description,
                     accuracy: parseFloat(data.accuracy),
+                    modified: data.modified,
                     parent_id: data.parent_id
                 });
-                console.log("Model Loaded:", data);
-            }).catch(error => console.log('Request failed', error));
-        fetch ("/api/getfactors/?model_id=1&format=json",
+                console.log("Model Loaded: ", data.name);
+            }).catch(error => console.log("Request failed", error));
+        fetch ("/api/getfactors/?model_id=" + this.state.model_id +"&format=json",
             {
                 method: "GET",
                 headers: {"Content-Type" : "application/json;charset=UTF-8"},
@@ -116,11 +121,13 @@ class ModelView extends Component {
                 {
                     this.setState({rows:this.state.rows.concat(data.factors[i])});
                 }
-                console.log("Factors Loaded:", data);
+                console.log("%d factors loaded.", data.factors.length);
             }).catch(error => console.log('Request failed', error));
 
         this.testModel = this.testModel.bind(this);
         this.retrainModel = this.retrainModel.bind(this);
+        this.SaveModel = this.SaveModel.bind(this);
+        this.SaveFactor = this.SaveFactor.bind(this);
         this.updateWeight = this.updateWeight.bind(this);
     }
 
@@ -134,6 +141,12 @@ class ModelView extends Component {
             <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
             <h3> {this.state.description}</h3>
             <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
+            <p>
+                <button className="toolbar" onClick={this.retrainModel}>Re-Fit</button> &nbsp;
+                <button className="toolbar" onClick={this.testModel}>Test Model</button> &nbsp;
+                <button className="toolbar" onClick={this.SaveModel}>Save Model...</button>
+            </p>
+
             <table id="myTable" className="myTable">
                 <thead>
                     <tr>
@@ -148,35 +161,134 @@ class ModelView extends Component {
                 </tbody>
             </table>
             <br />
-            <p>
-                 <button onClick={this.retrainModel}>Re-Fit</button>
-            </p>
-            <p>
-                <button onClick={this.testModel}>Test Model</button>
-            </p>
         </div>
         );
     }
     //Handler for Weight modification
     updateWeight(event) {
         let copyRows = [...this.state.rows];
-        console.log("Weight of factor["+event.index+"] is changed from "
-            + copyRows[event.index].weight + " to "+ event.value);
-        copyRows[event.index].weight = event.value;
-        this.setState({rows: copyRows});
+        var newWeight = parseFloat(event.value);
+        if (isNaN(newWeight) == false)
+        {
+            console.log("Weight of factor[%d] is changed from %f to %f", event.index
+                ,copyRows[event.index].weight, newWeight);
+            copyRows[event.index].weight = newWeight;
+            this.setState({rows: copyRows});
+        }
     }
     //Handler for Retrain Button
     retrainModel ()
     {
+
     }
 
-  //Handler for Test Button
+    SaveFactor(model_id, factor, isUpdate)
+    {
+        var requestType, requestURL;
+        if (isUpdate == true)
+        {
+            requestType = "PUT";
+            requestURL = "/api/factor/"+factor.id+"/"
+            //console.log("Update a factor:");
+        }
+        else
+        {
+            requestType = "POST";
+            requestURL = "/api/factor/"
+            factor.model_id = model_id
+            //console.log("Add a new factor:");
+        }
+        var factorJson = JSON.stringify(factor);
+        //console.log(factorJson);
+        fetch (requestURL,
+        {
+            method: requestType,
+            headers: {"Content-Type" : "application/json;charset=UTF-8"},
+            body: factorJson
+        }).then( res => res.json()).then(data =>
+        {
+            //console.log("Response: ", data);
+        }).catch(error =>
+        {
+            console.log('Request failed: ', error)
+            return false;
+        });
+        return true;
+    }
+
+    //Handler for Save Button
+    SaveModel ()
+    {
+        var saveName = prompt("Save As:", this.state.model_name);
+        if (saveName == null ) return;
+        var currentModel, requestType, requestURL, isUpdate;
+        if (this.state.model_name == saveName)
+        {
+           isUpdate = window.confirm("Do you want to overwrite the current model?");
+        }
+        if (isUpdate == true)
+        {
+            //Overwrite the model
+            currentModel = {
+                name: this.state.model_name,
+                description: this.state.description,
+                accuracy: this.state.accuracy,
+                modified: new Date,
+                parent_id: this.state.parent_id
+                };
+            requestType = "PUT";
+            requestURL = "/api/model/"+this.state.model_id+"/"
+            console.log("Overwriting a model: ");
+        }
+        else
+        {
+            //Save as a new model
+            currentModel = {
+                name: saveName,
+                description: this.state.description,
+                accuracy: this.state.accuracy,
+                modified: new Date,
+                parent_id: this.state.model_id
+                };
+            requestType = "POST";
+            requestURL = "/api/model/";
+            console.log("Save as a new model: ");
+        }
+        var modelJson = JSON.stringify(currentModel);
+        console.log(modelJson);
+        fetch (requestURL,
+        {
+            method: requestType,
+            headers: {"Content-Type" : "application/json;charset=UTF-8"},
+            body: modelJson
+        }).then( res => res.json()).then(data =>
+        {
+            //console.log("Response: ", data);
+            //this.setState({model_id: data.id});
+            //this.setState({model_name: saveName});
+            var factors = this.state.rows;
+            this.setState({rows: []});
+            var count = 0;
+            for (var i=0; i<factors.length; i++)
+            {
+                if (this.SaveFactor(data.id, factors[i], isUpdate) == true) {count++;}
+            }
+            console.log("%d/%d factors saved.", factors.length, count);
+            alert("Successfully Saved: %s", saveName);
+        }).catch(error =>
+        {
+            console.log("Request failed: ", error)
+            alert("Save Failure: ", error);
+        });
+    }
+
+    //Handler for Test Button
     testModel ()
     {
         var factors = JSON.stringify(this.state.rows)
-        console.log("Test request:", this.state.model_name);
-        console.log("Accuracy before test:", this.state.accuracy);
-        fetch ("/api/post/testmodel/",
+        console.log("Test request: %s", factors);
+        console.log("Accuracy before test: %f", this.state.accuracy);
+        fetch ("/api/testmodel/",
             {
                 method: "POST",
                 headers: {"Content-Type" : "application/json;charset=UTF-8"},
@@ -184,8 +296,8 @@ class ModelView extends Component {
             }).then( res => res.json()).then(data =>
             {
                 this.setState({accuracy: parseFloat(data.accuracy)});
-                console.log("Accuracy after test:", this.state.accuracy);
-            }).catch(error => console.log('Request failed', error));
+                console.log("Accuracy after test: %f", this.state.accuracy);
+            }).catch(error => console.log("Request failed: ", error));
     }
 
 }

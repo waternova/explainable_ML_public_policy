@@ -18,8 +18,6 @@ from rest_framework import routers
 from restapi import views
 
 router = routers.DefaultRouter()
-router.register(r'model', views.MlModelViewSet)
-router.register(r'factor', views.FactorViewSet)
 router.register(r'comment', views.CommentViewSet)
 router.register(r'user', views.UserViewSet)
 
@@ -27,7 +25,11 @@ urlpatterns = [
     url(r'^getmodels/', views.GetModels, name='GetModels'),
     url(r'^getfactors/', views.GetFactors, name='GetFactors'),
     url(r'^getcomments/', views.GetComments, name='GetComments'),
-    url(r'^post/testmodel/', views.TestModel, name='TestModel'),
+    url(r'^testmodel/', views.TestModel, name='TestModel'),
     url(r'^', include(router.urls)),
+    url(r'^model/$', views.MlModelListView.as_view()),
+    url(r'^model/(?P<pk>[0-9]+)/$', views.MlModelItemView.as_view()),
+    url(r'^factor/$', views.FactorListView.as_view()),
+    url(r'^factor/(?P<pk>[0-9]+)/$', views.FactorItemView.as_view()),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

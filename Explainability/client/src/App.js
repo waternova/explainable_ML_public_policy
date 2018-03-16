@@ -6,10 +6,6 @@ import ModelView from './ModelView.js';
 import Header from './header.js';
 
 class App extends Component {
-    constructor (props)
-    {
-		super(props)
-	}
     render()
     {
         return (
@@ -17,7 +13,7 @@ class App extends Component {
                 <Header />
                 <Route exact path="/" component={Home}/>
                 <Route path="/ModelList" component={ModelList}/>
-                <Route path="/ModelView" component={ModelView}/>
+                <Route path="/ModelView/:id" component={ModelView}/>
             </div>
         );
     }

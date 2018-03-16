@@ -4,13 +4,12 @@ from django.db import models
 
 
 class MlModel(models.Model):
-    #id = models.AutoField() --> Default id will be added by Django
     name = models.CharField(max_length=255)
     description = models.TextField(max_length=65535, null=True)
     accuracy = models.FloatField(null=True)
     intercept = models.FloatField(null=True)
     parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
-    modified = models.DateTimeField(auto_now_add=True, blank=True)
+    modified = models.DateTimeField(auto_now_add=False, blank=True)
 
 
 class Factor(models.Model):

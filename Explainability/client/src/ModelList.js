@@ -49,8 +49,8 @@ class ModelList extends React.Component {
                 {
                     this.setState({models:this.state.models.concat(data.models[i])});
                 }
-                console.log(data.models.length, " Models Loaded");
-            }).catch(error => console.log('Request failed', error));
+                console.log("%d Models Loaded", data.models.length);
+            }).catch(error => console.log("Request failed:", error));
 
         //this.testModel = this.testModel.bind(this);
         //this.retrainModel = this.retrainModel.bind(this);

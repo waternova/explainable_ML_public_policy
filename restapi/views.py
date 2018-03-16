@@ -2,6 +2,8 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework import viewsets
+from rest_framework import generics
+
 from .serializers import MlModelSerializer
 from .serializers import FactorSerializer
 from .serializers import CommentSerializer
@@ -13,12 +15,22 @@ from restapi.models import Comment
 from restapi.models import User
 
 
-class MlModelViewSet(viewsets.ModelViewSet):
+class MlModelListView(generics.ListCreateAPIView):
     queryset = MlModel.objects.all()
     serializer_class = MlModelSerializer
 
 
-class FactorViewSet(viewsets.ModelViewSet):
+class MlModelItemView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MlModel.objects.all()
+    serializer_class = MlModelSerializer
+
+
+class FactorListView(generics.ListCreateAPIView):
+    queryset = Factor.objects.all()
+    serializer_class = FactorSerializer
+
+
+class FactorItemView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Factor.objects.all()
     serializer_class = FactorSerializer
 
@@ -47,6 +59,17 @@ def GetFactors(request):
             factor_serializer = FactorSerializer(factor_obj, many=True)
             return Response({'factors': factor_serializer.data}, status=status.HTTP_200_OK)
     return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+def PutFactors(request):
+    if request.method == 'PUT':
+        factors_json = json.loads(request.body.decode('utf-8'))
+        factors_obj = Factor.objects.create(**factors_json)
+        factor_serializer = FactorSerializer(factors_obj, many=True)
+        factor_serializer.save();
+        return Response(res, status=status.HTTP_200_OK)
+    return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def GetModels(request):

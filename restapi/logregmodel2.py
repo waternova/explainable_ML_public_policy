@@ -23,7 +23,7 @@ def preparelist(coefdata, cols):
             coeflist.append(0.366298367)
         else:
             # print(factors)
-            print("factors[factors.name == col]['weight']", factors[factors.name == col]['weight'].values)
+            # print("factors[factors.name == col]['weight']", factors[factors.name == col]['weight'].values)
             values = factors[factors.name == col]['weight'].values
             if len(values) > 0:
                 coeflist.append(values[0])
