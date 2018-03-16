@@ -54,7 +54,7 @@ class Row extends Component {
 
   handleChange(event) {
     var newWeight = parseFloat(event.target.value);
-    if (isNaN (newWeight) == false)
+    if (isNaN (newWeight) === false)
     {
         this.setState({weight: newWeight} );
         this.props.onChange({index: this.state.index, value: newWeight});
@@ -83,7 +83,6 @@ class ModelView extends Component {
     constructor (props)
     {
         super(props);
-        console.log(props);
         this.state = {
             model_id: props.match.params.id,
             model_name: "",
@@ -170,7 +169,7 @@ class ModelView extends Component {
     updateWeight(event) {
         let copyRows = [...this.state.rows];
         var newWeight = parseFloat(event.value);
-        if (isNaN(newWeight) == false)
+        if (isNaN(newWeight) === false)
         {
             console.log("Weight of factor[%d] is changed from %f to %f", event.index
                 ,copyRows[event.index].weight, newWeight);
@@ -187,7 +186,7 @@ class ModelView extends Component {
     SaveFactor(model_id, factor, isUpdate)
     {
         var requestType, requestURL;
-        if (isUpdate == true)
+        if (isUpdate === true)
         {
             requestType = "PUT";
             requestURL = "/api/factor/"+factor.id+"/"
@@ -223,12 +222,14 @@ class ModelView extends Component {
     {
         var saveName = prompt("Save As:", this.state.model_name);
         if (saveName == null ) return;
-        var currentModel, requestType, requestURL, isUpdate;
-        if (this.state.model_name == saveName)
+        var currentModel, requestType, requestURL
+        var isUpdate = false;
+        if (this.state.model_name === saveName)
         {
            isUpdate = window.confirm("Do you want to overwrite the current model?");
+           if (isUpdate === false) return;
         }
-        if (isUpdate == true)
+        if (isUpdate === true)
         {
             //Overwrite the model
             currentModel = {
@@ -236,12 +237,12 @@ class ModelView extends Component {
                 description: this.state.description,
                 accuracy: this.state.accuracy,
                 intercept: this.state.intercept,
-                modified: new Date,
+                modified: new Date(),
                 parent_id: this.state.parent_id
                 };
             requestType = "PUT";
             requestURL = "/api/model/"+this.state.model_id+"/"
-            console.log("Overwriting a model: ");
+            console.log("Overwriting a model: %d", this.state.model_id );
         }
         else
         {
@@ -251,7 +252,7 @@ class ModelView extends Component {
                 description: this.state.description,
                 accuracy: this.state.accuracy,
                 intercept: this.state.intercept,
-                modified: new Date,
+                modified: new Date(),
                 parent_id: this.state.model_id
                 };
             requestType = "POST";
@@ -259,7 +260,7 @@ class ModelView extends Component {
             console.log("Save as a new model: ");
         }
         var modelJson = JSON.stringify(currentModel);
-        console.log(modelJson);
+        //console.log(modelJson);
         fetch (requestURL,
         {
             method: requestType,
@@ -274,7 +275,7 @@ class ModelView extends Component {
             var count = 0;
             for (var i=0; i<factors.length; i++)
             {
-                if (this.SaveFactor(data.id, factors[i], isUpdate) == true) {count++;}
+                if (this.SaveFactor(data.id, factors[i], isUpdate) === true) {count++;}
             }
             console.log("%d/%d factors saved.", factors.length, count);
             alert("Successfully Saved: " + saveName);
