@@ -3,6 +3,7 @@ import './ModelView.css';
 import './Dropdown.css';
 import CommentDropdown from './CommentDropdown.js';
 import FactorDropdown from './FactorDropdown.js';
+import classNames from 'classnames';
 
 class Row extends Component {
   constructor(props) {
@@ -15,10 +16,15 @@ class Row extends Component {
       index: this.props.index,
       description: this.props.value.description,
       newDescription: this.props.value.description,
+      isBinary: false,
+      isBalanced: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateFactorDescription = this.updateFactorDescription.bind(this);
     this.saveNewDescription = this.saveNewDescription.bind(this);
+    this.onNewNameUpdate = this.onNewNameUpdate.bind(this);
+    this.onBinaryVarUpdate = this.onBinaryVarUpdate.bind(this);
+    this.handleBalanceSelect = this.handleBalanceSelect.bind(this);
   }
 
   render() {
@@ -34,6 +40,12 @@ class Row extends Component {
       width: String(width) + 'px',
       marginLeft: String(leftMargin) + 'px',
     }
+    const description = this.state.newDescription || "";
+    const visibleName = this.state.alias;
+    const balanceButtonClassNames = classNames({
+        'balance-button': true,
+        'selected': this.state.isBalanced,
+    });
     return (
       <tr>
         <td>{this.state.alias}
@@ -41,12 +53,24 @@ class Row extends Component {
             className="factor-detail"
             placeholder="..."
             originalName={this.state.name}
-            description={this.state.newDescription}
+            description={description}
             handleNewDescriptionUpdate={this.updateFactorDescription}
-            saveNewDescription={this.saveNewDescription} />
+            saveNewDescription={this.saveNewDescription}
+            visibleName={visibleName}
+            isBinary={this.state.isBinary}
+            handleNewNameUpdate={this.onNewNameUpdate}
+            handleBinaryVarUpdate={this.onBinaryVarUpdate} />
         </td>
         <td><div className="chart-bar" style={barChartStyle}></div></td>
-        <td><CommentDropdown /><input type="submit" value="Balance Model" className="balance-button" /></td>
+        <td>
+            <CommentDropdown />
+            <input 
+                type="submit" 
+                value="Balance Model" 
+                className={balanceButtonClassNames} 
+                disabled={!this.state.isBinary} 
+                onClick={this.handleBalanceSelect} />
+        </td>
         <td><input defaultValue={this.state.weight} onChange={this.handleChange}></input></td>
       </tr>
     );
@@ -61,8 +85,20 @@ class Row extends Component {
     }
   }
 
+  handleBalanceSelect(event) {
+    this.setState({isBalanced: !this.state.isBalanced});
+  }
+
   updateFactorDescription(event) {
     this.setState({newDescription: event.target.value});
+  }
+
+  onNewNameUpdate(event) {
+    this.setState({alias: event.target.value});
+  }
+
+  onBinaryVarUpdate(event) {
+    this.setState({isBinary: event.target.checked})
   }
 
   saveNewDescription(event) {

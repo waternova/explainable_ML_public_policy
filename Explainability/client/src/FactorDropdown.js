@@ -31,7 +31,9 @@ class FactorDropdown extends AbstractDropdown {
       <div>
       <form onSubmit={this.props.saveNewDescription}>
         <div>Original Name: {this.props.originalName}</div>
+        <label>Visible Name: </label><input value={this.props.visibleName} onChange={this.props.handleNewNameUpdate} />
         <label>Description: </label><textarea value={this.props.description} onChange={this.props.handleNewDescriptionUpdate} />
+        <label>Is Binary Variable: </label><input type="checkbox" checked={this.props.isBinary} onChange={this.props.handleBinaryVarUpdate} />
         <input type="submit" value="Save" />
       </form>
       </div>
