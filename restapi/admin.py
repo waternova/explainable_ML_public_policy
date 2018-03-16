@@ -6,4 +6,4 @@ from restapi.models import MlModel,Factor,Comment,User
 admin.site.register(MlModel)
 admin.site.register(Factor)
 admin.site.register(Comment)
-admin.site.register(User
+admin.site.register(User)
