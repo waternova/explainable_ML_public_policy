@@ -10,6 +10,8 @@ class MlModel(models.Model):
     intercept = models.FloatField(null=True)
     parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     modified = models.DateTimeField(auto_now_add=False, blank=True)
+    active = models.BooleanField(default=False)
+
 
 
 class Factor(models.Model):
