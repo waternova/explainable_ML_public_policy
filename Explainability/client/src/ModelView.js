@@ -8,23 +8,25 @@ import classNames from 'classnames';
 class Row extends Component {
   constructor(props) {
     super(props);
+    const value = this.props.value;
+    // TODO: make isBinary and isBalanced come from database
     this.state = {
-      id: this.props.value.id,
-      weight: this.props.value.weight,
-      alias: this.props.value.alias,
-      name: this.props.value.name,
+      id: value.id,
+      weight: value.weight,
+      alias: value.alias,
+      newAlias: value.alias,
+      name: value.name,
       index: this.props.index,
-      description: this.props.value.description,
-      newDescription: this.props.value.description,
+      description: value.description,
+      newDescription: value.description,
+      newIsBinary: false,
       isBinary: false,
       isBalanced: false,
     };
     this.handleChange = this.handleChange.bind(this);
-    this.updateFactorDescription = this.updateFactorDescription.bind(this);
-    this.saveNewDescription = this.saveNewDescription.bind(this);
-    this.onNewNameUpdate = this.onNewNameUpdate.bind(this);
-    this.onBinaryVarUpdate = this.onBinaryVarUpdate.bind(this);
     this.handleBalanceSelect = this.handleBalanceSelect.bind(this);
+    this.handleFactorDetailUpdate = this.handleFactorDetailUpdate.bind(this);
+    this.handleFactorDetailSubmit = this.handleFactorDetailSubmit.bind(this);
   }
 
   render() {
@@ -41,7 +43,6 @@ class Row extends Component {
       marginLeft: String(leftMargin) + 'px',
     }
     const description = this.state.newDescription || "";
-    const visibleName = this.state.alias;
     const balanceButtonClassNames = classNames({
         'balance-button': true,
         'selected': this.state.isBalanced,
@@ -53,11 +54,13 @@ class Row extends Component {
             className="factor-detail"
             placeholder="..."
             originalName={this.state.name}
-            description={description}
+            newDescription={description}
             handleNewDescriptionUpdate={this.updateFactorDescription}
-            saveNewDescription={this.saveNewDescription}
-            visibleName={visibleName}
-            isBinary={this.state.isBinary}
+            handleFormSubmit={this.handleFactorDetailSubmit}
+            newAlias={this.state.newAlias}
+            newIsBinary={this.state.newIsBinary}
+            handleFactorFormSubmit={this.handleFactorDetailSubmit}
+            handleFactorFormUpdate={this.handleFactorDetailUpdate}
             handleNewNameUpdate={this.onNewNameUpdate}
             handleBinaryVarUpdate={this.onBinaryVarUpdate} />
         </td>
@@ -85,33 +88,26 @@ class Row extends Component {
     }
   }
 
+  handleFactorDetailUpdate(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+        [name]: value
+    });
+  }
+
+  handleFactorDetailSubmit(event) {
+    event.preventDefault();
+    this.setState({
+        alias: this.state.newAlias,
+        description: this.state.newDescription,
+        isBinary: this.state.newIsBinary,
+    })
+  }
+
   handleBalanceSelect(event) {
     this.setState({isBalanced: !this.state.isBalanced});
-  }
-
-  updateFactorDescription(event) {
-    this.setState({newDescription: event.target.value});
-  }
-
-  onNewNameUpdate(event) {
-    this.setState({alias: event.target.value});
-  }
-
-  onBinaryVarUpdate(event) {
-    this.setState({isBinary: event.target.checked})
-  }
-
-  saveNewDescription(event) {
-    event.preventDefault();
-    // TODO: make UI update to make clear when it has saved
-    fetch('/api/factor/' + this.state.id + '/', {
-      method: 'PATCH',
-      body: JSON.stringify({'description': this.state.newDescription}),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-    }).then(response => this.setState({description: this.state.newDescription}))
-    .catch(error => console.error('Error:', error));
   }
 }
 

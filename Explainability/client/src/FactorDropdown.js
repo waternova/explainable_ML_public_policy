@@ -23,21 +23,30 @@ class FactorDropdown extends AbstractDropdown {
     this.fireChangeEvent = this.fireChangeEvent.bind(this)
     this.handleNewComment = this.handleNewComment.bind(this)
     this.handleNewCommentChange = this.handleNewCommentChange.bind(this)
+    this.handleFormSubmit = this.handleFormSubmit.bind(this)
   }
 
   buildMenu () {
     // TODO: add Cancel button to reset description to original
     return (
       <div>
-      <form onSubmit={this.props.saveNewDescription}>
+      <form onSubmit={this.handleFormSubmit}>
         <div>Original Name: {this.props.originalName}</div>
-        <label>Visible Name: </label><input value={this.props.visibleName} onChange={this.props.handleNewNameUpdate} />
-        <label>Description: </label><textarea value={this.props.description} onChange={this.props.handleNewDescriptionUpdate} />
-        <label>Is Binary Variable: </label><input type="checkbox" checked={this.props.isBinary} onChange={this.props.handleBinaryVarUpdate} />
-        <input type="submit" value="Save" />
+        <label>Visible Name: </label><input name="newAlias" value={this.props.newAlias} onChange={this.props.handleFactorFormUpdate} />
+        <label>Description: </label><textarea name="newDescription" value={this.props.newDescription} onChange={this.props.handleFactorFormUpdate} />
+        <label>Is Binary Variable: </label><input name="newIsBinary" type="checkbox" checked={this.props.newIsBinary} onChange={this.props.handleFactorFormUpdate} />
+        <br />
+        <input type="submit" value="Update" />
       </form>
       </div>
     );
+  }
+
+  handleFormSubmit(event) {
+    // Needs to close this dropdown before delegating to Row state
+    event.preventDefault();
+    this.setState({ isOpen: false });
+    this.props.handleFormSubmit(event);
   }
 
   render () {
