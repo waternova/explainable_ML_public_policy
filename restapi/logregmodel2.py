@@ -3,6 +3,7 @@ import pandas as pd
 from patsy import dmatrices
 from sklearn.linear_model import LogisticRegression
 from sklearn.cross_validation import train_test_split
+from restapi.models import MlModel
 
 #preparing training and testing data
 def preparedata(df):
@@ -20,7 +21,9 @@ def preparelist(coefdata, cols):
     coeflist= []
     for col in cols:
         if col == 'Intercept':
-            coeflist.append(0.366298367)
+            #coeflist.append(0.366298367)
+            activemodel = MlModel.objects.filter(active=True)
+            coeflist.append(activemodel[0].intercept)
         else:
             # print(factors)
             # print("factors[factors.name == col]['weight']", factors[factors.name == col]['weight'].values)
