@@ -17,7 +17,6 @@ const Header = () => {
             <div className="menu">
                 <MenuItem to={'/'}>Home</MenuItem>
                 <MenuItem to={'/ModelList'}>Model List</MenuItem>
-                <MenuItem to={'/ModelView'}>Model View</MenuItem>
             </div>
         </div>
     );

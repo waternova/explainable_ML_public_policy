@@ -32,7 +32,7 @@ class Row extends Component {
     const barChartStyle = {
       backgroundColor: this.state.weight > 0 ? positiveColor:negativeColor,
       width: String(width) + 'px',
-      marginLeft: String(leftMargin) + 'px'
+      marginLeft: String(leftMargin) + 'px',
     }
     return (
       <tr>
@@ -89,6 +89,7 @@ class ModelView extends Component {
             model_name: "",
             description: "",
             accuracy: 0.0,
+            intercept: 0.0,
             modified: "",
             parent_id: null,
             rows: []
@@ -105,6 +106,7 @@ class ModelView extends Component {
                     model_name: data.name,
                     description: data.description,
                     accuracy: parseFloat(data.accuracy),
+                    intercept: parseFloat(data.accuracy),
                     modified: data.modified,
                     parent_id: data.parent_id
                 });
@@ -233,6 +235,7 @@ class ModelView extends Component {
                 name: this.state.model_name,
                 description: this.state.description,
                 accuracy: this.state.accuracy,
+                intercept: this.state.intercept,
                 modified: new Date,
                 parent_id: this.state.parent_id
                 };
@@ -247,6 +250,7 @@ class ModelView extends Component {
                 name: saveName,
                 description: this.state.description,
                 accuracy: this.state.accuracy,
+                intercept: this.state.intercept,
                 modified: new Date,
                 parent_id: this.state.model_id
                 };
@@ -267,18 +271,17 @@ class ModelView extends Component {
             //this.setState({model_id: data.id});
             //this.setState({model_name: saveName});
             var factors = this.state.rows;
-            this.setState({rows: []});
             var count = 0;
             for (var i=0; i<factors.length; i++)
             {
                 if (this.SaveFactor(data.id, factors[i], isUpdate) == true) {count++;}
             }
             console.log("%d/%d factors saved.", factors.length, count);
-            alert("Successfully Saved: %s", saveName);
+            alert("Successfully Saved: " + saveName);
         }).catch(error =>
         {
             console.log("Request failed: ", error)
-            alert("Save Failure: ", error);
+            alert("Save Failure: " + error);
         });
     }
 

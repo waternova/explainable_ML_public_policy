@@ -6,7 +6,8 @@ table {border-collapse: collapse; width: 100%;}
 .comment-tooltip {background-color: white; border: 1px solid #555; width: 100px; height: 100px; padding: 10px}
 .comment-tooltip p {font-size: 0.8em;}
 .comment-tooltip input {width: 80px;}
-.chart-bar {height: 10px;}
+.chart-bar {height: 10px; }
+.chart-bar-base {height: 100%; width: 2px; background-color: #111111;}
 .id {text-align: center; width: 40px;}
 .name {text-align: left;}
 .accuracy {text-align: right; width: 80px;}

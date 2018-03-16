@@ -1,10 +1,10 @@
 .logo {
-    height: 3.5rem;
+    height: 2.5rem;
     background-color: #212529;
-    width: 100vw;
-    line-height: 3.5rem;
-    color: white;
-    font-size: 1.5rem;
+    width: 100%;
+    line-height: 2.5rem;
+    color: gray;
+    font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
 }
@@ -19,15 +19,17 @@
     color: white;
     font-size: 1rem;
     line-height: 3.5rem;
-    width: 33.3333%;
+    width: 10rem;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.5s;
     text-decoration: none;
+    border-left: 0.1rem solid #333333;
+    background-color: #495057;
 }
 
 .menu-item:hover {
-    background-color: #495057;
+    background-color: #606060;
 }
 
 .menu-item:active, .menu-item.active {

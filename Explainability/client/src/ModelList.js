@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './ModelList.css';
+import { Link } from 'react-router-dom';
 
 class ModelListItem extends Component {
     constructor(props)
@@ -22,7 +23,11 @@ class ModelListItem extends Component {
         return (
             <tr>
                 <td className="id">{this.state.id}</td>
-                <td className="name">{this.state.name}</td>
+                <td className="name">
+                    <Link to={"/ModelView/"+this.state.id+"/"}>
+                        {this.state.name}
+                    </Link>
+                </td>
                 <td className="accuracy">{(this.state.accuracy * 100).toFixed(2)}%</td>
                 <td className="modified">{dt.toLocaleString()}</td>
                 <td className="parent">{this.state.parent_id}</td>
