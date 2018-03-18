@@ -21,8 +21,8 @@ def preparelist(coefdata, cols, intercept):
     factors = pd.DataFrame(coefdata)  # variable name changed
     coeflist= []
     for col in cols:
-        if col == 'Intercept':
-            coeflist.append(intercept) # 0.366298367
+        if col == 'Intercept':  # Default was 0.366298367 ==> Put in DB
+            coeflist.append(intercept)
         else:
             # print(factors)
             # print("factors[factors.name == col]['weight']", factors[factors.name == col]['weight'].values)
