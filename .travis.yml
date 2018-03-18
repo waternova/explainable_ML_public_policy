@@ -5,11 +5,11 @@ node_js:
   - "6.9"
 # command to install dependencies (already run by default)
 install:
-  - pip install -r requirements.txt
+#  - pip install -r requirements.txt
   - cd Explainability/client
-  - npm run build
+  - npm install
 # command to run tests
 script:
-  - ./manage.py test restapi
+#  - ./manage.py test restapi
   - cd Explainability/client
   - npm test
