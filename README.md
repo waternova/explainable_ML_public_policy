@@ -11,12 +11,18 @@ These instructions will get you a copy of the project up and running on your loc
 (Appilication/Backend)
 
   Python 3.4 or greater
+  Django 1.11
   
-  Django 1.11, numpy, pandas, patsy, sklearn, scipy, django-cors-headers
+  numpy, pandas, patsy, sklearn, scipy, django-cors-headers, django-filter
+  To install) pip -install [name] 
   
 (WebUI/Frontend)
 
   <a href="https://nodejs.org/en/download/">node.js</a>
+  
+  react-router-dom
+  To install) npm install --save [name] 
+
 
 * If using Anaconda, run `conda create --name explainableml django`
 
