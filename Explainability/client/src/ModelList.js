@@ -43,18 +43,18 @@ class ModelList extends React.Component {
         this.state = {
             models: []
             };
-        fetch ("/api/getmodels/?format=json",
+        fetch ("/api/model/?format=json",
             {
                 method: "GET",
                 headers: {"Content-Type" : "application/json;charset=UTF-8"},
             }).then( res => res.json()).then(data =>
             {
                 this.setState({models: []});
-                for (var i=0; i<data.models.length; i++)
+                for (var i=0; i<data.length; i++)
                 {
-                    this.setState({models:this.state.models.concat(data.models[i])});
+                    this.setState({models:this.state.models.concat(data[i])});
                 }
-                console.log("%d Models Loaded", data.models.length);
+                console.log("%d Models Loaded", data.length);
             }).catch(error => console.log("Request failed:", error));
 
         //this.testModel = this.testModel.bind(this);

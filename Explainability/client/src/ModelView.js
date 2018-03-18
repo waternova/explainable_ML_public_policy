@@ -137,13 +137,13 @@ class ModelView extends Component {
                     model_name: data.name,
                     description: data.description,
                     accuracy: parseFloat(data.accuracy),
-                    intercept: parseFloat(data.accuracy),
+                    intercept: parseFloat(data.intercept),
                     modified: data.modified,
                     parent_id: data.parent_id
                 });
                 console.log("Model Loaded: ", data.name);
             }).catch(error => console.log("Request failed", error));
-        fetch ("/api/getfactors/?model_id=" + this.state.model_id +"&format=json",
+        fetch ("/api/factors/?model_id=" + this.state.model_id +"&format=json",
             {
                 method: "GET",
                 headers: {"Content-Type" : "application/json;charset=UTF-8"},
@@ -159,8 +159,8 @@ class ModelView extends Component {
 
         this.testModel = this.testModel.bind(this);
         this.retrainModel = this.retrainModel.bind(this);
-        this.SaveModel = this.SaveModel.bind(this);
-        this.SaveFactor = this.SaveFactor.bind(this);
+        this.saveModel = this.saveModel.bind(this);
+        this.saveFactor = this.saveFactor.bind(this);
         this.updateWeight = this.updateWeight.bind(this);
     }
 
@@ -177,7 +177,7 @@ class ModelView extends Component {
             <p>
                 <button className="toolbar" onClick={this.retrainModel}>Re-Fit</button> &nbsp;
                 <button className="toolbar" onClick={this.testModel}>Test Model</button> &nbsp;
-                <button className="toolbar" onClick={this.SaveModel}>Save Model...</button>
+                <button className="toolbar" onClick={this.saveModel}>Save Model...</button>
             </p>
 
             <table id="myTable" className="myTable">
@@ -212,22 +212,37 @@ class ModelView extends Component {
     //Handler for Retrain Button
     retrainModel ()
     {
-
+        var factors = JSON.stringify(this.state.rows.slice(0,3));
+        //var factors = JSON.stringify(this.state.rows[0]);
+        console.log("TestCall!!!");
+        console.log(factors);
+        var requestURL ="/api/factors/";
+        console.log(requestURL);
+        fetch (requestURL,
+        //fetch ("/api/factor/",
+            {
+                method: "PATCH",
+                headers: {"Content-Type" : "application/json;charset=UTF-8"},
+                body: factors
+            }).then( res => res.json()).then(data =>
+            {
+                console.log(data);
+            }).catch(error => console.log("Request failed: ", error));
     }
 
-    SaveFactor(model_id, factor, isUpdate)
+    saveFactor(model_id, factor, isUpdate)
     {
         var requestType, requestURL;
         if (isUpdate === true)
         {
             requestType = "PUT";
-            requestURL = "/api/factor/"+factor.id+"/"
+            requestURL = "/api/factor/"+factor.id+"/";
             //console.log("Update a factor:");
         }
         else
         {
             requestType = "POST";
-            requestURL = "/api/factor/"
+            requestURL = "/api/factor/";
             factor.model_id = model_id
             //console.log("Add a new factor:");
         }
@@ -250,11 +265,11 @@ class ModelView extends Component {
     }
 
     //Handler for Save Button
-    SaveModel ()
+    saveModel ()
     {
         var saveName = prompt("Save As:", this.state.model_name);
         if (saveName == null ) return;
-        var currentModel, requestType, requestURL
+        var currentModel, requestType, requestURL;
         var isUpdate = false;
         if (this.state.model_name === saveName)
         {
@@ -273,7 +288,7 @@ class ModelView extends Component {
                 parent_id: this.state.parent_id
                 };
             requestType = "PUT";
-            requestURL = "/api/model/"+this.state.model_id+"/"
+            requestURL = "/api/model/"+this.state.model_id+"/";
             console.log("Overwriting a model: %d", this.state.model_id );
         }
         else
@@ -307,13 +322,13 @@ class ModelView extends Component {
             var count = 0;
             for (var i=0; i<factors.length; i++)
             {
-                if (this.SaveFactor(data.id, factors[i], isUpdate) === true) {count++;}
+                if (this.saveFactor(data.id, factors[i], isUpdate) === true) {count++;}
             }
             console.log("%d/%d factors saved.", factors.length, count);
             alert("Successfully Saved: " + saveName);
         }).catch(error =>
         {
-            console.log("Request failed: ", error)
+            console.log("Request failed: ", error);
             alert("Save Failure: " + error);
         });
     }
@@ -321,14 +336,15 @@ class ModelView extends Component {
     //Handler for Test Button
     testModel ()
     {
-        var factors = JSON.stringify(this.state.rows)
-        console.log("Test request: %s", factors);
+        var data = {factors: this.state.rows, intercept: this.state.intercept};
+        var data_json = JSON.stringify(data);
+        console.log("Test request: %s", data_json);
         console.log("Accuracy before test: %f", this.state.accuracy);
         fetch ("/api/testmodel/",
             {
                 method: "POST",
                 headers: {"Content-Type" : "application/json;charset=UTF-8"},
-                body: factors
+                body: data_json
             }).then( res => res.json()).then(data =>
             {
                 this.setState({accuracy: parseFloat(data.accuracy)});

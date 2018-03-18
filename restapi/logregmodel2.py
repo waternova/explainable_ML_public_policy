@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 from patsy import dmatrices
 from sklearn.linear_model import LogisticRegression
-from sklearn.cross_validation import train_test_split
-from restapi.models import MlModel
+from sklearn.model_selection import train_test_split
 
-#preparing training and testing data
+
+# preparing training and testing data
 def preparedata(df):
     y, X = dmatrices('G3_class ~ C(school) + age + C(sex) + C(address) + \
                   C(famsize) + C(Pstatus) + C(Medu ) + C(Fedu)+ C(Fjob)+C(traveltime)+C(studytime)+failures+\
@@ -15,15 +15,14 @@ def preparedata(df):
     y = np.ravel(y)
     return y,X
 
-#preparing list of coefficents
-def preparelist(coefdata, cols):
-    factors = pd.DataFrame(coefdata)  #valiable name changed
+
+# preparing list of coefficients
+def preparelist(coefdata, cols, intercept):
+    factors = pd.DataFrame(coefdata)  # variable name changed
     coeflist= []
     for col in cols:
         if col == 'Intercept':
-            #coeflist.append(0.366298367)
-            activemodel = MlModel.objects.filter(active=True)
-            coeflist.append(activemodel[0].intercept)
+            coeflist.append(intercept) # 0.366298367
         else:
             # print(factors)
             # print("factors[factors.name == col]['weight']", factors[factors.name == col]['weight'].values)
@@ -37,11 +36,11 @@ def preparelist(coefdata, cols):
                 print("did not find ", col)
     return coeflist
     
-#rebuilding model
-def logreg(coefdata): 
+# rebuilding model
+def logreg(coefdata, intercept):
     df_math = pd.read_csv('df_math_cleaned.csv')
     y, X = preparedata(df_math)
-    coeflist = preparelist(coefdata, X.columns)
+    coeflist = preparelist(coefdata, X.columns, intercept)
     X_train, X_test, y_train, y_test = \
         train_test_split(X, y, test_size=.9, random_state=42)
     model = LogisticRegression()
