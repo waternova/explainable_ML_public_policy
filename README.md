@@ -10,24 +10,24 @@ These instructions will get you a copy of the project up and running on your loc
 
 * If using Anaconda, run `conda create --name explainableml django`
 
-
+<br/>
 (Appilication/Backend)
 
-  Python 3.4 or greater,  Django 1.11
+&nbsp;&nbsp;&nbsp;&nbsp; Python 3.4 or greater,  Django 1.11
   
-  numpy, pandas, patsy, sklearn, scipy, django-cors-headers, django-filter
+&nbsp;&nbsp;&nbsp;&nbsp; numpy, pandas, patsy, sklearn, scipy, django-cors-headers, django-filter
   
-  * To install) pip -install [name] 
-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  * To install) pip -install [name] 
+<br/>
 
 (WebUI/Frontend)
 
-  <a href="https://nodejs.org/en/download/">node.js</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://nodejs.org/en/download/">node.js</a>
   
-  react-router-dom
+&nbsp;&nbsp;&nbsp;&nbsp;react-router-dom
   
-  * To install) npm install --save [name] 
-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  * To install) npm install --save [name] 
+<br/>
 
 
 
