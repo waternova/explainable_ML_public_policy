@@ -10,6 +10,7 @@ install:
   - npm install
 # command to run tests
 script:
+  - cd ../..
 #  - ./manage.py test restapi
   - cd Explainability/client
   - npm test
