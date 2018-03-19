@@ -15,7 +15,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 * WebUI/Frontend
   - <a href="https://nodejs.org/en/download/">node.js</a>
-  - react-router-dom
+  - react-router-dom, file-saver
       + To install) npm install --save [name] 
       
 * If using Anaconda, run `conda create --name explainableml django`
