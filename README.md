@@ -62,13 +62,17 @@ The frontend will automatically refresh the page when JavaScript files are chang
 
 You can view api documentation at `http://localhost:8000/`
 
-### Testing
+#### Testing
 
 You can run tests for python with 
 `python manage.py test restapi`
 
 And tests for React in `Explainability/client` with
 `npm test`
+
+#### Database updates
+
+Any time you update the database tables, you must also generate a migration script with `python manage.py makemigrations` Otherwise, tests will fail.
 
 ***
 
