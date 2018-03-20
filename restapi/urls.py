@@ -26,6 +26,7 @@ router.register(r'user', views.UserViewSet)
 urlpatterns = [
     url(r'^getmodels/', views.get_models, name='GetModels'),
     url(r'^factors/', views.factors, name='Factors'),
+    url(r'^delfactors/', views.del_factors, name='DelFactors'),
     url(r'^getcomments/', views.get_comments, name='GetComments'),
     url(r'^testmodel/', views.test_model, name='TestModel'),
     url(r'^', include(router.urls)),

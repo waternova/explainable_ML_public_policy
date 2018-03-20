@@ -22,6 +22,7 @@ class ModelListItem extends Component {
         var dt = new Date(this.state.modified);
         return (
             <tr>
+                <td className="check"><input id={this.state.id} type="checkbox"/></td>
                 <td className="id">{this.state.id}</td>
                 <td className="name">
                     <Link to={"/ModelView/"+this.state.id+"/"}>
@@ -57,9 +58,9 @@ class ModelList extends React.Component {
                 console.log("%d Models Loaded", data.length);
             }).catch(error => console.log("Request failed:", error));
 
-        //this.testModel = this.testModel.bind(this);
-        //this.retrainModel = this.retrainModel.bind(this);
-        //this.updateWeight = this.updateWeight.bind(this);
+        this.deleteModel = this.deleteModel.bind(this);
+        this.importModel = this.importModel.bind(this);
+        this.checkAll = this.checkAll.bind(this);
 	}
 
     render() {
@@ -70,9 +71,14 @@ class ModelList extends React.Component {
     return (
         <div className="wrapper">
             <h1>Model List</h1>
+            <p>
+            <button className="toolbar" onClick={this.deleteModel}>Delete</button> &nbsp;
+            <button className="toolbar" onClick={this.importModel}>Import a model...</button> &nbsp;
+            </p>
             <table id="myTable" className="myTable">
                 <thead>
                     <tr>
+                        <th className="check"><input id="checkAll" type="checkbox" onClick={this.checkAll}/></th>
                         <th className="id">Id</th>
                         <th className="name">Model Name</th>
                         <th className="accuracy">Accuracy</th>
@@ -86,6 +92,32 @@ class ModelList extends React.Component {
             </table>
         </div>
         );
+    }
+
+    deleteModel() {
+        var isUpdate = window.confirm("Do you want to delete selected models?");
+        if (isUpdate === false) return;
+        for (var i=0; i<this.state.models.length; i++) {
+            var model_id = this.state.models[i].id;
+            if (document.getElementById(model_id).checked) {
+                console.log("Trying to delete model #%d", model_id);
+                fetch ("/api/delfactors/?model_id=" + model_id, {method: "GET"},
+                ).then(res => console.log(res.status)
+                ).catch(error => console.log("Factor delete request failed:", error));
+                fetch ("/api/model/" + model_id + "/", {method: "DELETE"},
+                ).then(res => console.log(res.status)
+                ).catch(error => console.log("Model delete request failed:", error));
+            }
+        }
+    }
+
+    importModel() {
+    }
+
+    checkAll(event) {
+        for (var i=0; i<this.state.models.length; i++) {
+            document.getElementById(this.state.models[i].id).click();
+        }
     }
 }
 

@@ -17,7 +17,7 @@ class MlModelSerializer(serializers.ModelSerializer):
 class FactorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Factor
-        fields = ('id', 'alias', 'name', 'description', 'weight', 'balanced', 'enabled', 'model_id')
+        fields = ('id', 'alias', 'name', 'description', 'weight', 'is_binary', 'is_balanced', 'is_enabled', 'model_id')
         #list_serializer_class = FactorListSerializer
 
 '''

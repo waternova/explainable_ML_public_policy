@@ -57,8 +57,24 @@ def factors(request):
         if model_id is not None:
             factors_obj = Factor.objects.filter(model_id=int(model_id))
             serializer = FactorSerializer(factors_obj, many=True)
-            return Response({'factors': serializer.data}, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
     return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def del_factors(request):
+    if request.method == 'GET':
+        model_id = request.GET.get('model_id')
+        if model_id is not None:
+            factors_obj = Factor.objects.filter(model_id=int(model_id))
+            count = 0
+            for factor in factors_obj:
+                factor.delete()
+                count = count + 1
+            return Response("Deleted %d factors." % count, status=status.HTTP_200_OK)
+    return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
+
+
 '''
     elif request.method == 'PATCH':
             factors_obj = Factor.objects.all()
