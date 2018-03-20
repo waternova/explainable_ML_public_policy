@@ -1,19 +1,25 @@
 .labels {
-    width: 25%;
-    display: inline-table;
+    font-size: 0.8rem;
+    width: 100%;
+}
+
+.factor_name {
+    font-size: 1.0rem;
+    color: #A9A9A9;
+    width: 95%;
 }
 
 .alias {
-    width: 70%;
+    width: 95%;
 }
 
 .weight {
     text-align: right;
-    width: 70%;
+    width: 95%;
 }
 
 .description {
-    width: 100%;
+    font-size: 0.8rem;
 }
 
 .btn {

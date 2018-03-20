@@ -72,7 +72,7 @@ def del_factors(request):
             for factor in factors_obj:
                 factor.delete()
                 count = count + 1
-            return Response("Deleted %d factors." % count, status=status.HTTP_200_OK)
+            return Response({'deleted': count}, status=status.HTTP_200_OK)
     return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
 
 

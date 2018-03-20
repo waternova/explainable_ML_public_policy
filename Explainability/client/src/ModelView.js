@@ -136,14 +136,14 @@ class ModelView extends Component {
             }).then( res => res.json()).then(data => {
                 this.loadModel(data);
                 console.log("Model Loaded: ", data.name);
-                }).catch(error => console.log("Request failed", error));
-        fetch ("/api/factors/?model_id=" + this.state.model_id +"&format=json", {
-            method: "GET",
-            headers: {"Content-Type" : "application/json;charset=UTF-8"},
-            }).then( res => res.json()).then(data => {
-                this.loadFactors(data)
-                console.log("%d factors loaded.", data.length);
-            }).catch(error => console.log('Request failed', error));
+                fetch ("/api/factors/?model_id=" + this.state.model_id +"&format=json", {
+                    method: "GET",
+                    headers: {"Content-Type" : "application/json;charset=UTF-8"},
+                    }).then( res => res.json()).then(data => {
+                        this.loadFactors(data)
+                        console.log("%d factors loaded.", data.length);
+                    }).catch(error => console.log('Request failed', error));
+            }).catch(error => console.log("Request failed", error));
     }
 
     render() {
