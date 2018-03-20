@@ -1,6 +1,7 @@
 import React from 'react'
 import AbstractDropdown from './AbstractDropdown.js'
 import classNames from 'classnames'
+import './FactorDropdown.css';
 
 // https://github.com/fraserxu/react-dropdown/blob/master/index.js
 
@@ -19,34 +20,46 @@ class FactorDropdown extends AbstractDropdown {
       newComment: '',
     }
     this.mounted = true
-    this.handleDocumentClick = this.handleDocumentClick.bind(this)
-    this.fireChangeEvent = this.fireChangeEvent.bind(this)
-    this.handleNewComment = this.handleNewComment.bind(this)
-    this.handleNewCommentChange = this.handleNewCommentChange.bind(this)
-    this.handleFormSubmit = this.handleFormSubmit.bind(this)
+    this.handleFactorFormSubmit = this.handleFactorFormSubmit.bind(this)
+    this.closeDialog = this.closeDialog.bind(this)
   }
 
   buildMenu () {
     // TODO: add Cancel button to reset description to original
     return (
       <div>
-      <form onSubmit={this.handleFormSubmit}>
-        <div>Original Name: {this.props.originalName}</div>
-        <label>Visible Name: </label><input name="newAlias" value={this.props.newAlias} onChange={this.props.handleFactorFormUpdate} />
-        <label>Description: </label><textarea name="newDescription" value={this.props.newDescription} onChange={this.props.handleFactorFormUpdate} />
-        <label>Is Binary Variable: </label><input name="newIsBinary" type="checkbox" checked={this.props.newIsBinary} onChange={this.props.handleFactorFormUpdate} />
-        <br />
-        <input type="submit" value="Update" />
+      <form onSubmit={this.handleFactorFormSubmit}>
+        <div><b>Original Name: {this.props.originalName}</b></div>
+        <br/>
+        <label className="labels">Alias </label>
+        <input className="alias" id="alias" name="alias" defaultValue={this.props.alias} />
+        <br/><br/>
+        <label>Description </label>
+        <textarea className="description" id="description" name="description" defaultValue={this.props.description} />
+        <br/>
+        <input id="is_binary" name="is_binary" type="checkbox" defaultChecked={this.props.is_binary} />
+        <label>Binary Variable </label>
+        <br/>
+        <input id="is_enabled" name="is_enabled" type="checkbox" defaultChecked={this.props.is_enabled} />
+        <label>Enabled </label>
+        <br/> <br/>
+        <button className="btn" name="cancel" onClick={this.closeDialog}>Cancel</button>
+        <input className="btn" name="apply" type="submit" value="Apply" />
       </form>
+      <br/>
       </div>
     );
   }
 
-  handleFormSubmit(event) {
+  closeDialog() {
+    this.setState({ isOpen: false });
+  }
+
+  handleFactorFormSubmit(event) {
     // Needs to close this dropdown before delegating to Row state
     event.preventDefault();
-    this.setState({ isOpen: false });
-    this.props.handleFormSubmit(event);
+    this.closeDialog();
+    this.props.handleFactorFormSubmit(event);
   }
 
   render () {

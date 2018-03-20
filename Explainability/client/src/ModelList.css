@@ -8,9 +8,15 @@ table {border-collapse: collapse; width: 100%;}
 .comment-tooltip input {width: 80px;}
 .chart-bar {height: 10px; }
 .chart-bar-base {height: 100%; width: 2px; background-color: #111111;}
+.check {text-align: center; width: 20px;}
 .id {text-align: center; width: 40px;}
 .name {text-align: left;}
 .accuracy {text-align: right; width: 80px;}
 .modified {text-align: center; width: 200px;}
 .parent {text-align: center; width: 80px;}
 
+.toolbar {
+    width: 10rem;
+    height: 2.5rem;
+    font-size: 1.1rem;
+}

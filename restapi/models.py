@@ -5,28 +5,28 @@ from django.db import models
 
 class MlModel(models.Model):
     name = models.CharField(max_length=255)
-    description = models.TextField(max_length=65535, null=True)
+    description = models.TextField(max_length=65535, null=True, blank=True)
     accuracy = models.FloatField(null=True)
     intercept = models.FloatField(null=True)
     parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     modified = models.DateTimeField(auto_now_add=False, blank=True)
-#   active = models.BooleanField(default=False)
 
 
 class Factor(models.Model):
     name = models.CharField(max_length=255)
     alias = models.CharField(max_length=255)
-    description = models.TextField(max_length=65535, null=True)
+    description = models.TextField(max_length=65535, null=True, blank=True)
     weight = models.FloatField()
-    balanced = models.BooleanField()
-    enabled = models.BooleanField()
+    is_balanced = models.BooleanField(default=False)
+    is_binary = models.BooleanField(default=False)
+    is_enabled = models.BooleanField(default=True)
     model_id = models.ForeignKey('MlModel', on_delete=models.CASCADE)
 
 
 class Comment (models.Model):
     user_name = models.CharField(max_length=255)
     updated_datetime = models.DateTimeField()
-    comment_text = models.TextField(max_length=65535)
+    comment_text = models.TextField(max_length=65535, null=True, blank=True)
     factor_id = models.ForeignKey('Factor', on_delete=models.CASCADE)
 
 

@@ -8,31 +8,32 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-(Appilication/Backend)
+* Appilication/Backend
+  - Python 3.4 or greater,  Django 1.11
+  - numpy, pandas, patsy, sklearn, scipy, django-cors-headers, django-filter
+    + To install: pip -install [name]
 
-  Python 3.4 or greater
-  
-  Django 1.11, numpy, pandas, patsy, sklearn, scipy, django-cors-headers
-  
-(WebUI/Frontend)
-
-  <a href="https://nodejs.org/en/download/">node.js</a>
-
+* WebUI/Frontend
+  - <a href="https://nodejs.org/en/download/">node.js</a>
+  - react-router-dom, file-saver
+      + To install) npm install --save [name] 
+      
 * If using Anaconda, run `conda create --name explainableml django`
+
 
 ### Deploying
 
-Appilication/Backednd: Run 
+* Appilication/Backednd: Run 
 
-`python manage.py runserver`
+  - `python manage.py runserver`
 
-WebUI/Frontend: Run 
+* WebUI/Frontend: Run 
 
-`npm start` 
-
-in Explainability/client directory
+  - `npm start` (in Explainability/client directory)
 
 * Use different terminal instances for each
+
+***
 
 ### Development
 
@@ -59,6 +60,8 @@ The frontend server at `http://localhost:3000/` will automatically load in your 
 The frontend will automatically refresh the page when JavaScript files are changed.
 
 You can view api documentation at `http://localhost:8000/`
+
+***
 
 ### Documents
 
