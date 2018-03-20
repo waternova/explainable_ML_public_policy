@@ -1,0 +1,16 @@
+language: python
+python:
+  - "3.4"
+node_js:
+  - "6.9"
+# command to install dependencies (already run by default)
+install:
+  - pip install -r requirements.txt
+  - cd Explainability/client
+  - npm install
+# command to run tests
+script:
+  - cd ../..
+  - ./manage.py test restapi
+  - cd Explainability/client
+  - npm test
