@@ -11,14 +11,15 @@ These instructions will get you a copy of the project up and running on your loc
 * Appilication/Backend
   - Python 3.4 or greater,  Django 1.11
   - numpy, pandas, patsy, sklearn, scipy, django-cors-headers, django-filter
-    + To install: pip -install [name]
+    + To install: `pip install -r requirements.txt`
 
 * WebUI/Frontend
   - <a href="https://nodejs.org/en/download/">node.js</a>
   - react-router-dom, file-saver
-      + To install) npm install --save [name] 
-      
-* If using Anaconda, run `conda create --name explainableml django`
+      + To install: cd Explainability/client; npm install 
+
+* If using virtualenv, create a new virtualenv before running `pip install -r requirements.txt`   
+* If using Anaconda, run `conda create --name explainableml`
 
 
 ### Deploying
@@ -60,6 +61,14 @@ The frontend server at `http://localhost:3000/` will automatically load in your 
 The frontend will automatically refresh the page when JavaScript files are changed.
 
 You can view api documentation at `http://localhost:8000/`
+
+### Testing
+
+You can run tests for python with 
+`python manage.py test restapi`
+
+And tests for React in `Explainability/client` with
+`npm test`
 
 ***
 
