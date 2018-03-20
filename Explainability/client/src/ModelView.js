@@ -341,7 +341,7 @@ class ModelView extends Component {
         var data = {model:currentModel, factors:this.state.rows }
         var data_json = JSON.stringify(data);
         var blob = new Blob([data_json], {type: "application/json;charset=utf-8"});
-        FileSaver.saveAs(blob, this.state.model_name+".json");
+        FileSaver(blob, this.state.model_name+".json");
     }
 
     handleImportClick() {
