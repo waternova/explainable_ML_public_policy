@@ -104,3 +104,12 @@ input {
 .hidden {
     display:none;
 }
+
+.factor_enabled {
+    color: #000000;
+}
+
+.factor_disabled {
+    color: #B9B9B9;
+    text-decoration:line-through;
+}

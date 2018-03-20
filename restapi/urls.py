@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^delfactors/', views.del_factors, name='DelFactors'),
     url(r'^getcomments/', views.get_comments, name='GetComments'),
     url(r'^testmodel/', views.test_model, name='TestModel'),
+    url(r'^retrainmodel/', views.retrain_model, name='RetrainModel'),
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     #url(r'^model/$', views.MlModelListView.as_view()),

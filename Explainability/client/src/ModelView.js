@@ -21,7 +21,7 @@ class Row extends Component {
       is_balanced: value.is_balanced,
       is_enabled: value.is_enabled,
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.handleWeightChange = this.handleWeightChange.bind(this);
     this.handleBalanceSelect = this.handleBalanceSelect.bind(this);
     this.handleFactorFormSubmit = this.handleFactorFormSubmit.bind(this);
   }
@@ -39,14 +39,13 @@ class Row extends Component {
       width: String(width) + 'px',
       marginLeft: String(leftMargin) + 'px',
     }
-    const description = this.state.newDescription || "";
     const balanceButtonClassNames = classNames({
         'balance-button': true,
         'selected': this.state.is_balanced,
     });
     return (
       <tr>
-        <td>{this.state.alias}
+        <td><span className={this.state.is_enabled ? "factor_enabled" : "factor_disabled"}>{this.state.alias}</span>
           <FactorDropdown
             className="factor-detail"
             placeholder="..."
@@ -69,12 +68,12 @@ class Row extends Component {
                 disabled={!this.state.is_binary}
                 onClick={this.handleBalanceSelect} />
         </td>
-        <td><input defaultValue={this.state.weight} onChange={this.handleChange}></input></td>
+        <td><input defaultValue={this.state.weight} onChange={this.handleWeightChange}></input></td>
       </tr>
     );
   }
 
-  handleChange(event) {
+  handleWeightChange(event) {
     var newWeight = parseFloat(event.target.value);
     if (isNaN (newWeight) === false)
     {
@@ -87,7 +86,7 @@ class Row extends Component {
     event.preventDefault();
     for (var i=0; i<event.target.length; i++) {
       var name = event.target[i].name;
-      if (name!="apply" && name!="cancel"){
+      if (name!=="apply" && name!=="cancel"){
         var value = event.target[i].type === 'checkbox' ? event.target[i].checked : event.target[i].value;
         /*if (name === "weight") {
           var newWeight = parseFloat(value);
@@ -158,7 +157,7 @@ class ModelView extends Component {
             <h3> {this.state.description}</h3>
             <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
             <p>
-                <button className="toolbar" onClick={this.retrainModel}>Re-Fit</button> &nbsp;
+                <button className="toolbar" onClick={this.retrainModel}>Retrain</button> &nbsp;
                 <button className="toolbar" onClick={this.testModel}>Test Model</button> &nbsp;
                 <button className="toolbar" onClick={this.saveModel}>Save Model...</button> &nbsp;
                 <button className="toolbar" onClick={this.exportModel}>Export Model...</button> &nbsp;
@@ -186,14 +185,9 @@ class ModelView extends Component {
     //Handler for Factor modification
     updateFactor(event) {
         let copyRows = [...this.state.rows];
-        console.log("%s of Factor #[%d] update:", event.field, event.index, event.value);
+        console.log("%s of Factor[%d] updated:", event.field, event.index, event.value);
         copyRows[event.index][event.field] = event.value;
         this.setState({rows: copyRows});
-    }
-
-    //Handler for Retrain Button
-    retrainModel ()
-    {
     }
 
     saveFactor(model_id, factor, isUpdate)
@@ -298,7 +292,7 @@ class ModelView extends Component {
     {
         var data = {factors: this.state.rows, intercept: this.state.intercept};
         var data_json = JSON.stringify(data);
-        console.log("Test request: %s", data_json);
+        console.log("Test request: %s", this.state.model_name);
         console.log("Accuracy before test: %f", this.state.accuracy);
         fetch ("/api/testmodel/",
             {
@@ -309,6 +303,29 @@ class ModelView extends Component {
             {
                 this.setState({accuracy: parseFloat(data.accuracy)});
                 console.log("Accuracy after test: %f", this.state.accuracy);
+            }).catch(error => console.log("Request failed: ", error));
+    }
+
+    //Handler for Retrain Button
+    retrainModel ()
+    {
+        var data = {factors: this.state.rows, intercept: this.state.intercept};
+        var data_json = JSON.stringify(data);
+        console.log("Retrain request: %s", this.state.model_name);
+        fetch ("/api/retrainmodel/",
+            {
+                method: "POST",
+                headers: {"Content-Type" : "application/json;charset=UTF-8"},
+                body: data_json
+            }).then( res => res.json()).then(data =>
+            {
+                var count = 0;
+                for (var i=0; i<data.length; i++) {
+                    if (data[i].is_enabled) count++;
+                }
+                console.log("%d factors are changed", count);
+                this.setState({rows: []});
+                this.setState({rows: data});
             }).catch(error => console.log("Request failed: ", error));
     }
 
@@ -375,7 +392,7 @@ class ModelView extends Component {
             alert('The File APIs are not fully supported by your browser.');
             return;
         }
-        var reader = new FileReader
+        var reader = new FileReader();
         var fileInput = document.getElementById('file');
         var file = fileInput.files[0];
         reader.onload = this.importModelEnd;

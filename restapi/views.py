@@ -19,6 +19,7 @@ from rest_framework.response import Response
 
 import json
 from restapi.logregmodel2 import logreg
+from restapi.logregmodel2 import retrain
 
 
 class MLModelViewSet(viewsets.ModelViewSet):
@@ -117,5 +118,13 @@ def test_model(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         res = {'accuracy': logreg(data["factors"], data["intercept"])}
+        return Response(res, status=status.HTTP_200_OK)
+    return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def retrain_model(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        res = retrain(data["factors"], data["intercept"])
         return Response(res, status=status.HTTP_200_OK)
     return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
