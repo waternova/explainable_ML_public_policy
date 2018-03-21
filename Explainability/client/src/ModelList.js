@@ -42,9 +42,12 @@ class ModelList extends React.Component {
     {
 		super(props);
         this.deleteModel = this.deleteModel.bind(this);
-        this.importModel = this.importModel.bind(this);
         this.checkAll = this.checkAll.bind(this);
         this.refreshModel = this.refreshModel.bind(this);
+        this.handleImportClick=this.handleImportClick.bind(this);
+        this.importModelBegin = this.importModelBegin.bind(this);
+        this.importModelEnd = this.importModelEnd.bind(this);
+        this.importFactor = this.importFactor.bind(this);
 
         this.state = {
             models: []
@@ -78,7 +81,8 @@ class ModelList extends React.Component {
             <h1>Model List</h1>
             <p>
             <button className="toolbar" onClick={this.deleteModel}>Delete</button> &nbsp;
-            <button className="toolbar" onClick={this.importModel}>Import a model...</button> &nbsp;
+            <button className="toolbar" onClick={this.handleImportClick}>Import a model...</button> &nbsp;
+            <input type="file" className="hidden" id="file_import" name="file" accept=".json" onChange={this.importModelBegin}/>
             </p>
             <table id="myTable" className="myTable">
                 <thead>
@@ -121,8 +125,74 @@ class ModelList extends React.Component {
         }
         this.refreshModel();
     }
+    handleImportClick() {
+        document.getElementById('file_import').click();
+    }
 
-    importModel() {
+    importFactor(model_id, factor)
+    {
+        factor.model_id = model_id
+        var factorJson = JSON.stringify(factor);
+        fetch ("/api/factor/",
+        {
+            method: "POST",
+            headers: {"Content-Type" : "application/json;charset=UTF-8"},
+            body: factorJson
+        }).then( res => res.json()).then(data =>
+        {
+            return true;
+        }).catch(error =>
+        {
+            console.log('Request failed: ', error)
+            return false;
+        });
+        return true;
+    }
+
+    importModelEnd(event) {
+        try {
+            var data = JSON.parse(event.target.result);
+        } catch(e) {
+            alert("Cannot parse the file as JSON.");
+            return;
+        }
+        console.log(data);
+        if (!("model" in data && "factors" in data))
+        {
+            alert("Cannot find a model data.");
+            return;
+        }
+        var model = data["model"];
+        var factors = data["factors"];
+        var modelJson = JSON.stringify(model);
+        fetch ("/api/model/", {
+            method: "POST",
+            headers: {"Content-Type" : "application/json;charset=UTF-8"},
+            body: modelJson
+        }).then( res => res.json()).then(data => {
+            console.log("Model %d added", data.id);
+            var count = 0;
+            for (var i=0; i<factors.length; i++) {
+                if (this.importFactor(data.id, factors[i]) === true) {count++;}
+            }
+            console.log("%d/%d factors Imported.", factors.length, count);
+            this.refreshModel();
+        }).catch(error => {
+            console.log("Request failed: ", error);
+        });
+    }
+
+    importModelBegin(event) {
+        if (!(window.File && window.FileReader && window.FileList && window.Blob))
+        {
+            alert('The File APIs are not fully supported by your browser.');
+            return;
+        }
+        var reader = new FileReader();
+        var fileInput = document.getElementById('file_import');
+        var file = fileInput.files[0];
+        reader.onload = this.importModelEnd;
+        reader.readAsText(file);
     }
 
     checkAll(event) {
