@@ -10,6 +10,7 @@
 # keyring >= 4.1.1            # Minimum version 4.1.1
 # coverage != 3.5             # Version Exclusion. Anything except version 3.5
 # Mopidy-Dirble ~= 1.1        # Compatible release. Same as >= 1.1, == 1.*
+setuptools
 astroid==1.5.3
 attrs==17.4.0
 certifi==2016.2.28
