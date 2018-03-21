@@ -124,9 +124,9 @@ class ModelView extends Component {
         this.saveFactor = this.saveFactor.bind(this);
         this.updateFactor = this.updateFactor.bind(this);
         this.exportModel = this.exportModel.bind(this);
-        this.importModelBegin = this.importModelBegin.bind(this);
-        this.importModelEnd = this.importModelEnd.bind(this);
-        this.handleImportClick = this.handleImportClick.bind(this);
+        //this.importModelBegin = this.importModelBegin.bind(this);
+        //this.importModelEnd = this.importModelEnd.bind(this);
+        //this.handleImportClick = this.handleImportClick.bind(this);
         this.loadModel = this.loadModel.bind(this);
         this.loadFactors = this.loadFactors.bind(this);
 
@@ -151,6 +151,8 @@ class ModelView extends Component {
         return (<Row key={entry.id} index={number} value={entry} onChange={this.updateFactor}/>);
         })
 
+//                <button className="toolbar" onClick={this.handleImportClick}>Import Model...</button> &nbsp;
+//                <input type="file" className="hidden" id="file" name="file" accept=".json" onChange={this.importModelBegin}/>
     return (
         <div className="wrapper">
             <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
@@ -159,10 +161,9 @@ class ModelView extends Component {
             <p>
                 <button className="toolbar" onClick={this.retrainModel}>Retrain</button> &nbsp;
                 <button className="toolbar" onClick={this.testModel}>Test Model</button> &nbsp;
-                <button className="toolbar" onClick={this.saveModel}>Save Model...</button> &nbsp;
+                <button id="overwrite" className="toolbar" onClick={this.saveModel}>Save</button> &nbsp;
+                <button id="saveas" className="toolbar" onClick={this.saveModel}>Save as...</button> &nbsp;
                 <button className="toolbar" onClick={this.exportModel}>Export Model...</button> &nbsp;
-                <button className="toolbar" onClick={this.handleImportClick}>Import Model...</button> &nbsp;
-                <input type="file" className="hidden" id="file" name="file" accept=".json" onChange={this.importModelBegin}/>
             </p>
             <table id="myTable" className="myTable">
                 <thead>
@@ -225,18 +226,18 @@ class ModelView extends Component {
     }
 
     //Handler for Save Button
-    saveModel ()
+    saveModel (event)
     {
-        var saveName = prompt("Save As:", this.state.model_name);
-        if (saveName == null ) return;
+        var isUpdate = event.target.id=="overwrite" ? true : false ;
+        var popup_title = isUpdate ? "Overwrite existing model:" : "Save as a new model:"
+        var saveName = prompt(popup_title, this.state.model_name);
+        if (saveName == null || saveName.length == 0 ) return;
         var currentModel, requestType, requestURL;
-        var isUpdate = false;
-        isUpdate = window.confirm("Do you want to overwrite the current model?");
         if (isUpdate === true)
         {
             //Overwrite the model
             currentModel = {
-                name: this.state.model_name,
+                name: saveName,
                 description: this.state.description,
                 accuracy: this.state.accuracy,
                 intercept: this.state.intercept,
@@ -246,6 +247,7 @@ class ModelView extends Component {
             requestType = "PUT";
             requestURL = "/api/model/"+this.state.model_id+"/";
             console.log("Overwriting a model: %d", this.state.model_id );
+            this.setState({model_name: saveName});
         }
         else
         {
@@ -279,11 +281,11 @@ class ModelView extends Component {
                 if (this.saveFactor(data.id, factors[i], isUpdate) === true) {count++;}
             }
             console.log("%d/%d factors saved.", factors.length, count);
-            alert("Successfully Saved: " + saveName);
+            alert("Successfully Saved: \n" + saveName);
         }).catch(error =>
         {
             console.log("Request failed: ", error);
-            alert("Save Failure: " + error);
+            alert("Save Failure: \n" + error);
         });
     }
 
@@ -341,11 +343,8 @@ class ModelView extends Component {
         var data = {model:currentModel, factors:this.state.rows }
         var data_json = JSON.stringify(data);
         var blob = new Blob([data_json], {type: "application/json;charset=utf-8"});
+        console.log(blob);
         FileSaver(blob, this.state.model_name+".json");
-    }
-
-    handleImportClick() {
-        document.getElementById('file').click();
     }
 
     loadModel (data) {
@@ -365,6 +364,10 @@ class ModelView extends Component {
             data[i].model_id = this.state.model_id;
             this.setState({rows:this.state.rows.concat(data[i])});
         }
+    }
+/*
+    handleImportClick() {
+        document.getElementById('file').click();
     }
 
     importModelEnd(event) {
@@ -398,6 +401,7 @@ class ModelView extends Component {
         reader.onload = this.importModelEnd;
         reader.readAsText(file);
     }
+*/
 }
 
 
