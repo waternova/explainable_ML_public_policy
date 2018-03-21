@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.4"
+  - "3.5"
 node_js:
   - "6.9"
 # command to install dependencies (already run by default)
