@@ -39,7 +39,7 @@ def preparelist(factors, cols, intercept):
     return coefficient_list
     
 # rebuilding model
-def logreg(factors, intercept):
+def test_model(factors, intercept):
     # "factors" has all the values such as is_enabled, is_binary, is_balanced
     # for example)
     # print(factors[0]["alias"])
@@ -48,6 +48,9 @@ def logreg(factors, intercept):
     ##
     df_math = pd.read_csv('df_math_cleaned.csv')
     y, X = preparedata(df_math)
+    for factor in factors:
+        if not factor["is_enabled"]:
+            X = X.drop(factor["name"], axis=1)
     coefficient_list = preparelist(factors, X.columns, intercept)
     X_train, X_test, y_train, y_test = \
         train_test_split(X, y, test_size=.9, random_state=42)
@@ -60,15 +63,20 @@ def logreg(factors, intercept):
 def retrain(factors, dataFile= 'df_math_cleaned.csv'):
     df_math = pd.read_csv(dataFile)
     y, X = preparedata(df_math)
-    
+    for factor in factors:
+        if not factor["is_enabled"]:
+            X = X.drop(factor["name"], axis=1)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
     model = LogisticRegression()
     model.fit(X_train, y_train)
-    # TODO: support enabling/disabling factors
+    # enabling/disabling factors
     for factor in factors:
-        col_num_in_X = X.dtypes.index.tolist().index(factor['name'])
-        factor["weight"] = model.coef_[0][col_num_in_X]
+        col_list = X.dtypes.index.tolist()
+        factor_name = factor['name']
+        if factor_name in col_list:
+            col_num_in_X = col_list.index(factor_name)
+            factor["weight"] = model.coef_[0][col_num_in_X]
     #     if factor["is_enabled"]:
     #         factor["weight"] = factor["weight"] * (-1.0)
     # TODO: figure out best way to also recalculate accuracy
-    return factors
+    return {'factors': factors}

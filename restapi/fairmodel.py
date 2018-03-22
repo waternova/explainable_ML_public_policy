@@ -1,18 +1,16 @@
 import numpy as np
 import pandas as pd
 from itertools import combinations
-from patsy import dmatrices
 from sklearn.linear_model import LogisticRegression
-from sklearn.cross_validation import train_test_split
 from sklearn import metrics
-from sklearn.cross_validation import cross_val_score
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+# import restapi.logregmodel2 as logregmodel2
 
-def fair(model, protectiveAtt, dataFile= 'df_math_cleaned.csv'):
+def get_fair_thresholds(model, protectiveAtt, dataFile= 'df_math_cleaned.csv'):
     df_math = pd.read_csv(dataFile)
-    y, X = preparedata(df_math)
+    y, X = logregmodel2.preparedata(df_math)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
     #splitting data into test for each group in protective attribute
     X_test_class1 = X_test[X_test[protectiveAtt]==1]
@@ -43,16 +41,16 @@ def fair(model, protectiveAtt, dataFile= 'df_math_cleaned.csv'):
     df_class2_thresh['tpr'] = tpr_class2
     df_class2_thresh['threshold'] = threshold_class2
 
-    #Plotting ROC curves
-    plt.title('Receiver Operating Characteristic')
-    plt.plot(fpr_class1, tpr_class1, 'b', label = 'AUC = %0.2f' % roc_auc_class1)
-    plt.plot(fpr_class2, tpr_class2, 'b', label = 'AUC = %0.2f' % roc_auc_class2)
-    plt.legend(loc = 'lower right')
-    plt.plot([0, 1], [0, 1],'r--')
-    plt.xlim([0, 1])
-    plt.ylim([0, 1])
-    plt.ylabel('True Positive Rate')
-    plt.xlabel('False Positive Rate')
+    # #Plotting ROC curves
+    # plt.title('Receiver Operating Characteristic')
+    # plt.plot(fpr_class1, tpr_class1, 'b', label = 'AUC = %0.2f' % roc_auc_class1)
+    # plt.plot(fpr_class2, tpr_class2, 'b', label = 'AUC = %0.2f' % roc_auc_class2)
+    # plt.legend(loc = 'lower right')
+    # plt.plot([0, 1], [0, 1],'r--')
+    # plt.xlim([0, 1])
+    # plt.ylim([0, 1])
+    # plt.ylabel('True Positive Rate')
+    # plt.xlabel('False Positive Rate')
 
 
     greatest_tpr = None
@@ -69,23 +67,25 @@ def fair(model, protectiveAtt, dataFile= 'df_math_cleaned.csv'):
                 else:
                     new_greatest = 'class1'
                 if new_greatest != greatest_tpr:
-                    plt.plot(fpr1,tpr1,'ro')
+                    plt.plot(fpr_c1,tpr_c1,'ro')
+                    plt.plot(fpr_c2,tpr_c2,'ro')
                     thresholds.append((threshold_c1, threshold_c2))
                 greatest_tpr = new_greatest
                 break
 
 
-    plt.show()
-    plt.savefig('roc_curve.png')
+    # plt.show()
+    # plt.savefig('roc_curve.png')
     # print(len(thresholds))
 
     #Calculate final threshold
-    final_threshold = float('inf')
+    final_threshold_avg = float('inf')
+    final_thresholds = None
     for x in thresholds:
         avg_threshold = (x[0] + x[1])/2
-        if abs(avg_threshold - 0.50) < abs(final_threshold-0.50):
-            final_threshold = avg_threshold
-
-    return final_threshold
+        if abs(avg_threshold - 0.50) < abs(final_threshold_avg-0.50):
+            final_threshold_avg = avg_threshold
+            final_thresholds = x
+    return final_thresholds
   
 

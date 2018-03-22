@@ -319,15 +319,9 @@ class ModelView extends Component {
                 method: "POST",
                 headers: {"Content-Type" : "application/json;charset=UTF-8"},
                 body: data_json
-            }).then( res => res.json()).then(data =>
-            {
-                var count = 0;
-                for (var i=0; i<data.length; i++) {
-                    if (data[i].is_enabled) count++;
-                }
-                console.log("%d factors are changed", count);
+            }).then( res => res.json()).then(data => {
                 this.setState({rows: []});
-                this.setState({rows: data});
+                this.setState({rows: data.factors});
             }).catch(error => console.log("Request failed: ", error));
     }
 

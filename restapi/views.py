@@ -18,7 +18,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 import json
-from restapi.logregmodel2 import logreg
+from restapi.logregmodel2 import test_model as test_logreg_model
 from restapi.logregmodel2 import retrain
 
 
@@ -117,7 +117,7 @@ def get_comments(request):
 def test_model(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
-        res = {'accuracy': logreg(data["factors"], data["intercept"])}
+        res = {'accuracy': test_logreg_model(data["factors"], data["intercept"])}
         return Response(res, status=status.HTTP_200_OK)
     return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
 
@@ -129,11 +129,8 @@ def retrain_model(request):
             model_id = 1
         else:
             model_id = data["model_id"]
-        factors_obj = Factor.objects.filter(model_id=int(model_id))
-        serializer = FactorSerializer(factors_obj, many=True)
-        # serializer.data
         # TODO: look up dataFile from database
-        res = retrain(data["factors"], dataFile='df_math_cleaned.csv')
-        return Response(res, status=status.HTTP_200_OK)
+        model = retrain(data["factors"], dataFile='df_math_cleaned.csv')
+        return Response(model, status=status.HTTP_200_OK)
     else:
         return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
