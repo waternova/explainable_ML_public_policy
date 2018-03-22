@@ -99,6 +99,7 @@ class Row extends Component {
 
   handleBalanceSelect(event) {
     this.props.onChange({index: this.state.index, field: "is_balanced", value: !this.props.value.is_balanced});
+    this.props.clearOtherBalanceSelect(this.state.id);
   }
 }
 
@@ -129,6 +130,7 @@ class ModelView extends Component {
         //this.handleImportClick = this.handleImportClick.bind(this);
         this.loadModel = this.loadModel.bind(this);
         this.loadFactors = this.loadFactors.bind(this);
+        this.clearOtherBalanceSelect = this.clearOtherBalanceSelect.bind(this);
 
         fetch ("/api/model/" + this.state.model_id + "/?format=json", {
             method: "GET",
@@ -148,7 +150,12 @@ class ModelView extends Component {
 
     render() {
         const rows = this.state.rows.map((entry, number) => {
-            return (<Row key={entry.id} index={number} value={entry} onChange={this.updateFactor}/>);
+            return (<Row 
+              key={entry.id} 
+              index={number} 
+              value={entry} 
+              onChange={this.updateFactor} 
+              clearOtherBalanceSelect={this.clearOtherBalanceSelect}/>);
         })
 
 //                <button className="toolbar" onClick={this.handleImportClick}>Import Model...</button> &nbsp;
@@ -191,6 +198,14 @@ class ModelView extends Component {
         console.log("%s of Factor[%d] updated:", event.field, event.index, event.value);
         copyRows[event.index][event.field] = event.value;
         this.setState({rows: copyRows});
+    }
+
+    clearOtherBalanceSelect(idSelected) {
+      for (let rowData of this.state.rows) {
+        if (rowData.id !== idSelected && rowData.is_balanced) {
+          rowData.is_balanced = false;
+        }
+      }
     }
 
     saveFactor(model_id, factor, isUpdate)
