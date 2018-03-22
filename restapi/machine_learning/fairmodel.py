@@ -6,11 +6,12 @@ from sklearn import metrics
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 # import matplotlib.pyplot as plt
-# import restapi.logregmodel2 as logregmodel2
+from restapi.machine_learning.util import preparedata
 
+# Gets thresholds with positive class first
 def get_fair_thresholds(model, protectiveAtt, dataFile= 'df_math_cleaned.csv'):
     df_math = pd.read_csv(dataFile)
-    y, X = logregmodel2.preparedata(df_math)
+    y, X = preparedata(df_math)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
     #splitting data into test for each group in protective attribute
     X_test_class1 = X_test[X_test[protectiveAtt]==1]
@@ -22,13 +23,13 @@ def get_fair_thresholds(model, protectiveAtt, dataFile= 'df_math_cleaned.csv'):
     probs_class1 = model.predict_proba(X_test_class1)
     preds_class1 = probs_class1[:,1]
     fpr_class1, tpr_class1, threshold_class1 = metrics.roc_curve(y_test_class1, preds_class1)
-    roc_auc_class1 = metrics.auc(fpr_class1, tpr_class1)
+    # roc_auc_class1 = metrics.auc(fpr_class1, tpr_class1)
 
     #Creating ROC for class 2
     probs_class2 = model.predict_proba(X_test_class2)
     preds_class2 = probs_class2[:,1]
     fpr_class2, tpr_class2, threshold_class2 = metrics.roc_curve(y_test_class2, preds_class2)
-    roc_auc_class2 = metrics.auc(fpr_class2, tpr_class2)
+    # roc_auc_class2 = metrics.auc(fpr_class2, tpr_class2)
 
     #Creating threshold tables
     df_class1_thresh = pd.DataFrame()
@@ -67,8 +68,8 @@ def get_fair_thresholds(model, protectiveAtt, dataFile= 'df_math_cleaned.csv'):
                 else:
                     new_greatest = 'class1'
                 if new_greatest != greatest_tpr:
-                    plt.plot(fpr_c1,tpr_c1,'ro')
-                    plt.plot(fpr_c2,tpr_c2,'ro')
+                    # plt.plot(fpr_c1,tpr_c1,'ro')
+                    # plt.plot(fpr_c2,tpr_c2,'ro')
                     thresholds.append((threshold_c1, threshold_c2))
                 greatest_tpr = new_greatest
                 break

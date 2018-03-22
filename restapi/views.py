@@ -18,8 +18,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 import json
-from restapi.logregmodel2 import test_model as test_logreg_model
-from restapi.logregmodel2 import retrain
+from restapi.machine_learning.logregmodel2 import test_model as test_logreg_model
+from restapi.machine_learning.logregmodel2 import retrain
+from restapi.machine_learning.fairmodel import get_fair_thresholds
 
 
 class MLModelViewSet(viewsets.ModelViewSet):
@@ -130,7 +131,16 @@ def retrain_model(request):
         else:
             model_id = data["model_id"]
         # TODO: look up dataFile from database
-        model = retrain(data["factors"], dataFile='df_math_cleaned.csv')
-        return Response(model, status=status.HTTP_200_OK)
+        model, model_description = retrain(data["factors"], dataFile='df_math_cleaned.csv')
+        # TODO: error if two factors are balanced
+        protected_attr = None
+        for factor in data["factors"]:
+            if factor["is_balanced"]:
+                protected_attr = factor["name"]
+        if protected_attr is not None:
+            thresholds = get_fair_thresholds(model, protected_attr, dataFile='df_math_cleaned.csv')
+            model_description["positive_threshold"] = thresholds[0]
+            model_description["negative_threshold"] = thresholds[1]
+        return Response(model_description, status=status.HTTP_200_OK)
     else:
         return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)

@@ -18,7 +18,6 @@ class Row extends Component {
       index: this.props.index,
       description: value.description,
       is_binary: value.is_binary,
-      is_balanced: value.is_balanced,
       is_enabled: value.is_enabled,
     };
     this.handleWeightChange = this.handleWeightChange.bind(this);
@@ -41,7 +40,7 @@ class Row extends Component {
     }
     const balanceButtonClassNames = classNames({
         'balance-button': true,
-        'selected': this.state.is_balanced,
+        'selected': this.props.value.is_balanced,
     });
     return (
       <tr>
@@ -54,7 +53,7 @@ class Row extends Component {
             alias={this.state.alias}
             weight={this.state.weight}
             is_binary={this.state.is_binary}
-            is_balanced={this.state.is_balanced}
+            is_balanced={this.props.value.is_balanced}
             is_enabled={this.state.is_enabled}
             handleFactorFormSubmit={this.handleFactorFormSubmit} />
         </td>
@@ -99,13 +98,12 @@ class Row extends Component {
   }
 
   handleBalanceSelect(event) {
-    this.setState({is_balanced: !this.state.is_balanced});
+    this.props.onChange({index: this.state.index, field: "is_balanced", value: !this.props.value.is_balanced});
   }
 }
 
 class ModelView extends Component {
-    constructor (props)
-    {
+    constructor (props) {
         super(props);
         this.state = {
             model_id: props.match.params.id,
@@ -115,8 +113,10 @@ class ModelView extends Component {
             intercept: 0.0,
             modified: "",
             parent_id: null,
-            rows: []
-            };
+            rows: [],
+            positiveThreshold: null,
+            negativeThreshold: null,
+        };
 
         this.testModel = this.testModel.bind(this);
         this.retrainModel = this.retrainModel.bind(this);
@@ -148,38 +148,40 @@ class ModelView extends Component {
 
     render() {
         const rows = this.state.rows.map((entry, number) => {
-        return (<Row key={entry.id} index={number} value={entry} onChange={this.updateFactor}/>);
+            return (<Row key={entry.id} index={number} value={entry} onChange={this.updateFactor}/>);
         })
 
 //                <button className="toolbar" onClick={this.handleImportClick}>Import Model...</button> &nbsp;
 //                <input type="file" className="hidden" id="file" name="file" accept=".json" onChange={this.importModelBegin}/>
-    return (
-        <div className="wrapper">
-            <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
-            <h3> {this.state.description}</h3>
-            <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
-            <p>
-                <button className="toolbar" onClick={this.retrainModel}>Retrain</button> &nbsp;
-                <button className="toolbar" onClick={this.testModel}>Test Model</button> &nbsp;
-                <button id="overwrite" className="toolbar" onClick={this.saveModel}>Save</button> &nbsp;
-                <button id="saveas" className="toolbar" onClick={this.saveModel}>Save as...</button> &nbsp;
-                <button className="toolbar" onClick={this.exportModel}>Export Model...</button> &nbsp;
-            </p>
-            <table id="myTable" className="myTable">
-                <thead>
-                    <tr>
-                        <th>Factor</th>
-                        <th width="300px" style={{"textAlign": "center"}}><span>Less likely</span><span> &lt;- Passing -&gt; </span><span>More likely</span></th>
-                        <th>Actions</th>
-                        <th>Weight</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  {rows}
-                </tbody>
-            </table>
-            <br />
-        </div>
+        return (
+            <div className="wrapper">
+                <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
+                <h3> {this.state.description}</h3>
+                <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
+                <h2>{this.state.positiveThreshold ? 'Threshold for positive class:' + (this.state.positiveThreshold).toFixed(2): ''}</h2>
+                <h2>{this.state.negativeThreshold ? 'Threshold for negative class:' + (this.state.negativeThreshold).toFixed(2): ''}</h2>
+                <p>
+                    <button className="toolbar" onClick={this.retrainModel}>Retrain</button> &nbsp;
+                    <button className="toolbar" onClick={this.testModel}>Test Model</button> &nbsp;
+                    <button id="overwrite" className="toolbar" onClick={this.saveModel}>Save</button> &nbsp;
+                    <button id="saveas" className="toolbar" onClick={this.saveModel}>Save as...</button> &nbsp;
+                    <button className="toolbar" onClick={this.exportModel}>Export Model...</button> &nbsp;
+                </p>
+                <table id="myTable" className="myTable">
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                            <th width="300px" style={{"textAlign": "center"}}><span>Less likely</span><span> &lt;- Passing -&gt; </span><span>More likely</span></th>
+                            <th>Actions</th>
+                            <th>Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {rows}
+                    </tbody>
+                </table>
+                <br />
+            </div>
         );
     }
 
@@ -321,7 +323,11 @@ class ModelView extends Component {
                 body: data_json
             }).then( res => res.json()).then(data => {
                 this.setState({rows: []});
-                this.setState({rows: data.factors});
+                this.setState({
+                    rows: data.factors,
+                    positiveThreshold: data.positive_threshold,
+                    negativeThreshold: data.negative_threshold,
+                });
             }).catch(error => console.log("Request failed: ", error));
     }
 
