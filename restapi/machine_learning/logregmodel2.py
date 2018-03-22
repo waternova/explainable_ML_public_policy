@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 from restapi.machine_learning.util import preparedata
 
 # preparing list of coefficients
@@ -23,7 +24,7 @@ def preparelist(factors, cols, intercept):
     return coefficient_list
     
 # rebuilding model
-def test_model(factors, intercept):
+def test_model(factors, intercept, thresholds=None, balanced_factor=None):
     # "factors" has all the values such as is_enabled, is_binary, is_balanced
     # for example)
     # print(factors[0]["alias"])
@@ -37,11 +38,25 @@ def test_model(factors, intercept):
             X = X.drop(factor["name"], axis=1)
     coefficient_list = preparelist(factors, X.columns, intercept)
     X_train, X_test, y_train, y_test = \
-        train_test_split(X, y, test_size=.9, random_state=42)
+        train_test_split(X, y, test_size=.25, random_state=42)
     model = LogisticRegression()
     model.fit(X_train, y_train)  # It would be nice if we didn't have to do this
-    model.coef_ = np.array([coefficient_list])        
-    return model.score(X_test, y_test)  # Average accuracy of cross vaidated logistic regression model
+    model.coef_ = np.array([coefficient_list])    
+    if balanced_factor is None:
+        y_pred = model.predict(X_test) > 0.5
+        return accuracy_score(y_test, y_pred)  # Accuracy of model
+    else:
+        print(thresholds)
+        X_test_class1 = X_test[X_test[balanced_factor]==1]
+        X_test_class2 = X_test[X_test[balanced_factor]==0]
+        y_test_class1 = y_test[X_test[balanced_factor]==1]
+        y_test_class2 = y_test[X_test[balanced_factor]==0]
+        y_pred_1 = model.predict_proba(X_test_class1)[:,1] > thresholds[0]
+        y_pred_2 = model.predict_proba(X_test_class2)[:,1] > thresholds[1]
+        y_true = np.concatenate([y_test_class1, y_test_class2])
+        y_pred = np.concatenate([y_pred_1, y_pred_2])
+        return accuracy_score(y_true, y_pred)
+
 
 # Retrain passed factors using dataFile as input csv
 def retrain(factors, dataFile= 'df_math_cleaned.csv'):

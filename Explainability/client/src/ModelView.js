@@ -158,8 +158,8 @@ class ModelView extends Component {
                 <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
                 <h3> {this.state.description}</h3>
                 <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
-                <h2>{this.state.positiveThreshold ? 'Threshold for positive class:' + (this.state.positiveThreshold).toFixed(2): ''}</h2>
-                <h2>{this.state.negativeThreshold ? 'Threshold for negative class:' + (this.state.negativeThreshold).toFixed(2): ''}</h2>
+                <h2>{this.state.positiveThreshold ? 'Threshold for positive class: ' + (this.state.positiveThreshold).toFixed(2): ''}</h2>
+                <h2>{this.state.negativeThreshold ? 'Threshold for negative class: ' + (this.state.negativeThreshold).toFixed(2): ''}</h2>
                 <p>
                     <button className="toolbar" onClick={this.retrainModel}>Retrain</button> &nbsp;
                     <button className="toolbar" onClick={this.testModel}>Test Model</button> &nbsp;
@@ -294,7 +294,12 @@ class ModelView extends Component {
     //Handler for Test Button
     testModel ()
     {
-        var data = {factors: this.state.rows, intercept: this.state.intercept};
+        var data = {
+            factors: this.state.rows, 
+            intercept: this.state.intercept,
+            positive_threshold: this.state.positiveThreshold,
+            negative_threshold: this.state.negativeThreshold,
+        };
         var data_json = JSON.stringify(data);
         console.log("Test request: %s", this.state.model_name);
         console.log("Accuracy before test: %f", this.state.accuracy);
@@ -327,6 +332,7 @@ class ModelView extends Component {
                     rows: data.factors,
                     positiveThreshold: data.positive_threshold,
                     negativeThreshold: data.negative_threshold,
+                    accuracy: data.accuracy,
                 });
             }).catch(error => console.log("Request failed: ", error));
     }

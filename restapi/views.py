@@ -118,7 +118,14 @@ def get_comments(request):
 def test_model(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
-        res = {'accuracy': test_logreg_model(data["factors"], data["intercept"])}
+        protected_attr = None
+        for factor in data["factors"]:
+            if factor["is_balanced"]:
+                protected_attr = factor["name"]
+        thresholds = None
+        if "positive_threshold" in data and "negative_threshold" in data:
+            thresholds = (data["positive_threshold"], data["negative_threshold"])
+        res = {'accuracy': test_logreg_model(data["factors"], data["intercept"], thresholds, protected_attr)}
         return Response(res, status=status.HTTP_200_OK)
     return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
 
@@ -141,6 +148,10 @@ def retrain_model(request):
             thresholds = get_fair_thresholds(model, protected_attr, dataFile='df_math_cleaned.csv')
             model_description["positive_threshold"] = thresholds[0]
             model_description["negative_threshold"] = thresholds[1]
+            accuracy = test_logreg_model(model_description['factors'], data['intercept'], thresholds, protected_attr)
+        else:
+            accuracy = test_logreg_model(model_description['factors'], data['intercept'])
+        model_description['accuracy'] = accuracy
         return Response(model_description, status=status.HTTP_200_OK)
     else:
         return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
