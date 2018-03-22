@@ -125,6 +125,15 @@ def test_model(request):
 def retrain_model(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
-        res = retrain(data["factors"], data["intercept"])
+        if "model_id" not in data or data["model_id"] is None:
+            model_id = 1
+        else:
+            model_id = data["model_id"]
+        factors_obj = Factor.objects.filter(model_id=int(model_id))
+        serializer = FactorSerializer(factors_obj, many=True)
+        # serializer.data
+        # TODO: look up dataFile from database
+        res = retrain(data["factors"], dataFile='df_math_cleaned.csv')
         return Response(res, status=status.HTTP_200_OK)
-    return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
