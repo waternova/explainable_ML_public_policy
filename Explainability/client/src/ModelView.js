@@ -365,7 +365,7 @@ class ModelView extends Component {
         var data_json = JSON.stringify(data);
         var blob = new Blob([data_json], {type: "application/json;charset=utf-8"});
         console.log(blob);
-        FileSaver(blob, this.state.model_name+".json");
+        FileSaver.saveAs(blob, this.state.model_name+".json");
     }
 
     loadModel (data) {
