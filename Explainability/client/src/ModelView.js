@@ -18,7 +18,6 @@ class Row extends Component {
       index: this.props.index,
       description: value.description,
       is_binary: value.is_binary,
-      is_balanced: value.is_balanced,
       is_enabled: value.is_enabled,
     };
     this.handleWeightChange = this.handleWeightChange.bind(this);
@@ -41,7 +40,7 @@ class Row extends Component {
     }
     const balanceButtonClassNames = classNames({
         'balance-button': true,
-        'selected': this.state.is_balanced,
+        'selected': this.props.value.is_balanced,
     });
     return (
       <tr>
@@ -54,7 +53,7 @@ class Row extends Component {
             alias={this.state.alias}
             weight={this.state.weight}
             is_binary={this.state.is_binary}
-            is_balanced={this.state.is_balanced}
+            is_balanced={this.props.value.is_balanced}
             is_enabled={this.state.is_enabled}
             handleFactorFormSubmit={this.handleFactorFormSubmit} />
         </td>
@@ -99,13 +98,13 @@ class Row extends Component {
   }
 
   handleBalanceSelect(event) {
-    this.setState({is_balanced: !this.state.is_balanced});
+    this.props.onChange({index: this.state.index, field: "is_balanced", value: !this.props.value.is_balanced});
+    this.props.clearOtherBalanceSelect(this.state.id);
   }
 }
 
 class ModelView extends Component {
-    constructor (props)
-    {
+    constructor (props) {
         super(props);
         this.state = {
             model_id: props.match.params.id,
@@ -115,8 +114,10 @@ class ModelView extends Component {
             intercept: 0.0,
             modified: "",
             parent_id: null,
-            rows: []
-            };
+            rows: [],
+            positiveThreshold: null,
+            negativeThreshold: null,
+        };
 
         this.testModel = this.testModel.bind(this);
         this.retrainModel = this.retrainModel.bind(this);
@@ -129,6 +130,7 @@ class ModelView extends Component {
         //this.handleImportClick = this.handleImportClick.bind(this);
         this.loadModel = this.loadModel.bind(this);
         this.loadFactors = this.loadFactors.bind(this);
+        this.clearOtherBalanceSelect = this.clearOtherBalanceSelect.bind(this);
 
         fetch ("/api/model/" + this.state.model_id + "/?format=json", {
             method: "GET",
@@ -148,38 +150,45 @@ class ModelView extends Component {
 
     render() {
         const rows = this.state.rows.map((entry, number) => {
-        return (<Row key={entry.id} index={number} value={entry} onChange={this.updateFactor}/>);
+            return (<Row 
+              key={entry.id} 
+              index={number} 
+              value={entry} 
+              onChange={this.updateFactor} 
+              clearOtherBalanceSelect={this.clearOtherBalanceSelect}/>);
         })
 
 //                <button className="toolbar" onClick={this.handleImportClick}>Import Model...</button> &nbsp;
 //                <input type="file" className="hidden" id="file" name="file" accept=".json" onChange={this.importModelBegin}/>
-    return (
-        <div className="wrapper">
-            <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
-            <h3> {this.state.description}</h3>
-            <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
-            <p>
-                <button className="toolbar" onClick={this.retrainModel}>Retrain</button> &nbsp;
-                <button className="toolbar" onClick={this.testModel}>Test Model</button> &nbsp;
-                <button id="overwrite" className="toolbar" onClick={this.saveModel}>Save</button> &nbsp;
-                <button id="saveas" className="toolbar" onClick={this.saveModel}>Save as...</button> &nbsp;
-                <button className="toolbar" onClick={this.exportModel}>Export Model...</button> &nbsp;
-            </p>
-            <table id="myTable" className="myTable">
-                <thead>
-                    <tr>
-                        <th>Factor</th>
-                        <th width="300px" style={{"textAlign": "center"}}><span>Less likely</span><span> &lt;- Passing -&gt; </span><span>More likely</span></th>
-                        <th>Actions</th>
-                        <th>Weight</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  {rows}
-                </tbody>
-            </table>
-            <br />
-        </div>
+        return (
+            <div className="wrapper">
+                <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
+                <h3> {this.state.description}</h3>
+                <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
+                <h2>{this.state.positiveThreshold ? 'Threshold for positive class: ' + (this.state.positiveThreshold).toFixed(2): ''}</h2>
+                <h2>{this.state.negativeThreshold ? 'Threshold for negative class: ' + (this.state.negativeThreshold).toFixed(2): ''}</h2>
+                <p>
+                    <button className="toolbar" onClick={this.retrainModel}>Retrain</button> &nbsp;
+                    <button className="toolbar" onClick={this.testModel}>Test Model</button> &nbsp;
+                    <button id="overwrite" className="toolbar" onClick={this.saveModel}>Save</button> &nbsp;
+                    <button id="saveas" className="toolbar" onClick={this.saveModel}>Save as...</button> &nbsp;
+                    <button className="toolbar" onClick={this.exportModel}>Export Model...</button> &nbsp;
+                </p>
+                <table id="myTable" className="myTable">
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                            <th width="300px" style={{"textAlign": "center"}}><span>Less likely</span><span> &lt;- Passing -&gt; </span><span>More likely</span></th>
+                            <th>Actions</th>
+                            <th>Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {rows}
+                    </tbody>
+                </table>
+                <br />
+            </div>
         );
     }
 
@@ -189,6 +198,14 @@ class ModelView extends Component {
         console.log("%s of Factor[%d] updated:", event.field, event.index, event.value);
         copyRows[event.index][event.field] = event.value;
         this.setState({rows: copyRows});
+    }
+
+    clearOtherBalanceSelect(idSelected) {
+      for (let rowData of this.state.rows) {
+        if (rowData.id !== idSelected && rowData.is_balanced) {
+          rowData.is_balanced = false;
+        }
+      }
     }
 
     saveFactor(model_id, factor, isUpdate)
@@ -292,7 +309,12 @@ class ModelView extends Component {
     //Handler for Test Button
     testModel ()
     {
-        var data = {factors: this.state.rows, intercept: this.state.intercept};
+        var data = {
+            factors: this.state.rows, 
+            intercept: this.state.intercept,
+            positive_threshold: this.state.positiveThreshold,
+            negative_threshold: this.state.negativeThreshold,
+        };
         var data_json = JSON.stringify(data);
         console.log("Test request: %s", this.state.model_name);
         console.log("Accuracy before test: %f", this.state.accuracy);
@@ -319,15 +341,14 @@ class ModelView extends Component {
                 method: "POST",
                 headers: {"Content-Type" : "application/json;charset=UTF-8"},
                 body: data_json
-            }).then( res => res.json()).then(data =>
-            {
-                var count = 0;
-                for (var i=0; i<data.length; i++) {
-                    if (data[i].is_enabled) count++;
-                }
-                console.log("%d factors are changed", count);
+            }).then( res => res.json()).then(data => {
                 this.setState({rows: []});
-                this.setState({rows: data});
+                this.setState({
+                    rows: data.factors,
+                    positiveThreshold: data.positive_threshold,
+                    negativeThreshold: data.negative_threshold,
+                    accuracy: data.accuracy,
+                });
             }).catch(error => console.log("Request failed: ", error));
     }
 
