@@ -34,3 +34,11 @@ class User (models.Model):
     user_name = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     user_type = models.IntegerField()
+
+
+class DataSet(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(max_length=65535, null=True, blank=True)
+    modified = models.DateTimeField(auto_now_add=False, blank=True)
+    content = models.FileField(blank=True, upload_to="datasets")
+

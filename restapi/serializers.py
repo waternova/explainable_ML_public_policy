@@ -6,6 +6,7 @@ from restapi.models import MlModel
 from restapi.models import Factor
 from restapi.models import Comment
 from restapi.models import User
+from restapi.models import DataSet
 
 
 class MlModelSerializer(serializers.ModelSerializer):
@@ -41,6 +42,7 @@ class FactorListSerializer(serializers.ListSerializer):
         return ret
 '''
 
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
@@ -51,4 +53,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'user_name', 'password', 'user_type')
+
+
+class DataSetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataSet
+        fields = ('id', 'name', 'description', 'modified', 'content')
 
