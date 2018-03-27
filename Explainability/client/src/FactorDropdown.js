@@ -29,20 +29,20 @@ class FactorDropdown extends AbstractDropdown {
     return (
       <div>
       <form onSubmit={this.handleFactorFormSubmit}>
-        <label className="labels">Factor Name </label> <br/>
-        <input type="text" className="factor_name" id="name" name="name" defaultValue={this.props.originalName} readonly="" />
+        <label className="factor_dialog_labels">Factor Name </label> <br/>
+        <input type="text" className="factor_dialog_name" id="name" name="name" defaultValue={this.props.originalName} readonly="" />
         <br/><br/>
-        <label className="labels">Alias </label> <br/>
-        <input className="alias" id="alias" name="alias" defaultValue={this.props.alias} />
+        <label className="factor_dialog_labels">Alias </label> <br/>
+        <input className="factor_dialog_alias" id="alias" name="alias" defaultValue={this.props.alias} />
         <br/><br/>
-        <label className="labels">Description </label>
-        <textarea className="description" id="description" name="description" defaultValue={this.props.description} />
+        <label className="factor_dialog_labels">Description </label>
+        <textarea className="factor_dialog_description" id="description" name="description" defaultValue={this.props.description} />
         <br/>
         <input id="is_binary" name="is_binary" type="checkbox" defaultChecked={this.props.is_binary} />
-        <label className="labels">Binary Variable </label>
+        <label className="factor_dialog_labels">Binary Variable </label>
         <br/>
         <input id="is_enabled" name="is_enabled" type="checkbox" defaultChecked={this.props.is_enabled} />
-        <label className="labels">Enabled </label>
+        <label className="factor_dialog_labels">Enabled </label>
         <br/> <br/>
         <button className="btn" name="cancel" onClick={this.closeDialog}>Cancel</button>
         <input className="btn" name="apply" type="submit" value="Apply" />

@@ -41,6 +41,7 @@ class DataSetList extends Component {
     };
     this.refreshItems();
     this.deleteDataSet = this.deleteDataSet.bind(this);
+    this.checkAll = this.checkAll.bind(this);
   };
 
   refreshItems () {
@@ -56,20 +57,26 @@ class DataSetList extends Component {
       }).catch(error => console.log("Request failed:", error));
   }
 
-   async deleteDataSet() {
-        var isDelete = window.confirm("Do you want to delete selected models?");
-        if (isDelete === false) return;
-        var res;
-        for (var i=0; i<this.state.items.length; i++) {
-            var data_id = this.state.items[i].id;
-            if (document.getElementById(data_id).checked) {
-                console.log("Trying to delete dataset #%d", data_id);
-                res = await fetch ("/api/dataset/" + data_id + "/", {method: "DELETE"},);
-                console.log("DELETE status:%d", res.status);
-            }
-        }
-        this.refreshItems();
+  checkAll(event) {
+    for (var i=0; i<this.state.items.length; i++) {
+      document.getElementById(this.state.items[i].id).click();
     }
+  }
+
+  async deleteDataSet() {
+    var isDelete = window.confirm("Do you want to delete selected datasets?");
+    if (isDelete === false) return;
+    var res;
+    for (var i=0; i<this.state.items.length; i++) {
+      var data_id = this.state.items[i].id;
+      if (document.getElementById(data_id).checked) {
+        console.log("Trying to delete dataset #%d", data_id);
+        res = await fetch ("/api/dataset/" + data_id + "/", {method: "DELETE"},);
+        console.log("DELETE status:%d", res.status);
+      }
+    }
+    this.refreshItems();
+  }
 
   render() {
     const ListItems = this.state.items.map((entry, number) => {

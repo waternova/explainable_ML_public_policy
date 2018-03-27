@@ -90,7 +90,7 @@ class DataSetUpload extends Component {
           <form method="post" action="api/dataset/" encType="multipart/form-data" onSubmit={this.handleSubmit}>
             <label>Name</label><br/><input type="text" id="name" name="name" value={this.state.name} onChange={this.handleChange}/> <br/> <br/>
             <label>Description</label><br/><input type="text" id="description" name="description" value={this.state.description} onChange={this.handleChange}/>  <br/> <br/>
-            <input type="file" id="file" name="file" ref={e => {this.file = e;}}/>  <br/> <br/>
+            <input type="file" id="file" name="file" accept=".csv" ref={e => {this.file = e;}}/>  <br/> <br/>
             <button onClick={this.closeModal} className="btn">Cancel</button>
             <input type="submit" className="btn" value="Upload"/> &nbsp;
           </form>
