@@ -175,7 +175,7 @@ class ModelView extends Component {
                     <button id="saveas" className="toolbar" onClick={this.saveModel}>Save as...</button> &nbsp;
                     <button className="toolbar" onClick={this.exportModel}>Export Model...</button> &nbsp;
                 </p>
-                <table id="myTable" className="myTable">
+                <table id="modelViewTable">
                     <thead>
                         <tr>
                             <th>Factor</th>

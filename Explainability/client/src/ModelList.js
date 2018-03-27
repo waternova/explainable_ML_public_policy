@@ -85,7 +85,7 @@ class ModelList extends React.Component {
             <button className="toolbar" onClick={this.handleImportClick}>Import a model...</button> &nbsp;
             <input type="file" className="hidden" id="file_import" name="file" accept=".json" onChange={this.importModelBegin}/>
             </p>
-            <table id="myTable" className="myTable">
+            <table id="modelListTable">
                 <thead>
                     <tr>
                         <th className="check"><input id="checkAll" type="checkbox" onClick={this.checkAll}/></th>
@@ -126,6 +126,7 @@ class ModelList extends React.Component {
         }
         this.refreshModel();
     }
+
     handleImportClick() {
         document.getElementById('file_import').click();
     }

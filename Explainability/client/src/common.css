@@ -6,7 +6,15 @@ table {border-collapse: collapse; width: 100%;}
 
 .wrapper {padding: 30px;}
 .toolbar {width: 10rem; height: 2.5rem; font-size: 1.0rem;}
+.btn {
+    float: right;
+    width: 5rem;
+    height: 1.5rem;
+    font-size: 0.8rem;
+    margin-left:0.5rem;
+}
 .hidden {display:none;}
+
 
 .check {text-align: center; width: 15px;}
 .id {text-align: center; width: 40px;}

@@ -18,14 +18,14 @@ class DataSetListItem extends Component {
 
   render() {
     var dt = new Date(this.state.modified);
-    var filename = this.state.file.split('/').pop().split('#')[0].split('?')[0];
+    var filename = decodeURI(this.state.file.split('/').pop().split('#')[0].split('?')[0]);
     return (
       <tr>
       <td className="check"><input id={this.state.id} type="checkbox"/></td>
       <td className="id">{this.state.id}</td>
       <td className="name">{this.state.name}</td>
       <td className="datetime">{dt.toLocaleString()}</td>
-      <td className="path"><a href={this.state.file} target="_blank">{filename}</a></td>
+      <td className="path"><a href={this.state.file} target="_blank" download>{filename}</a></td>
       </tr>
     );
   }
@@ -40,6 +40,7 @@ class DataSetList extends Component {
       items: []
     };
     this.refreshItems();
+    this.deleteDataSet = this.deleteDataSet.bind(this);
   };
 
   refreshItems () {
@@ -55,6 +56,21 @@ class DataSetList extends Component {
       }).catch(error => console.log("Request failed:", error));
   }
 
+   async deleteDataSet() {
+        var isDelete = window.confirm("Do you want to delete selected models?");
+        if (isDelete === false) return;
+        var res;
+        for (var i=0; i<this.state.items.length; i++) {
+            var data_id = this.state.items[i].id;
+            if (document.getElementById(data_id).checked) {
+                console.log("Trying to delete dataset #%d", data_id);
+                res = await fetch ("/api/dataset/" + data_id + "/", {method: "DELETE"},);
+                console.log("DELETE status:%d", res.status);
+            }
+        }
+        this.refreshItems();
+    }
+
   render() {
     const ListItems = this.state.items.map((entry, number) => {
       return (<DataSetListItem key={entry.id} index={number} value={entry}/>);
@@ -63,11 +79,11 @@ class DataSetList extends Component {
       <div className="wrapper">
         <h1>Dataset List</h1>
         <div>
-        <DataSetUpload/> &nbsp;
+        <DataSetUpload onChange={this.refreshItems} /> &nbsp;
         <button className="toolbar" onClick={this.deleteDataSet}>Delete</button> &nbsp;
         </div>
         <br/>
-        <table id="myTable" className="myTable">
+        <table id="dataSetListTable">
         <thead>
         <tr>
         <th className="check"><input id="checkAll" type="checkbox" onClick={this.checkAll}/></th>
