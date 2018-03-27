@@ -16,8 +16,8 @@ const Header = () => {
             </div>
             <div className="menu">
                 <MenuItem to={'/'}>Home</MenuItem>
-                <MenuItem to={'/DataSetList'}>Datasets</MenuItem>
                 <MenuItem to={'/ModelList'}>Models</MenuItem>
+                <MenuItem to={'/DataSetList'}>Datasets</MenuItem>
             </div>
         </div>
     );

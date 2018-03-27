@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './common.css';
 import './ModelList.css';
 import { Link } from 'react-router-dom';
 

@@ -14,7 +14,7 @@ class App extends Component {
                 <div>
                     <Header />
                     <Route exact path="/" component={Home}/>
-                    <Route path="/DateSetList" component={DataSetList}/>
+                    <Route path="/DataSetList" component={DataSetList}/>
                     <Route path="/ModelList" component={ModelList}/>
                     <Route path="/ModelView/:id" component={ModelView}/>
                 </div>

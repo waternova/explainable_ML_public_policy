@@ -1,43 +1,7 @@
-/*.App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-*/
-
 body {
   font-size: 14px;
 }
 
-thead tr {background-color: #dcdee2; border-bottom: 1px solid #555; text-align: left;}
-thead th {padding: 5px;}
-/*tbody tr:nth-child(even) {background-color: #efefef;}*/
-tbody td {padding: 3px;}
-tbody tr {border-bottom: 1px solid #c1c1c1;}
-table {border-collapse: collapse;}
 .comment-tooltip {background-color: white; border: 1px solid #555; width: 100px; height: 100px; padding: 10px}
 .comment-tooltip p {font-size: 0.8em;}
 .comment-tooltip input {width: 80px;}
@@ -67,10 +31,6 @@ input {
   padding: 2px 3px 3px 3px;
 }
 
-.wrapper {
-  padding: 30px;
-}
-
 .box-icon {
   float: left;
   height: 15px;
@@ -95,15 +55,6 @@ input {
   float: right;
 }
 
-.toolbar {
-    width: 10rem;
-    height: 2.5rem;
-    font-size: 1.1rem;
-}
-
-.hidden {
-    display:none;
-}
 
 .factor_enabled {
     color: #000000;

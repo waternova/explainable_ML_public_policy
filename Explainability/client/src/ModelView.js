@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './common.css';
 import './ModelView.css';
 import './Dropdown.css';
 import CommentDropdown from './CommentDropdown.js';

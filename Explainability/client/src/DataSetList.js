@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import classNames from 'classnames';
+import { Link } from 'react-router-dom';
 import DataSetUpload from './DataSetUpload.js'
+import './common.css';
+import './DataSetList.css';
 
 class DataSetListItem extends Component {
   constructor(props) {
@@ -10,19 +12,20 @@ class DataSetListItem extends Component {
       name: this.props.value.name,
       description: this.props.value.description,
       modified: this.props.value.modified,
-      content: this.props.value.content,
+      file: this.props.value.file
     };
   }
 
   render() {
     var dt = new Date(this.state.modified);
+    var filename = this.state.file.split('/').pop().split('#')[0].split('?')[0];
     return (
       <tr>
       <td className="check"><input id={this.state.id} type="checkbox"/></td>
       <td className="id">{this.state.id}</td>
       <td className="name">{this.state.name}</td>
       <td className="datetime">{dt.toLocaleString()}</td>
-      <td className="path">{this.state.content.url}</td>
+      <td className="path"><a href={this.state.file} target="_blank">{filename}</a></td>
       </tr>
     );
   }
@@ -31,10 +34,26 @@ class DataSetListItem extends Component {
 class DataSetList extends Component {
   constructor (props) {
     super(props);
+    this.refreshItems = this.refreshItems.bind(this);
+
     this.state = {
       items: []
     };
+    this.refreshItems();
   };
+
+  refreshItems () {
+    fetch ("/api/dataset/?format=json", {
+      method: "GET",
+      headers: {"Content-Type" : "application/json;charset=UTF-8"},
+      }).then( res => res.json()).then(data => {
+        this.setState({items: []});
+        for (var i=0; i<data.length; i++) {
+          this.setState({items:this.state.items.concat(data[i])});
+        }
+        console.log("%d Datasets Loaded", data.length);
+      }).catch(error => console.log("Request failed:", error));
+  }
 
   render() {
     const ListItems = this.state.items.map((entry, number) => {
@@ -42,21 +61,20 @@ class DataSetList extends Component {
     })
     return (
       <div className="wrapper">
-        <h1>Model List</h1>
-        <p>
-        <button className="toolbar" onClick={this.deleteModel}>Delete</button> &nbsp;
-        <button className="toolbar" onClick={this.handleImportClick}>Import a model...</button> &nbsp;
-        <input type="file" className="hidden" id="file_import" name="file" accept=".json" onChange={this.importModelBegin}/>
-        </p>
+        <h1>Dataset List</h1>
+        <div>
+        <DataSetUpload/> &nbsp;
+        <button className="toolbar" onClick={this.deleteDataSet}>Delete</button> &nbsp;
+        </div>
+        <br/>
         <table id="myTable" className="myTable">
         <thead>
         <tr>
         <th className="check"><input id="checkAll" type="checkbox" onClick={this.checkAll}/></th>
         <th className="id">Id</th>
-        <th className="name">Model Name</th>
-        <th className="accuracy">Accuracy</th>
-        <th className="modified">Modified</th>
-        <th className="parent">Parent Id</th>
+        <th className="name">Dataset Name</th>
+        <th className="modified">Uploaded</th>
+        <th className="path">File URL</th>
         </tr>
         </thead>
         <tbody>
@@ -67,4 +85,6 @@ class DataSetList extends Component {
     );
   }
 }
+
+
 export default DataSetList

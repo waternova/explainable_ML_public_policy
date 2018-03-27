@@ -58,5 +58,5 @@ class UserSerializer(serializers.ModelSerializer):
 class DataSetSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataSet
-        fields = ('id', 'name', 'description', 'modified', 'content')
+        fields = ('id', 'name', 'description', 'modified', 'file')
 

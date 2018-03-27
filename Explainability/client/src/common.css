@@ -1,0 +1,14 @@
+thead tr {background-color: #dcdee2; border-bottom: 1px solid #555;}
+thead th {padding: 5px 10px 5px 10px; }
+tbody tr {border-bottom: 1px solid #c1c1c1; }
+tbody td {padding: 5px 10px 5px 10px; }
+table {border-collapse: collapse; width: 100%;}
+
+.wrapper {padding: 30px;}
+.toolbar {width: 10rem; height: 2.5rem; font-size: 1.0rem;}
+.hidden {display:none;}
+
+.check {text-align: center; width: 15px;}
+.id {text-align: center; width: 40px;}
+.name {text-align: left;}
+.modified {text-align: center; width: 200px;}

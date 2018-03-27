@@ -37,6 +37,7 @@ urlpatterns = [
     #url(r'^model/(?P<pk>[0-9]+)/$', views.MlModelItemView.as_view()),
 ]
 
+
 '''
     url(r'^factor/$', views.FactorListView.as_view()),
     url(r'^factor/(?P<pk>[0-9]+)/$', views.FactorItemView.as_view()),
