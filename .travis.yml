@@ -3,7 +3,7 @@ python:
   - "3.5"
 node_js:
   - "6.9"
-# command to install dependencies (already run by default)
+# commands to install dependencies
 install:
   - pip install -r requirements.txt
   - cd Explainability/client
