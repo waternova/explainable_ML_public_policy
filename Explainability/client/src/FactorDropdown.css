@@ -1,19 +1,19 @@
-.labels {
+.factor_dialog_labels {
     font-size: 0.8rem;
     width: 100%;
 }
 
-.factor_name {
+.factor_dialog_name {
     font-size: 1.0rem;
     color: #A9A9A9;
     width: 95%;
 }
 
-.alias {
+.factor_dialog_alias {
     width: 95%;
 }
 
-.weight {
+.factor_dialog_weight {
     text-align: right;
     width: 95%;
 }
