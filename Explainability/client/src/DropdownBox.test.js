@@ -20,3 +20,13 @@ it('should not show interior menu default render', () => {
   const form = wrapper.find('form');
   expect(form.length).toEqual(0);
 });
+
+it('should show the label added in the props', () => {
+  const wrapper = mount(
+    <DropdownBox labelValue="Stuff">
+      <p>Hello World</p>
+    </DropdownBox>
+  );
+  const label = wrapper.find('.Dropdown-label');
+  expect(label.text()).toBe("Stuff");
+});
