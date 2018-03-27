@@ -22,6 +22,7 @@ router.register(r'model', views.MLModelViewSet)
 router.register(r'factor', views.FactorViewSet)
 router.register(r'comment', views.CommentViewSet)
 router.register(r'user', views.UserViewSet)
+router.register(r'dataset', views.DateSetViewSet)
 
 urlpatterns = [
     url(r'^getmodels/', views.get_models, name='GetModels'),
@@ -35,6 +36,7 @@ urlpatterns = [
     #url(r'^model/$', views.MlModelListView.as_view()),
     #url(r'^model/(?P<pk>[0-9]+)/$', views.MlModelItemView.as_view()),
 ]
+
 
 '''
     url(r'^factor/$', views.FactorListView.as_view()),

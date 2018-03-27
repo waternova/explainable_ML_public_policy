@@ -7,11 +7,13 @@ from .serializers import MlModelSerializer
 from .serializers import FactorSerializer
 from .serializers import CommentSerializer
 from .serializers import UserSerializer
+from .serializers import DataSetSerializer
 
 from restapi.models import MlModel
 from restapi.models import Factor
 from restapi.models import Comment
 from restapi.models import User
+from restapi.models import DataSet
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -50,6 +52,11 @@ class CommentViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class DateSetViewSet(viewsets.ModelViewSet):
+    queryset = DataSet.objects.all()
+    serializer_class = DataSetSerializer
 
 
 @api_view(['GET', 'PATCH'])

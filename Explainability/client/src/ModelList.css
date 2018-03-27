@@ -1,22 +1,2 @@
-thead tr {background-color: #dcdee2; border-bottom: 1px solid #555;}
-thead th {padding: 50px 10px 5px 10px; }
-tbody tr {border-bottom: 1px solid #c1c1c1; }
-tbody td {padding: 5px 10px 5px 10px; }
-table {border-collapse: collapse; width: 100%;}
-.comment-tooltip {background-color: white; border: 1px solid #555; width: 100px; height: 100px; padding: 10px}
-.comment-tooltip p {font-size: 0.8em;}
-.comment-tooltip input {width: 80px;}
-.chart-bar {height: 10px; }
-.chart-bar-base {height: 100%; width: 2px; background-color: #111111;}
-.check {text-align: center; width: 15px;}
-.id {text-align: center; width: 40px;}
-.name {text-align: left;}
 .accuracy {text-align: right; width: 80px;}
-.modified {text-align: center; width: 200px;}
 .parent {text-align: center; width: 80px;}
-
-.toolbar {
-    width: 10rem;
-    height: 2.5rem;
-    font-size: 1.1rem;
-}

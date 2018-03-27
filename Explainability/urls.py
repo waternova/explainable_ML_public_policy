@@ -16,10 +16,15 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('restapi.urls')),
     url(r'^$', views.model_viewer, name='model_viewer'),
     url(r'^modelViewer.js$', views.model_viewer_js, name='model_viewer_js')
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
