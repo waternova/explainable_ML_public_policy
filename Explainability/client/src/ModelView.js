@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './ModelView.css';
 import './Dropdown.css';
 import CommentDropdown from './CommentDropdown.js';
+import DropdownBox from './DropdownBox.js';
 import FactorDropdown from './FactorDropdown.js';
 import classNames from 'classnames';
 import FileSaver from 'file-saver';
@@ -59,7 +60,9 @@ class Row extends Component {
         </td>
         <td><div className="chart-bar" style={barChartStyle}></div></td>
         <td>
-            <CommentDropdown />
+            <DropdownBox labelValue="Comments">
+                <CommentDropdown />
+            </DropdownBox>
             <input 
                 type="submit" 
                 value="Balance Model" 
@@ -243,12 +246,11 @@ class ModelView extends Component {
     }
 
     //Handler for Save Button
-    saveModel (event)
-    {
-        var isUpdate = event.target.id=="overwrite" ? true : false ;
+    saveModel (event) {
+        var isUpdate = event.target.id==="overwrite" ? true : false ;
         var popup_title = isUpdate ? "Overwrite existing model:" : "Save as a new model:"
         var saveName = prompt(popup_title, this.state.model_name);
-        if (saveName == null || saveName.length == 0 ) return;
+        if (saveName === null || saveName.length === 0 ) return;
         var currentModel, requestType, requestURL;
         if (isUpdate === true)
         {

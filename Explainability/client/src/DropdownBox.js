@@ -10,8 +10,8 @@ class DropdownBox extends Component {
     super(props)
     this.state = {
       isOpen: false,
-    }
-    this.mounted = true
+    };
+    this.mounted = true;
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
   }
@@ -88,9 +88,6 @@ class DropdownBox extends Component {
         </div>
         {menu}
       </div>
-    )
-    return (
-      <div className={dropdownClass}>value</div>
     )
   }
 }
