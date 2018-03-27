@@ -7,10 +7,7 @@ import classNames from 'classnames'
 
 class DropdownBox extends Component {
   constructor (props) {
-    super(props)
-    this.state = {
-      isOpen: false,
-    };
+    super(props);
     this.mounted = true;
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -29,24 +26,26 @@ class DropdownBox extends Component {
 
   handleMouseDown (event) {
     if (this.props.onFocus && typeof this.props.onFocus === 'function') {
-      this.props.onFocus(this.state.isOpen);
+      this.props.onFocus(this.props.isOpen);
     }
     if (event.type === 'mousedown' && event.button !== 0) return;
     event.stopPropagation();
     event.preventDefault();
 
     if (!this.props.disabled) {
-      this.setState({
-        isOpen: !this.state.isOpen
-      });
+      if (this.props.isOpen) {
+        this.props.handleClose();
+      } else {
+        this.props.handleOpen();
+      }
     }
   }
 
   handleDocumentClick (event) {
     if (this.mounted) {
       if (!ReactDOM.findDOMNode(this).contains(event.target)) {
-        if (this.state.isOpen) {
-          this.setState({ isOpen: false });
+        if (this.props.isOpen) {
+          this.handleClose();
         }
       }
     }
@@ -60,7 +59,7 @@ class DropdownBox extends Component {
     const dropdownClass = classNames({
       [`${baseClassName}-root`]: true,
       [className]: !!className,
-      'is-open': this.state.isOpen
+      'is-open': this.props.isOpen
     });
     const labelClass = classNames({
       [`${baseClassName}-label`]: true,
@@ -76,7 +75,7 @@ class DropdownBox extends Component {
     });
 
     const value = (<div className={labelClass}>{labelValue}</div>)
-    const menu = this.state.isOpen ? <div className={menuClass}>{this.props.children}</div> : null
+    const menu = this.props.isOpen ? <div className={menuClass}>{this.props.children}</div> : null
     
     return (
       <div className={dropdownClass}>

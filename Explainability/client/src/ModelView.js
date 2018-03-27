@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './ModelView.css';
 import './Dropdown.css';
 import CommentDropdown from './CommentDropdown.js';
-import DropdownBox from './DropdownBox.js';
 import FactorDropdown from './FactorDropdown.js';
 import classNames from 'classnames';
 import FileSaver from 'file-saver';
@@ -48,9 +47,8 @@ class Row extends Component {
         <td><span className={this.state.is_enabled ? "factor_enabled" : "factor_disabled"}>{this.state.alias}</span>
           <FactorDropdown
             className="factor-detail"
-            placeholder="..."
             originalName={this.state.name}
-            description={this.state.description == null ? "" : this.state.description }
+            description={this.state.description === null ? "" : this.state.description }
             alias={this.state.alias}
             weight={this.state.weight}
             is_binary={this.state.is_binary}
@@ -60,9 +58,7 @@ class Row extends Component {
         </td>
         <td><div className="chart-bar" style={barChartStyle}></div></td>
         <td>
-            <DropdownBox labelValue="Comments">
-                <CommentDropdown />
-            </DropdownBox>
+            <CommentDropdown />
             <input 
                 type="submit" 
                 value="Balance Model" 
