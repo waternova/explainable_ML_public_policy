@@ -132,20 +132,24 @@ class ModelView extends Component {
         this.loadFactors = this.loadFactors.bind(this);
         this.clearOtherBalanceSelect = this.clearOtherBalanceSelect.bind(this);
 
+        if (!this.props.skipFactorLoad) {
+            this.loadFactorsFromServer();
+        }
+    }
+
+    loadFactorsFromServer() {
         fetch ("/api/model/" + this.state.model_id + "/?format=json", {
             method: "GET",
-            headers: {"Content-Type" : "application/json;charset=UTF-8"},
-            }).then( res => res.json()).then(data => {
-                this.loadModel(data);
-                console.log("Model Loaded: ", data.name);
-                fetch ("/api/factors/?model_id=" + this.state.model_id +"&format=json", {
-                    method: "GET",
-                    headers: {"Content-Type" : "application/json;charset=UTF-8"},
-                    }).then( res => res.json()).then(data => {
-                        this.loadFactors(data)
-                        console.log("%d factors loaded.", data.length);
-                    }).catch(error => console.log('Request failed', error));
-            }).catch(error => console.log("Request failed", error));
+            headers: {"Content-Type": "application/json;charset=UTF-8"},
+        }).then(res => res.json()).then(data => {
+            this.loadModel(data);
+            return fetch ("/api/factors/?model_id=" + data.id + "&format=json", {
+                method: "GET",
+                headers: {"Content-Type" : "application/json;charset=UTF-8"},
+            });
+        }).then(res => res.json()).then(data => {
+            this.loadFactors(data);
+        }).catch(error => console.log("Request failed", error));
     }
 
     render() {
