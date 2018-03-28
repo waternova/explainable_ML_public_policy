@@ -124,6 +124,7 @@ class ModelView extends Component {
         this.saveModel = this.saveModel.bind(this);
         this.saveFactor = this.saveFactor.bind(this);
         this.updateFactor = this.updateFactor.bind(this);
+        this.updateWeight = this.updateWeight.bind(this);
         this.exportModel = this.exportModel.bind(this);
         //this.importModelBegin = this.importModelBegin.bind(this);
         //this.importModelEnd = this.importModelEnd.bind(this);
@@ -138,18 +139,18 @@ class ModelView extends Component {
     }
 
     loadFactorsFromServer() {
-        fetch ("/api/model/" + this.state.model_id + "/?format=json", {
-            method: "GET",
-            headers: {"Content-Type": "application/json;charset=UTF-8"},
-        }).then(res => res.json()).then(data => {
-            this.loadModel(data);
-            return fetch ("/api/factors/?model_id=" + data.id + "&format=json", {
-                method: "GET",
-                headers: {"Content-Type" : "application/json;charset=UTF-8"},
-            });
-        }).then(res => res.json()).then(data => {
-            this.loadFactors(data);
-        }).catch(error => console.log("Request failed", error));
+      fetch ("/api/model/" + this.state.model_id + "/?format=json", {
+        method: "GET",
+        headers: {"Content-Type": "application/json;charset=UTF-8"},
+      }).then(res => res.json()).then(data => {
+        this.loadModel(data);
+        return fetch ("/api/factors/?model_id=" + data.id + "&format=json", {
+          method: "GET",
+          headers: {"Content-Type" : "application/json;charset=UTF-8"},
+        });
+      }).then(res => res.json()).then(data => {
+        this.loadFactors(data);
+      }).catch(error => console.log("Request failed", error));
     }
 
     render() {
@@ -162,8 +163,6 @@ class ModelView extends Component {
               clearOtherBalanceSelect={this.clearOtherBalanceSelect}/>);
         })
 
-//                <button className="toolbar" onClick={this.handleImportClick}>Import Model...</button> &nbsp;
-//                <input type="file" className="hidden" id="file" name="file" accept=".json" onChange={this.importModelBegin}/>
         return (
             <div className="wrapper">
                 <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
@@ -202,6 +201,12 @@ class ModelView extends Component {
         console.log("%s of Factor[%d] updated:", event.field, event.index, event.value);
         copyRows[event.index][event.field] = event.value;
         this.setState({rows: copyRows});
+    }
+
+    updateWeight(rowIndex, newWeight) {
+      let copyRows = [...this.state.rows];
+      copyRows[rowIndex].weight = newWeight;
+      this.setState({rows: copyRows});
     }
 
     clearOtherBalanceSelect(idSelected) {
