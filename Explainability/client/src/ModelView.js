@@ -53,7 +53,6 @@ class Row extends Component {
             alias={this.state.alias}
             weight={this.state.weight}
             is_binary={this.state.is_binary}
-            is_balanced={this.props.value.is_balanced}
             is_enabled={this.state.is_enabled}
             handleFactorFormSubmit={this.handleFactorFormSubmit} />
         </td>
@@ -77,7 +76,7 @@ class Row extends Component {
     if (isNaN (newWeight) === false)
     {
         this.setState({weight: newWeight} );
-        this.props.onChange({index: this.state.index, field: "weight", value: newWeight});
+        this.props.onChange(this.props.index, "weight", newWeight);
     }
   }
 
@@ -92,13 +91,13 @@ class Row extends Component {
           if (isNaN(newWeight) === false) value = newWeight;
         }*/
         this.setState( {[name]: value} );
-        this.props.onChange({index: this.state.index, field: name, value: value});
+        this.props.onChange(this.props.index, name, value);
       }
     }
   }
 
   handleBalanceSelect(event) {
-    this.props.onChange({index: this.state.index, field: "is_balanced", value: !this.props.value.is_balanced});
+    this.props.onChange(this.props.index, "is_balanced", !this.props.value.is_balanced);
     this.props.clearOtherBalanceSelect(this.state.id);
   }
 }
@@ -124,7 +123,6 @@ class ModelView extends Component {
         this.saveModel = this.saveModel.bind(this);
         this.saveFactor = this.saveFactor.bind(this);
         this.updateFactor = this.updateFactor.bind(this);
-        this.updateWeight = this.updateWeight.bind(this);
         this.exportModel = this.exportModel.bind(this);
         //this.importModelBegin = this.importModelBegin.bind(this);
         //this.importModelEnd = this.importModelEnd.bind(this);
@@ -153,7 +151,7 @@ class ModelView extends Component {
       }).then(res => res.json()).then(data => {
         this.loadFactors(data);
         this.updateGraphSizes();
-      }).catch(error => console.log("Request failed", error));
+      }).catch(error => console.error("Request failed", error));
     }
 
     render() {
@@ -199,16 +197,13 @@ class ModelView extends Component {
     }
 
     //Handler for Factor modification
-    updateFactor(event) {
-      let rows = this.updateWeight(event.index, event.value);
-      this.updateGraphSizes(rows);
-    }
-
-    updateWeight(rowIndex, newWeight) {
-      let copyRows = this.state.rows.slice();
-      copyRows[rowIndex].weight = newWeight;
-      this.setState({rows: copyRows});
-      return copyRows;
+    updateFactor(index, field, value) {
+      let newRows = this.state.rows.slice();
+      newRows[index][field] = value;
+      this.setState({rows: newRows});
+      if (field === 'weight') {
+        this.updateGraphSizes(newRows);
+      }
     }
 
     updateGraphSizes(rows = this.state.rows.slice()) {

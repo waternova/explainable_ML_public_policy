@@ -31,9 +31,14 @@ describe('bar graph updates', () => {
     modelView.setState({rows: rows}, done);
   });
 
-  it('should have updateWeight method that updates the weight of a single factor', () => {
-    modelView.instance().updateWeight(1, 2.1);
+  it('should have updateFactor method that updates the weight of a single factor', () => {
+    modelView.instance().updateFactor(1, "weight", 2.1);
     expect(modelView.state().rows[1].weight).toEqual(2.1);
+  });
+
+  it('should have updateFactor method that updates the is_binary of a single factor', () => {
+    modelView.instance().updateFactor(1, "is_binary", true);
+    expect(modelView.state().rows[1].is_binary).toBe(true);
   });
 
   it('should have updateGraphSizes method that resets the largest weight to be 100px wide', () => {
