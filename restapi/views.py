@@ -21,7 +21,7 @@ from rest_framework.response import Response
 
 import json
 from restapi.machine_learning.logregmodel2 import test_model as test_logreg_model
-from restapi.machine_learning.logregmodel2 import retrain
+from restapi.machine_learning.logregmodel2 import retrain, build_model_from_factors
 from restapi.machine_learning.fairmodel import get_fair_thresholds
 
 
@@ -131,8 +131,10 @@ def test_model(request):
                 protected_attr = factor["name"]
         thresholds = None
         if "positive_threshold" in data and "negative_threshold" in data:
-            thresholds = (data["positive_threshold"], data["negative_threshold"])
-        res = {'accuracy': test_logreg_model(data["factors"], data["intercept"], thresholds, protected_attr)}
+            thresholds = (data["negative_threshold"], data["positive_threshold"])
+        model = build_model_from_factors(data["factors"], data["intercept"])
+        accuracy, confusion_matrix = test_logreg_model(model, thresholds, protected_attr)
+        res = {'accuracy': accuracy, 'confusion_matrices': confusion_matrix}
         return Response(res, status=status.HTTP_200_OK)
     return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
 
@@ -155,10 +157,11 @@ def retrain_model(request):
             thresholds = get_fair_thresholds(model, protected_attr, dataFile='df_math_cleaned.csv')
             model_description["positive_threshold"] = thresholds[0]
             model_description["negative_threshold"] = thresholds[1]
-            accuracy = test_logreg_model(model_description['factors'], data['intercept'], thresholds, protected_attr)
+            accuracy, confusion_matrices = test_logreg_model(model, thresholds, protected_attr)
         else:
-            accuracy = test_logreg_model(model_description['factors'], data['intercept'])
+            accuracy, confusion_matrices = test_logreg_model(model)
         model_description['accuracy'] = accuracy
+        model_description['confusion_matrices'] = confusion_matrices
         return Response(model_description, status=status.HTTP_200_OK)
     else:
         return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
