@@ -27,7 +27,7 @@ describe('bar graph updates', () => {
         match={match} 
         skipFactorLoad={true} />
       ), div);
-    const rows = [{id: 3, weight: 1.2}, {id: 2, weight: -4.3}];
+    const rows = [{id: 3, weight: 1.2}, {id: 2, weight: -4.4}, {id: 6, weight: -2.2}];
     modelView.setState({rows: rows}, done);
   });
 
@@ -39,5 +39,10 @@ describe('bar graph updates', () => {
   it('should have updateGraphSizes method that resets the largest weight to be 100px wide', () => {
     modelView.instance().updateGraphSizes();
     expect(modelView.state().rows[1].graphSize).toEqual(-100);
+  });
+
+  it('should have updateGraphSizes method that scales other factors to match', () => {
+    modelView.instance().updateGraphSizes();
+    expect(modelView.state().rows[2].graphSize).toEqual(-50);
   });
 });
