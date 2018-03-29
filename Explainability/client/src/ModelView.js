@@ -4,6 +4,7 @@ import './ModelView.css';
 import './Dropdown.css';
 import CommentDropdown from './CommentDropdown.js';
 import FactorDropdown from './FactorDropdown.js';
+import ConfusionMatrix from './ConfusionMatrix';
 import classNames from 'classnames';
 import FileSaver from 'file-saver';
 
@@ -116,6 +117,7 @@ class ModelView extends Component {
             rows: [],
             positiveThreshold: null,
             negativeThreshold: null,
+            confusionMatrices: [[[0,0], [0,0]]],
         };
 
         this.testModel = this.testModel.bind(this);
@@ -162,7 +164,11 @@ class ModelView extends Component {
               value={entry} 
               onChange={this.updateFactor} 
               clearOtherBalanceSelect={this.clearOtherBalanceSelect}/>);
-        })
+        });
+
+        const confusionMatrices = this.state.confusionMatrices.map((matrix, index) => {
+          return <ConfusionMatrix key={index} index={index} matrix={this.state.confusionMatrices[index]} />
+        });
 
         return (
             <div className="wrapper">
@@ -171,6 +177,7 @@ class ModelView extends Component {
                 <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
                 <h2>{this.state.positiveThreshold ? 'Threshold for positive class: ' + (this.state.positiveThreshold).toFixed(2): ''}</h2>
                 <h2>{this.state.negativeThreshold ? 'Threshold for negative class: ' + (this.state.negativeThreshold).toFixed(2): ''}</h2>
+                {confusionMatrices}
                 <p>
                     <button className="toolbar" onClick={this.retrainModel}>Retrain</button> &nbsp;
                     <button className="toolbar" onClick={this.testModel}>Test Model</button> &nbsp;
@@ -341,7 +348,10 @@ class ModelView extends Component {
                 body: data_json
             }).then( res => res.json()).then(data =>
             {
-                this.setState({accuracy: parseFloat(data.accuracy)});
+                this.setState({
+                  accuracy: parseFloat(data.accuracy),
+                  confusionMatrices: data.confusion_matrices,
+                });
                 console.log("Accuracy after test: %f", this.state.accuracy);
             }).catch(error => console.log("Request failed: ", error));
     }
@@ -364,6 +374,7 @@ class ModelView extends Component {
                     positiveThreshold: data.positive_threshold,
                     negativeThreshold: data.negative_threshold,
                     accuracy: data.accuracy,
+                    confusionMatrices: data.confusion_matrices,
                 });
             }).catch(error => console.log("Request failed: ", error));
     }
