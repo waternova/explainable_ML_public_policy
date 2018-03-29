@@ -17,16 +17,27 @@ it('should render without error', () => {
   ReactDOM.unmountComponentAtNode(div);
 });
 
-it('should have updateWeight method that updates the weight of a single factor', () => {
-  const div = document.createElement('div');
-  const match = {params: {id: 4}};
-  const modelView = shallow(
-    (<ModelView 
-      match={match} 
-      skipFactorLoad={true} />
-    ), div);
-  const rows = [{id: 3, weight: 1.2}, {id: 2, weight: -4.3}];
-  modelView.setState({rows: rows});
-  modelView.instance().updateWeight(1, 2.1);
-  expect(modelView.state().rows[1].weight).toEqual(2.1);
+describe('bar graph updates', () => {
+  let modelView, div;
+  beforeEach(done => {
+    div = document.createElement('div');
+    const match = {params: {id: 4}};
+    modelView = shallow(
+      (<ModelView 
+        match={match} 
+        skipFactorLoad={true} />
+      ), div);
+    const rows = [{id: 3, weight: 1.2}, {id: 2, weight: -4.3}];
+    modelView.setState({rows: rows}, done);
+  });
+
+  it('should have updateWeight method that updates the weight of a single factor', () => {
+    modelView.instance().updateWeight(1, 2.1);
+    expect(modelView.state().rows[1].weight).toEqual(2.1);
+  });
+
+  it('should have updateGraphSizes method that resets the largest weight to be 100px wide', () => {
+    modelView.instance().updateGraphSizes();
+    expect(modelView.state().rows[1].graphSize).toEqual(-100);
+  });
 });

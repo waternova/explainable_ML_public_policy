@@ -29,14 +29,14 @@ class Row extends Component {
   render() {
     const positiveColor = "#75acff";
     const negativeColor = "#aa6bf9";
-    const width = 100 * Math.abs(this.state.weight);
+    const graphSize = this.props.value.graphSize;
     let leftMargin = 150;
-    if (this.state.weight < 0) {
-      leftMargin = 150 - width;
+    if (graphSize < 0) {
+      leftMargin = 150 + graphSize;
     }
     const barChartStyle = {
-      backgroundColor: this.state.weight > 0 ? positiveColor:negativeColor,
-      width: String(width) + 'px',
+      backgroundColor: graphSize > 0 ? positiveColor:negativeColor,
+      width: String(Math.abs(graphSize)) + 'px',
       marginLeft: String(leftMargin) + 'px',
     }
     const balanceButtonClassNames = classNames({
@@ -150,6 +150,7 @@ class ModelView extends Component {
         });
       }).then(res => res.json()).then(data => {
         this.loadFactors(data);
+        this.updateGraphSizes();
       }).catch(error => console.log("Request failed", error));
     }
 
@@ -197,16 +198,26 @@ class ModelView extends Component {
 
     //Handler for Factor modification
     updateFactor(event) {
-        let copyRows = [...this.state.rows];
-        console.log("%s of Factor[%d] updated:", event.field, event.index, event.value);
-        copyRows[event.index][event.field] = event.value;
-        this.setState({rows: copyRows});
+      let rows = this.updateWeight(event.index, event.value);
+      this.updateGraphSizes(rows);
     }
 
     updateWeight(rowIndex, newWeight) {
-      let copyRows = [...this.state.rows];
+      let copyRows = this.state.rows.slice();
       copyRows[rowIndex].weight = newWeight;
       this.setState({rows: copyRows});
+      return copyRows;
+    }
+
+    updateGraphSizes(rows = this.state.rows.slice()) {
+      let weights = rows.map(x=>x.weight);
+      let maxWeight = Math.max(...weights);
+      let minWeight = Math.min(...weights);
+      let maxSize = Math.max(maxWeight, -minWeight);
+      for (let row of rows) {
+        row.graphSize = row.weight / maxSize * 100;
+      }
+      this.setState({rows: rows});
     }
 
     clearOtherBalanceSelect(idSelected) {
