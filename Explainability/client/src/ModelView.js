@@ -132,10 +132,12 @@ class ModelView extends Component {
         this.loadModel = this.loadModel.bind(this);
         this.loadFactors = this.loadFactors.bind(this);
         this.clearOtherBalanceSelect = this.clearOtherBalanceSelect.bind(this);
+    }
 
-        if (!this.props.skipFactorLoad) {
-            this.loadFactorsFromServer();
-        }
+    componentDidMount() {
+      if (!this.props.skipFactorLoad) {
+        this.loadFactorsFromServer();
+      }
     }
 
     loadFactorsFromServer() {
