@@ -8,6 +8,7 @@ class MlModel(models.Model):
     description = models.TextField(max_length=65535, null=True, blank=True)
     accuracy = models.FloatField(null=True)
     intercept = models.FloatField(null=True)
+    dataset_id = models.ForeignKey('DataSet', on_delete=models.CASCADE, null=True)
     parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     modified = models.DateTimeField(auto_now_add=False, blank=True)
 

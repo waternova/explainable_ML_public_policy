@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './common.css';
 import './ModelList.css';
 import { Link } from 'react-router-dom';
+import CreateNewModel from './CreateNewModel';
 
 class ModelListItem extends Component {
     constructor(props)
@@ -39,37 +40,38 @@ class ModelListItem extends Component {
 }
 
 class ModelList extends React.Component {
-    constructor (props)
-    {
+    constructor (props) {
 		super(props);
         this.deleteModel = this.deleteModel.bind(this);
         this.checkAll = this.checkAll.bind(this);
-        this.refreshModel = this.refreshModel.bind(this);
         this.handleImportClick=this.handleImportClick.bind(this);
         this.importModelBegin = this.importModelBegin.bind(this);
         this.importModelEnd = this.importModelEnd.bind(this);
         this.importFactor = this.importFactor.bind(this);
-
+        this.refreshModelList = this.refreshModelList.bind(this);
         this.state = {
             models: []
-            };
-        this.refreshModel();
-	}
+        };
+    }
 
-    refreshModel () {
+    componentDidMount() {
+        this.refreshModelList();
+    }
+
+    refreshModelList() {
         fetch ("/api/model/?format=json",
+        {
+            method: "GET",
+            headers: {"Content-Type" : "application/json;charset=UTF-8"},
+        }).then( res => res.json()).then(data =>
+        {
+            this.setState({models: []});
+            for (var i=0; i<data.length; i++)
             {
-                method: "GET",
-                headers: {"Content-Type" : "application/json;charset=UTF-8"},
-            }).then( res => res.json()).then(data =>
-            {
-                this.setState({models: []});
-                for (var i=0; i<data.length; i++)
-                {
-                    this.setState({models:this.state.models.concat(data[i])});
-                }
-                console.log("%d Models Loaded", data.length);
-            }).catch(error => console.log("Request failed:", error));
+                this.setState({models:this.state.models.concat(data[i])});
+            }
+            console.log("%d Models Loaded", data.length);
+        }).catch(error => console.log("Request failed:", error));
     }
 
     render() {
@@ -77,14 +79,13 @@ class ModelList extends React.Component {
         return (<ModelListItem key={entry.id} index={number} value={entry}/>);
         })
 
-    return (
+        return (
         <div className="wrapper">
             <h1>Model List</h1>
-            <p>
-            <button className="toolbar" onClick={this.deleteModel}>Delete</button> &nbsp;
+            <CreateNewModel onChange={this.refreshModelList} /> &nbsp;
             <button className="toolbar" onClick={this.handleImportClick}>Import a model...</button> &nbsp;
+            <button className="toolbar" onClick={this.deleteModel}>Delete</button> &nbsp;
             <input type="file" className="hidden" id="file_import" name="file" accept=".json" onChange={this.importModelBegin}/>
-            </p>
             <table id="modelListTable">
                 <thead>
                     <tr>

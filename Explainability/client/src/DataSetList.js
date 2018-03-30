@@ -33,15 +33,17 @@ class DataSetListItem extends Component {
 class DataSetList extends Component {
   constructor (props) {
     super(props);
-    this.refreshItems = this.refreshItems.bind(this);
-
     this.state = {
       items: []
     };
-    this.refreshItems();
+    this.refreshItems = this.refreshItems.bind(this);
     this.deleteDataSet = this.deleteDataSet.bind(this);
     this.checkAll = this.checkAll.bind(this);
   };
+
+  componentDidMount() {
+    this.refreshItems();
+  }
 
   refreshItems () {
     fetch ("/api/dataset/?format=json", {
