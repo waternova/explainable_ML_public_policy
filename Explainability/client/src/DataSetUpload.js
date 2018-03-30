@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import classNames from 'classnames';
-//import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import './DataSetUpload.css'
 
@@ -44,22 +42,19 @@ class DataSetUpload extends Component {
     this.setState({modalIsOpen: false});
   }
 
- handleChange(event) {
-   var key = event.target.id;
-   switch (event.target.id) {
-     case 'name':
-       this.setState({name: event.target.value});
-       break;
-     case 'description':
-       this.setState({description: event.target.value});
-       break;
-   }
- }
+  handleChange(event) {
+    var key = event.target.id;
+    if(key === 'name') {
+      this.setState({name: event.target.value});
+    } else if(key === 'description') {
+      this.setState({description: event.target.value});
+    }
+  }
 
   handleSubmit(event) {
     event.preventDefault();
-    if (this.state.name.length == 0) {alert("Please input a name."); return;}
-    if (this.file.files.length == 0) {alert("No file is selected."); return; }
+    if (this.state.name.length === 0) {alert("Please input a name."); return;}
+    if (this.file.files.length === 0) {alert("No file is selected."); return;}
     var data = new FormData();
     data.append('name', this.state.name);
     data.append('description', this.state.description);

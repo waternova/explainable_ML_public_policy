@@ -5,3 +5,4 @@ node_modules
 .idea/*
 .vscode
 .pytest_cache
+datasets/*
