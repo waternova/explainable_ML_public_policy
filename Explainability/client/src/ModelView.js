@@ -366,19 +366,24 @@ class ModelView extends Component {
         var data_json = JSON.stringify(data);
         console.log("Retrain request: %s", this.state.model_name);
         fetch ("/api/retrainmodel/", {
-                method: "POST",
-                headers: {"Content-Type" : "application/json;charset=UTF-8"},
-                body: data_json
-            }).then( res => res.json()).then(data => {
-                this.setState({rows: []});
-                this.setState({
-                    rows: data.factors,
-                    positiveThreshold: data.positive_threshold,
-                    negativeThreshold: data.negative_threshold,
-                    accuracy: data.accuracy,
-                    confusionMatrices: data.confusion_matrices,
-                });
-            }).catch(error => console.log("Request failed: ", error));
+            method: "POST",
+            headers: {"Content-Type" : "application/json;charset=UTF-8"},
+            body: data_json
+        }).then( res => res.json()).then(data => {
+            this.setState({rows: []});
+            this.setState({
+                rows: data.factors,
+                positiveThreshold: data.positive_threshold,
+                negativeThreshold: data.negative_threshold,
+                accuracy: data.accuracy,
+                confusionMatrices: data.confusion_matrices,
+            });
+            for (let factor of data.factors) {
+                if (factor.name === 'Intercept') {
+                    this.setState({intercept: factor.weight})
+                }
+            }
+        }).catch(error => console.log("Request failed: ", error));
     }
 
     exportModel() {

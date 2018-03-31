@@ -131,7 +131,7 @@ def test_model(request):
             model_id = data["model_id"]
         mlmodel = MlModel.objects.get(pk=model_id)
         target_variable = mlmodel.target_variable
-        dataset = DataSet.objects.get(pk=mlmodel.dataset_id)
+        dataset = mlmodel.dataset_id
         target_variable = mlmodel.target_variable
         datafile = dataset.file
         dataFilePath = 'datasets/' + datafile.name
@@ -142,7 +142,7 @@ def test_model(request):
         thresholds = None
         if "positive_threshold" in data and "negative_threshold" in data:
             thresholds = (data["negative_threshold"], data["positive_threshold"])
-        model = build_model_from_factors(data["factors"], data["intercept"])
+        model = build_model_from_factors(data["factors"], data["intercept"], dataFilePath, target_variable, model_id)
         accuracy, confusion_matrix = test_logreg_model(model, model_id, target_variable, dataFilePath, thresholds, protected_attr)
         res = {'accuracy': accuracy, 'confusion_matrices': confusion_matrix}
         return Response(res, status=status.HTTP_200_OK)
@@ -209,7 +209,7 @@ def new_model_with_factor_creation(request):
     datafile = dataset.file
     all_columns = get_column_names_from_file('datasets/' + datafile.name)
     numeric_columns = non_categorical_columns.split(',')
-    categorical_columns = set(all_columns) - set(target_variable) - set(numeric_columns)
+    categorical_columns = set(all_columns) - set([target_variable]) - set(numeric_columns)
     factor_list = numeric_columns + ['C(' + x + ')' for x in categorical_columns]
     y,X = preparedata(pd.read_csv('datasets/' + datafile.name), target_variable, factor_list)
     factors_to_save = X.columns.values.tolist()
