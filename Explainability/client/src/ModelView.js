@@ -330,13 +330,13 @@ class ModelView extends Component {
     }
 
     //Handler for Test Button
-    testModel ()
-    {
+    testModel() {
         var data = {
             factors: this.state.rows, 
             intercept: this.state.intercept,
             positive_threshold: this.state.positiveThreshold,
             negative_threshold: this.state.negativeThreshold,
+            model_id: this.state.model_id,
         };
         var data_json = JSON.stringify(data);
         console.log("Test request: %s", this.state.model_name);
@@ -357,13 +357,15 @@ class ModelView extends Component {
     }
 
     //Handler for Retrain Button
-    retrainModel ()
-    {
-        var data = {factors: this.state.rows, intercept: this.state.intercept};
+    retrainModel() {
+        var data = {
+            factors: this.state.rows, 
+            intercept: this.state.intercept, 
+            model_id: this.state.model_id,
+        };
         var data_json = JSON.stringify(data);
         console.log("Retrain request: %s", this.state.model_name);
-        fetch ("/api/retrainmodel/",
-            {
+        fetch ("/api/retrainmodel/", {
                 method: "POST",
                 headers: {"Content-Type" : "application/json;charset=UTF-8"},
                 body: data_json
