@@ -183,7 +183,8 @@ def retrain_model(request):
 
 from restapi.models import MlModel, DataSet, Factor
 from django.utils import timezone
-from restapi.machine_learning.util import get_column_names_from_file, preparedata
+from restapi.machine_learning.util import preparedata
+from restapi.util import get_column_names_from_file
 import pandas as pd
 @api_view(['POST'])
 def new_model_with_factor_creation(request):
