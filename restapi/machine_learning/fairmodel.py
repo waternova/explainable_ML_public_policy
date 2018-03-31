@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 # import matplotlib.pyplot as plt
 from restapi.machine_learning.util import preparedata
 from restapi.util import get_factor_list_from_file
+from restapi.machine_learning.logregmodel2 import get_numeric_columns
 
 # Gets thresholds with positive class first
 def get_fair_thresholds(model, model_id, protectiveAtt, dataFile, target_variable):
