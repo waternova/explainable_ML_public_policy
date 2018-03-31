@@ -1,13 +1,10 @@
-from restapi.models import MlModel, DataSet
 import pandas as pd
 
 
-def get_factor_list_from_file(path_to_file, target_variable, model_id):
-    model_desc = MlModel.objects.get(pk=model_id)
+def get_factor_list_from_file(path_to_file, target_variable, arithmetic_columns):
     all_columns = get_column_names_from_file(path_to_file)
-    numeric_columns = model_desc.non_categorical_columns.split(',')
-    categorical_columns = set(all_columns) - set([target_variable]) - set(numeric_columns)
-    factor_list = numeric_columns + ['C(' + x + ')' for x in categorical_columns]
+    categorical_columns = set(all_columns) - set([target_variable]) - set(arithmetic_columns)
+    factor_list = arithmetic_columns + ['C(' + x + ')' for x in categorical_columns]
     return factor_list
 
 

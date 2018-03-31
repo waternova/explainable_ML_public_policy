@@ -12,7 +12,8 @@ from restapi.util import get_factor_list_from_file
 # Gets thresholds with positive class first
 def get_fair_thresholds(model, model_id, protectiveAtt, dataFile, target_variable):
     df_data = pd.read_csv(dataFile)
-    factor_list_wo_categories = get_factor_list_from_file(dataFile, target_variable, model_id)
+    numeric_columns = get_numeric_columns(model_id)
+    factor_list_wo_categories = get_factor_list_from_file(dataFile, target_variable, numeric_columns)
     y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
     #splitting data into test for each group in protective attribute
