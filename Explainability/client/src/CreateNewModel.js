@@ -59,15 +59,7 @@ class CreateNewModel extends Component {
 
   handleChange(event) {
     var key = event.target.name;
-    if (key === 'name') {
-      this.setState({name: event.target.value});
-    } else if (key === 'description') {
-      this.setState({description: event.target.value});
-    } else if (key === 'dataset') {
-      this.setState({dataset: event.target.value});
-    } else if (key === 'nonCategorical') {
-      this.setState({nonCategorical: event.target.value});
-    }
+    this.setState({[key]: event.target.value});
   }
 
   handleSelectChange(newOption) {
@@ -82,9 +74,9 @@ class CreateNewModel extends Component {
       description: this.state.description,
       dataset_id: this.state.dataset.value,
       non_categorical_columns: this.state.nonCategorical,
-      modified: new Date(),
+      target_variable: this.state.targetVariable,
     }
-    fetch ("/api/model/", {
+    fetch ("/api/newmodel/", {
       method: "POST",
       headers: {
         'content-type': 'application/json;charset=UTF-8'
@@ -132,6 +124,10 @@ class CreateNewModel extends Component {
             <label>Non-categorical variables, as a comma-separated list</label>
             <br/>
             <input type="text" name="nonCategorical" value={this.state.nonCategorical} onChange={this.handleChange}/>  
+            <br/> <br/>
+            <label>Target variable (must be binary)</label>
+            <br/>
+            <input type="text" name="targetVariable" value={this.state.targetVariable} onChange={this.handleChange}/>  
             <br/> <br/>
             <button onClick={this.closeModal} className="btn">Cancel</button>
             <input type="submit" className="btn" value="Upload"/> &nbsp;

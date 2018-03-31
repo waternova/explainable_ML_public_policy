@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^retrainmodel/', views.retrain_model, name='RetrainModel'),
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^newmodel/', views.new_model_with_factor_creation, name='New Model')
     #url(r'^model/$', views.MlModelListView.as_view()),
     #url(r'^model/(?P<pk>[0-9]+)/$', views.MlModelItemView.as_view()),
 ]

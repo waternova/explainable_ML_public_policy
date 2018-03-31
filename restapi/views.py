@@ -165,3 +165,47 @@ def retrain_model(request):
         return Response(model_description, status=status.HTTP_200_OK)
     else:
         return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
+
+from restapi.models import MlModel, DataSet, Factor
+from django.utils import timezone
+from restapi.machine_learning.util import get_column_names_from_file, preparedata
+import pandas as pd
+@api_view(['POST'])
+def new_model_with_factor_creation(request):
+    # expects JSON with name, description, and dataset_id
+    if request.method != 'POST':
+        return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
+    data = json.loads(request.body.decode('utf-8'))
+    # Save new model
+    dataset_id = data['dataset_id']
+    non_categorical_columns = data['non_categorical_columns']
+    target_variable = data['target_variable']
+    newModel = MlModel(
+        name = data['name'], 
+        description = data['description'], 
+        dataset_id = DataSet.objects.get(pk=dataset_id), 
+        modified = timezone.now(),
+        non_categorical_columns = non_categorical_columns,
+        target_variable = target_variable
+    )
+    newModel.save()
+    # Get factor names from file
+    dataset = DataSet.objects.get(pk=dataset_id)
+    datafile = dataset.file
+    print(datafile.name)
+    all_columns = get_column_names_from_file('datasets/' + datafile.name)
+    numeric_columns = non_categorical_columns.split(',')
+    categorical_columns = set(all_columns) - set(target_variable) - set(numeric_columns)
+    factor_list = numeric_columns + ['C(' + x + ')' for x in categorical_columns]
+    y,X = preparedata(pd.read_csv('datasets/' + datafile.name), target_variable, factor_list)
+    factors_to_save = X.columns.values.tolist()
+    # Save factors
+    for factor in factors_to_save:
+        newFactor = Factor(
+            name = factor,
+            alias = factor,
+            weight = 0,
+            model_id = newModel
+        )
+        newFactor.save()
+    return Response(newModel.id, status=status.HTTP_200_OK)

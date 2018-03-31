@@ -10,6 +10,7 @@ class MlModel(models.Model):
     intercept = models.FloatField(null=True)
     dataset_id = models.ForeignKey('DataSet', on_delete=models.CASCADE, null=True)
     non_categorical_columns = models.TextField(max_length=65535, null=True, blank=True)
+    target_variable = models.TextField(max_length=65535, null=True)
     parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     modified = models.DateTimeField(auto_now_add=False, blank=True)
 
