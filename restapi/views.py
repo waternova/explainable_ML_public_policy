@@ -169,7 +169,7 @@ def retrain_model(request):
             if factor["is_balanced"]:
                 protected_attr = factor["name"]
         if protected_attr is not None:
-            thresholds = get_fair_thresholds(model, protected_attr, dataFile='df_math_cleaned.csv')
+            thresholds = get_fair_thresholds(model, model_id, protected_attr, dataFilePath, target_variable)
             model_description["positive_threshold"] = thresholds[0]
             model_description["negative_threshold"] = thresholds[1]
             accuracy, confusion_matrices = test_logreg_model(model, model_id, target_variable, dataFilePath, thresholds, protected_attr)
