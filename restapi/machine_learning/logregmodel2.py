@@ -3,7 +3,8 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix
-from restapi.machine_learning.util import preparedata, get_factor_list_from_file
+from restapi.machine_learning.util import preparedata
+from restapi.util import get_factor_list_from_file
 
 # preparing list of coefficients
 def preparelist(factors, cols, intercept):
