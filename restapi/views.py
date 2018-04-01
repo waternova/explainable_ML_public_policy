@@ -23,6 +23,7 @@ import json
 from restapi.machine_learning.logregmodel2 import test_model as test_logreg_model
 from restapi.machine_learning.logregmodel2 import retrain, build_model_from_factors
 from restapi.machine_learning.fairmodel import get_fair_thresholds
+from restapi.util import get_numeric_columns
 
 
 class MLModelViewSet(viewsets.ModelViewSet):
@@ -142,8 +143,9 @@ def test_model(request):
         thresholds = None
         if "positive_threshold" in data and "negative_threshold" in data:
             thresholds = (data["negative_threshold"], data["positive_threshold"])
-        model = build_model_from_factors(data["factors"], data["intercept"], dataFilePath, target_variable, model_id)
-        accuracy, confusion_matrix = test_logreg_model(model, model_id, target_variable, dataFilePath, thresholds, protected_attr)
+        numeric_columns = get_numeric_columns(model_id)
+        model = build_model_from_factors(data["factors"], data["intercept"], dataFilePath, target_variable, numeric_columns)
+        accuracy, confusion_matrix = test_logreg_model(model, numeric_columns, target_variable, dataFilePath, thresholds, protected_attr)
         res = {'accuracy': accuracy, 'confusion_matrices': confusion_matrix}
         return Response(res, status=status.HTTP_200_OK)
     return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
@@ -162,19 +164,21 @@ def retrain_model(request):
         datafile = dataset.file
         # TODO: look up dataFile from database
         dataFilePath = 'datasets/' + datafile.name
-        model, model_description = retrain(model_id, target_variable, data["factors"], dataFile=dataFilePath)
+        numeric_columns = get_numeric_columns(model_id)
+        model, model_description = retrain(numeric_columns, target_variable, data["factors"], dataFile=dataFilePath)
         # TODO: error if two factors are balanced
         protected_attr = None
         for factor in data["factors"]:
             if factor["is_balanced"]:
                 protected_attr = factor["name"]
         if protected_attr is not None:
-            thresholds = get_fair_thresholds(model, model_id, protected_attr, dataFilePath, target_variable)
+            numeric_columns = get_numeric_columns(model_id)
+            thresholds = get_fair_thresholds(model, numeric_columns, protected_attr, dataFilePath, target_variable)
             model_description["positive_threshold"] = thresholds[0]
             model_description["negative_threshold"] = thresholds[1]
-            accuracy, confusion_matrices = test_logreg_model(model, model_id, target_variable, dataFilePath, thresholds, protected_attr)
+            accuracy, confusion_matrices = test_logreg_model(model, numeric_columns, target_variable, dataFilePath, thresholds, protected_attr)
         else:
-            accuracy, confusion_matrices = test_logreg_model(model, model_id, target_variable, dataFilePath)
+            accuracy, confusion_matrices = test_logreg_model(model, numeric_columns, target_variable, dataFilePath)
         model_description['accuracy'] = accuracy
         model_description['confusion_matrices'] = confusion_matrices
         return Response(model_description, status=status.HTTP_200_OK)

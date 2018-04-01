@@ -8,12 +8,11 @@ from sklearn.model_selection import train_test_split
 # import matplotlib.pyplot as plt
 from restapi.machine_learning.util import preparedata
 from restapi.util import get_factor_list_from_file
-from restapi.machine_learning.logregmodel2 import get_numeric_columns
+
 
 # Gets thresholds with positive class first
-def get_fair_thresholds(model, model_id, protectiveAtt, dataFile, target_variable):
+def get_fair_thresholds(model, numeric_columns, protectiveAtt, dataFile, target_variable):
     df_data = pd.read_csv(dataFile)
-    numeric_columns = get_numeric_columns(model_id)
     factor_list_wo_categories = get_factor_list_from_file(dataFile, target_variable, numeric_columns)
     y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
