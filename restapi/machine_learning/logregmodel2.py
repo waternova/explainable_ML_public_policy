@@ -7,20 +7,17 @@ from restapi.machine_learning.util import preparedata
 from restapi.util import get_factor_list_from_file
 
 
-# preparing list of coefficients
 def preparelist(factors, cols, intercept):
-    factor_data_frame = pd.DataFrame(factors)  # variable name changed
+    # Gets list of coefficients from factors in the same order as in cols
+    factor_data_frame = pd.DataFrame(factors)
     coefficient_list = []
     for col in cols:
-        if col == 'Intercept':  # Default was 0.366298367 ==> Put in DB
+        if col == 'Intercept':  
             coefficient_list.append(intercept)
         else:
             values = factor_data_frame[factor_data_frame.name == col]['weight'].values
             if len(values) > 0:
                 coefficient_list.append(values[0])
-            # TODO: this is a hack to make it work
-            elif col == "C(activities)[T.yes]":
-                coefficient_list.append(0)
             else:
                 print("did not find ", col)
     return coefficient_list
