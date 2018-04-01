@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from django.conf import settings
+from django.utils import timezone
 
-# Create your views here.
 from rest_framework import viewsets
 
 from .serializers import MlModelSerializer
@@ -20,10 +21,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 import json
+import os
+import pandas as pd
+
 from restapi.machine_learning.logregmodel2 import test_model as test_logreg_model
 from restapi.machine_learning.logregmodel2 import retrain, build_model_from_factors
+from restapi.machine_learning.util import preparedata
 from restapi.machine_learning.fairmodel import get_fair_thresholds
-from restapi.util import get_numeric_columns
+from restapi.util import get_numeric_columns, get_factor_list_from_file, get_column_names_from_file
 
 
 class MLModelViewSet(viewsets.ModelViewSet):
@@ -134,8 +139,7 @@ def test_model(request):
         target_variable = mlmodel.target_variable
         dataset = mlmodel.dataset_id
         target_variable = mlmodel.target_variable
-        datafile = dataset.file
-        dataFilePath = 'datasets/' + datafile.name
+        dataFilePath = os.path.join(settings.MEDIA_ROOT, dataset.file.name)
         protected_attr = None
         for factor in data["factors"]:
             if factor["is_balanced"]:
@@ -161,9 +165,7 @@ def retrain_model(request):
         mlmodel = MlModel.objects.get(pk=model_id)
         dataset = mlmodel.dataset_id
         target_variable = mlmodel.target_variable
-        datafile = dataset.file
-        # TODO: look up dataFile from database
-        dataFilePath = 'datasets/' + datafile.name
+        dataFilePath = os.path.join(settings.MEDIA_ROOT, dataset.file.name)
         numeric_columns = get_numeric_columns(model_id)
         model, model_description = retrain(numeric_columns, target_variable, data["factors"], dataFile=dataFilePath)
         # TODO: error if two factors are balanced
@@ -185,11 +187,7 @@ def retrain_model(request):
     else:
         return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
 
-from restapi.models import MlModel, DataSet, Factor
-from django.utils import timezone
-from restapi.machine_learning.util import preparedata
-from restapi.util import get_column_names_from_file
-import pandas as pd
+
 @api_view(['POST'])
 def new_model_with_factor_creation(request):
     # expects JSON with name, description, and dataset_id
@@ -211,12 +209,10 @@ def new_model_with_factor_creation(request):
     newModel.save()
     # Get factor names from file
     dataset = DataSet.objects.get(pk=dataset_id)
-    datafile = dataset.file
-    all_columns = get_column_names_from_file('datasets/' + datafile.name)
+    dataFilePath = os.path.join(settings.MEDIA_ROOT, dataset.file.name)
     numeric_columns = non_categorical_columns.split(',')
-    categorical_columns = set(all_columns) - set([target_variable]) - set(numeric_columns)
-    factor_list = numeric_columns + ['C(' + x + ')' for x in categorical_columns]
-    y,X = preparedata(pd.read_csv('datasets/' + datafile.name), target_variable, factor_list)
+    factor_list = get_factor_list_from_file(dataFilePath, target_variable, numeric_columns)
+    y,X = preparedata(pd.read_csv(dataFilePath), target_variable, factor_list)
     factors_to_save = X.columns.values.tolist()
     # Save factors
     for factor in factors_to_save:
