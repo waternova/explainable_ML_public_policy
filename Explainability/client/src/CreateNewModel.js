@@ -122,6 +122,7 @@ class CreateNewModel extends Component {
               value={datasetValue}
               onChange={this.handleSelectChange}
               options={this.state.datasetList}
+              required={true}
             />
             <br/>
             <label>Description</label>
