@@ -24,7 +24,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('restapi.urls')),
     url(r'^$', views.model_viewer, name='model_viewer'),
-    url(r'^modelViewer.js$', views.model_viewer_js, name='model_viewer_js')
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(
+    settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -6,3 +6,5 @@ node_modules
 .vscode
 .pytest_cache
 datasets/*
+static/*
+Explainability/client/build/*

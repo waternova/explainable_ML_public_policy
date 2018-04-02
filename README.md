@@ -76,6 +76,12 @@ Any time you update the database tables, you must also generate a migration scri
 
 ***
 
+### Deployment
+In `Explainability/client`, run
+`npm run build`
+Then at the project root run
+`python manage.py collectstatic` and `python manage.py runserver`
+
 ### Documents
 
 <a href="https://drive.google.com/open?id=1mvqfzQ_mZhfX1jMKooT67kJvRwBtw27upqGH7I-9D44"> User Story Map </a> <br>
