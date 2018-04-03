@@ -1,4 +1,7 @@
 .home  {
-  font-size: 14px;
+  font-size: 18px;
   padding: 50px;
+  margin: auto;
+  max-width: 600px;
+  line-height: 1.428;
 }
