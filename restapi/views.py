@@ -182,9 +182,10 @@ def retrain_model(request):
         y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
         X = drop_disabled_factors(X, data["factors"])
         if protected_attr is not None:
-            thresholds = get_fair_thresholds(model, numeric_columns, protected_attr, dataFilePath, target_variable)
-            model_description["positive_threshold"] = thresholds[0]
-            model_description["negative_threshold"] = thresholds[1]
+            thresholds = get_fair_thresholds(model, X, y, protected_attr)
+            model_description["negative_threshold"] = thresholds[0]
+            model_description["positive_threshold"] = thresholds[1]
+            print(thresholds)
             accuracy, confusion_matrices = test_logreg_model(model, X, y, thresholds, protected_attr)
         else:
             accuracy, confusion_matrices = test_logreg_model(model, X, y)
