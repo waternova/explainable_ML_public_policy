@@ -76,11 +76,11 @@ Any time you update the database tables, you must also generate a migration scri
 
 ***
 
-### Deployment
+### Deployment on a public server (not secure)
 In `Explainability/client`, run
 `npm run build`
 Then at the project root run
-`python manage.py collectstatic` and `python manage.py runserver`
+`python manage.py collectstatic` and `python manage.py runserver 0.0.0.0:8000`
 
 ### Documents
 

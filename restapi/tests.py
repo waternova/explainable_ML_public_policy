@@ -1,5 +1,5 @@
 from django.test import TestCase
-from restapi.models import MlModel
+from restapi.models import MlModel, MlModelDetail
 from django.utils import timezone
 import restapi.util as util
 from restapi.machine_learning.logregmodel2 import preparelist
@@ -30,3 +30,20 @@ class LogRegModelTestCase(TestCase):
         factors = [{"name": "factor1", "weight": 2.4}, {"name": "factor2", "weight": 1.4}, {"name": "Intercept", "weight": 0.3}]
         coefficient_list = preparelist(factors, ["factor2", "factor1", "Intercept"], 0.5)
         self.assertListEqual(coefficient_list, [1.4, 2.4, 0.5])
+
+class MlModelDetailTestCase(TestCase):
+    def test_store_numeric_data(self):
+        mlModel = MlModel.objects.create(
+            name="important model", 
+            description="very important",
+            modified=timezone.now())
+        
+        MlModelDetail.objects.create(
+            model_id=mlModel,
+            type="true positive rate",
+            intValue=45
+        )
+
+        detailSet = MlModelDetail.objects.filter(model_id=mlModel).filter(type="true positive rate")
+        self.assertNotEqual(detailSet.first(), None)
+        self.assertEqual(detailSet.first().intValue, 45)

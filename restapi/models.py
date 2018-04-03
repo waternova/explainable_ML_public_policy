@@ -46,3 +46,7 @@ class DataSet(models.Model):
     file = models.FileField(blank=True)
 
 
+class MlModelDetail(models.Model):
+    model_id = models.ForeignKey('MlModel', on_delete=models.CASCADE, null=True)
+    type = models.CharField(max_length=255)
+    intValue = models.IntegerField()
