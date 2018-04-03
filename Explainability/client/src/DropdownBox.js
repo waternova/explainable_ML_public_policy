@@ -45,7 +45,7 @@ class DropdownBox extends Component {
     if (this.mounted) {
       if (!ReactDOM.findDOMNode(this).contains(event.target)) {
         if (this.props.isOpen) {
-          this.handleClose();
+          this.props.handleClose();
         }
       }
     }
