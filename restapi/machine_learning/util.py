@@ -21,5 +21,5 @@ def drop_disabled_factors(df, factors):
     X = df
     for factor in factors:
         if not factor["is_enabled"]:
-            X = df.drop(factor["name"], axis=1)
+            X = X.drop(factor["name"], axis=1)
     return X

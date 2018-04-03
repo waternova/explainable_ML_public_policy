@@ -82,7 +82,4 @@ def retrain(factor_list_wo_categories, target_variable, factors, dataFile):
         if factor_name in col_list:
             col_num_in_X = col_list.index(factor_name)
             factor["weight"] = model.coef_[0][col_num_in_X]
-    #     if factor["is_enabled"]:
-    #         factor["weight"] = factor["weight"] * (-1.0)
-    # TODO: figure out best way to also recalculate accuracy
     return model, {'factors': factors}

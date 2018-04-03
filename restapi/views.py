@@ -173,13 +173,14 @@ def retrain_model(request):
         numeric_columns = get_numeric_columns(model_id)
         factor_list_wo_categories = get_factor_list_from_file(dataFilePath, target_variable, numeric_columns)
         model, model_description = retrain(factor_list_wo_categories, target_variable, data["factors"], dataFile=dataFilePath)
-        # TODO: error if two factors are balanced
+        # not enforced here: error if two factors are balanced
         protected_attr = None
         for factor in data["factors"]:
             if factor["is_balanced"]:
                 protected_attr = factor["name"]
         df_data = pd.read_csv(dataFilePath)
         y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
+        X = drop_disabled_factors(X, data["factors"])
         if protected_attr is not None:
             thresholds = get_fair_thresholds(model, numeric_columns, protected_attr, dataFilePath, target_variable)
             model_description["positive_threshold"] = thresholds[0]

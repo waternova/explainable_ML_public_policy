@@ -76,13 +76,15 @@ class LogRegModelTestCase(TestCase):
     def test_drop_disabled_factors_drops_factors(self):
         factors = [
             {"name":"failures", "is_enabled": False, "weight": 1.1},
-            {"name":"C(sex)[T.M]", "is_enabled": True, "weight": -1.2}]
+            {"name":"C(sex)[T.M]", "is_enabled": True, "weight": -1.2},
+            {"name":"C(abc)[T.a]", "is_enabled": False, "weight": -1.2}]
         df = pd.DataFrame.from_dict({
             'failures': [0, 1, 2],
-            'C(sex)[T.M]': ['M', 'F', 'M']})
+            'C(sex)[T.M]': [1, 0, 1],
+            "C(abc)[T.a]": [0, 1, 1]})
         dropped_df = drop_disabled_factors(df, factors)
         test_df = pd.DataFrame.from_dict({
-            'C(sex)[T.M]': ['M', 'F', 'M']})
+            'C(sex)[T.M]': [1, 0, 1]})
         pd.testing.assert_frame_equal(dropped_df, test_df)
 
     def test_drop_disabled_factors_returns_input_if_nothing_disabled(self):
@@ -91,7 +93,7 @@ class LogRegModelTestCase(TestCase):
             {"name":"C(sex)[T.M]", "is_enabled": True, "weight": -1.2}]
         df = pd.DataFrame.from_dict({
             'failures': [0, 1, 2],
-            'C(sex)[T.M]': ['M', 'F', 'M']})
+            'C(sex)[T.M]': [1, 0, 1]})
         dropped_df = drop_disabled_factors(df, factors)
         pd.testing.assert_frame_equal(dropped_df, df)
 
