@@ -4,7 +4,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix
 from restapi.machine_learning.util import preparedata
-from restapi.util import get_factor_list_from_file
 
 
 def preparelist(factors, cols, intercept):
@@ -23,7 +22,7 @@ def preparelist(factors, cols, intercept):
     return coefficient_list
 
 
-def build_model_from_factors(factors, intercept, dataFile, target_variable, numeric_columns):
+def build_model_from_factors(factors, intercept, y, X):
     # "factors" has all the values such as is_enabled, is_binary, is_balanced
     # for example:
     # print(factors[0]["alias"])
@@ -31,12 +30,6 @@ def build_model_from_factors(factors, intercept, dataFile, target_variable, nume
     # print(factors[0]["weight"])
     ##
     assert intercept is not None, "intercept is None"
-    df_data = pd.read_csv(dataFile)
-    factor_list_wo_categories = get_factor_list_from_file(dataFile, target_variable, numeric_columns)
-    y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
-    for factor in factors:
-        if not factor["is_enabled"]:
-            X = X.drop(factor["name"], axis=1)
     coefficient_list = preparelist(factors, X.columns, intercept)
     X_train, X_test, y_train, y_test = \
         train_test_split(X, y, test_size=.25, random_state=42)
@@ -46,10 +39,7 @@ def build_model_from_factors(factors, intercept, dataFile, target_variable, nume
     return model 
 
   
-def test_model(model, numeric_columns, target_variable, dataFile, thresholds=None, balanced_factor=None):
-    df_math = pd.read_csv(dataFile)
-    factor_list_wo_categories = get_factor_list_from_file(dataFile, target_variable, numeric_columns)
-    y, X = preparedata(df_math, target_variable, factor_list_wo_categories)
+def test_model(model, X, y, thresholds=None, balanced_factor=None):
     X_train, X_test, y_train, y_test = \
         train_test_split(X, y, test_size=.25, random_state=42)
     if balanced_factor is None:
@@ -76,9 +66,9 @@ def test_model(model, numeric_columns, target_variable, dataFile, thresholds=Non
 
 
 # Retrain passed factors using dataFile as input csv
-def retrain(numeric_columns, target_variable, factors, dataFile):
+def retrain(factor_list_wo_categories, target_variable, factors, dataFile):
     df_math = pd.read_csv(dataFile)
-    y, X = preparedata(df_math, target_variable, get_factor_list_from_file(dataFile, target_variable, numeric_columns))
+    y, X = preparedata(df_math, target_variable, factor_list_wo_categories)
     for factor in factors:
         if not factor["is_enabled"]:
             X = X.drop(factor["name"], axis=1)

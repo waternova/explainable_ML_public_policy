@@ -26,7 +26,7 @@ import pandas as pd
 
 from restapi.machine_learning.logregmodel2 import test_model as test_logreg_model
 from restapi.machine_learning.logregmodel2 import retrain, build_model_from_factors
-from restapi.machine_learning.util import preparedata
+from restapi.machine_learning.util import preparedata, drop_disabled_factors
 from restapi.machine_learning.fairmodel import get_fair_thresholds
 from restapi.util import get_numeric_columns, get_factor_list_from_file, get_column_names_from_file
 
@@ -148,8 +148,12 @@ def test_model(request):
         if "positive_threshold" in data and "negative_threshold" in data:
             thresholds = (data["negative_threshold"], data["positive_threshold"])
         numeric_columns = get_numeric_columns(model_id)
-        model = build_model_from_factors(data["factors"], data["intercept"], dataFilePath, target_variable, numeric_columns)
-        accuracy, confusion_matrix = test_logreg_model(model, numeric_columns, target_variable, dataFilePath, thresholds, protected_attr)
+        factor_list_wo_categories = get_factor_list_from_file(dataFilePath, target_variable, numeric_columns)
+        df_data = pd.read_csv(dataFilePath)
+        y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
+        X = drop_disabled_factors(X, data["factors"])
+        model = build_model_from_factors(data["factors"], data["intercept"], y, X)
+        accuracy, confusion_matrix = test_logreg_model(model, X, y, thresholds, protected_attr)
         res = {'accuracy': accuracy, 'confusion_matrices': confusion_matrix}
         return Response(res, status=status.HTTP_200_OK)
     return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
@@ -167,20 +171,22 @@ def retrain_model(request):
         target_variable = mlmodel.target_variable
         dataFilePath = os.path.join(settings.MEDIA_ROOT, dataset.file.name)
         numeric_columns = get_numeric_columns(model_id)
-        model, model_description = retrain(numeric_columns, target_variable, data["factors"], dataFile=dataFilePath)
+        factor_list_wo_categories = get_factor_list_from_file(dataFilePath, target_variable, numeric_columns)
+        model, model_description = retrain(factor_list_wo_categories, target_variable, data["factors"], dataFile=dataFilePath)
         # TODO: error if two factors are balanced
         protected_attr = None
         for factor in data["factors"]:
             if factor["is_balanced"]:
                 protected_attr = factor["name"]
+        df_data = pd.read_csv(dataFilePath)
+        y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
         if protected_attr is not None:
-            numeric_columns = get_numeric_columns(model_id)
             thresholds = get_fair_thresholds(model, numeric_columns, protected_attr, dataFilePath, target_variable)
             model_description["positive_threshold"] = thresholds[0]
             model_description["negative_threshold"] = thresholds[1]
-            accuracy, confusion_matrices = test_logreg_model(model, numeric_columns, target_variable, dataFilePath, thresholds, protected_attr)
+            accuracy, confusion_matrices = test_logreg_model(model, X, y, thresholds, protected_attr)
         else:
-            accuracy, confusion_matrices = test_logreg_model(model, numeric_columns, target_variable, dataFilePath)
+            accuracy, confusion_matrices = test_logreg_model(model, X, y)
         model_description['accuracy'] = accuracy
         model_description['confusion_matrices'] = confusion_matrices
         return Response(model_description, status=status.HTTP_200_OK)

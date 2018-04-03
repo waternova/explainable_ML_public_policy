@@ -16,3 +16,10 @@ def preparedata(df, target_variable='G3_class', factor_list=default_factor_list)
                   df, return_type="dataframe")
     y = np.ravel(y)
     return y,X
+
+def drop_disabled_factors(df, factors):
+    X = df
+    for factor in factors:
+        if not factor["is_enabled"]:
+            X = df.drop(factor["name"], axis=1)
+    return X
