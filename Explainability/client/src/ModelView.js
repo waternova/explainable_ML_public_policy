@@ -69,7 +69,7 @@ class Row extends Component {
         </td>
         <td>
           <input 
-            defaultValue={this.state.weight} 
+            defaultValue={this.state.weight.toFixed(6)} 
             onChange={this.handleWeightChange} 
             onBlur={(event) => this.props.resortRows()} />
         </td>
@@ -173,19 +173,27 @@ class ModelView extends Component {
               clearOtherBalanceSelect={this.clearOtherBalanceSelect}
               resortRows={this.resortRows}/>);
         });
-
+        const balancedFactor = this.state.rows.find(x => x.is_balanced);
+        const factorName = balancedFactor ? balancedFactor.alias : null;
         const confusionMatrices = this.state.confusionMatrices.map((matrix, index) => {
           const maxSize = Math.max(...matrix.reduce((acc, val) => acc.concat(val), []));
-          return <ConfusionMatrix key={index} index={index} matrix={matrix} maxSize={maxSize} />
+          var headerText;
+          var threshold;
+          if (this.state.confusionMatrices.length < 2) {
+            headerText = 'Predictions for all'
+          } else if (this.state.confusionMatrices.length === 2) {
+            headerText = `Predictions for cases where "${factorName}" is ${(index ? 'true' : 'false')}`;
+            threshold = index ? this.state.positiveThreshold : this.state.negativeThreshold;
+          }
+          return <ConfusionMatrix key={index} headerText={headerText} matrix={matrix} maxSize={maxSize} threshold={threshold} />
         });
 
         return (
             <div className="wrapper">
                 <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
-                <h3> {this.state.description}</h3>
-                <h2>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</h2>
-                <h2>{this.state.positiveThreshold ? 'Threshold for positive class: ' + (this.state.positiveThreshold).toFixed(2): ''}</h2>
-                <h2>{this.state.negativeThreshold ? 'Threshold for negative class: ' + (this.state.negativeThreshold).toFixed(2): ''}</h2>
+                <h3>Description</h3>
+                <p>{this.state.description}</p>
+                <p>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</p>
                 {confusionMatrices}
                 <p>
                     <button className="toolbar" onClick={this.retrainModel}>Retrain</button> &nbsp;
