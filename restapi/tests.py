@@ -108,8 +108,7 @@ class MlModelDetailTestCase(TestCase):
         MlModelDetail.objects.create(
             model_id=mlModel,
             type="true positive rate",
-            intValue=45
-        )
+            intValue=45)
 
         detailSet = MlModelDetail.objects.filter(model_id=mlModel).filter(type="true positive rate")
         self.assertNotEqual(detailSet.first(), None)

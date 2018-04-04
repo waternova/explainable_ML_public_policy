@@ -13,13 +13,13 @@ const ConfusionMatrix = props => (
     <tbody>
       <tr>
         <td>Actually negative</td>
-        <td>True negative: {props.matrix[0][0]}</td>
-        <td>False positive: {props.matrix[0][1]}</td>
+        <td style={{backgroundColor: 'rgb(0, 255, 0,' + props.matrix[0][0]/props.maxSize +')'}}>True negative: {props.matrix[0][0]}</td>
+        <td style={{backgroundColor: 'rgb(255, 0, 0,' + props.matrix[0][1]/props.maxSize +')'}}>False positive: {props.matrix[0][1]}</td>
       </tr>
       <tr>
         <td>Actually positive</td>
-        <td>False negative: {props.matrix[1][0]}</td>
-        <td>True positive: {props.matrix[1][1]}</td>
+        <td style={{backgroundColor: 'rgb(255, 0, 0,' + props.matrix[1][0]/props.maxSize +')'}}>False negative: {props.matrix[1][0]}</td>
+        <td style={{backgroundColor: 'rgb(0, 255, 0,' + props.matrix[1][1]/props.maxSize +')'}}>True positive: {props.matrix[1][1]}</td>
       </tr>
     </tbody>
   </table>

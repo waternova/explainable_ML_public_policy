@@ -67,7 +67,12 @@ class Row extends Component {
                 disabled={!this.state.is_binary}
                 onClick={this.handleBalanceSelect} />
         </td>
-        <td><input defaultValue={this.state.weight} onChange={this.handleWeightChange}></input></td>
+        <td>
+          <input 
+            defaultValue={this.state.weight} 
+            onChange={this.handleWeightChange} 
+            onBlur={(event) => this.props.resortRows()} />
+        </td>
       </tr>
     );
   }
@@ -132,6 +137,7 @@ class ModelView extends Component {
         this.loadModel = this.loadModel.bind(this);
         this.loadFactors = this.loadFactors.bind(this);
         this.clearOtherBalanceSelect = this.clearOtherBalanceSelect.bind(this);
+        this.resortRows = this.resortRows.bind(this);
     }
 
     componentDidMount() {
@@ -152,7 +158,8 @@ class ModelView extends Component {
         });
       }).then(res => res.json()).then(data => {
         this.loadFactors(data);
-        this.updateGraphSizes();
+        let rows = this.updateGraphSizes();
+        this.resortRows(rows);
       }).catch(error => console.error("Request failed", error));
     }
 
@@ -163,11 +170,13 @@ class ModelView extends Component {
               index={number} 
               value={entry} 
               onChange={this.updateFactor} 
-              clearOtherBalanceSelect={this.clearOtherBalanceSelect}/>);
+              clearOtherBalanceSelect={this.clearOtherBalanceSelect}
+              resortRows={this.resortRows}/>);
         });
 
         const confusionMatrices = this.state.confusionMatrices.map((matrix, index) => {
-          return <ConfusionMatrix key={index} index={index} matrix={this.state.confusionMatrices[index]} />
+          const maxSize = Math.max(...matrix.reduce((acc, val) => acc.concat(val), []));
+          return <ConfusionMatrix key={index} index={index} matrix={matrix} maxSize={maxSize} />
         });
 
         return (
@@ -208,18 +217,47 @@ class ModelView extends Component {
       let newRows = this.state.rows.slice();
       newRows[index][field] = value;
       this.setState({rows: newRows});
-      if (field === 'weight') {
+      if (field === 'weight' || field === 'is_enabled') {
         this.updateGraphSizes(newRows);
       }
     }
 
     updateGraphSizes(rows = this.state.rows.slice()) {
+      const interceptRowIndex = rows.map(x=>x.name).indexOf("Intercept");
+      let interceptRow;
+      if (interceptRowIndex > -1) {
+        interceptRow = rows[interceptRowIndex];
+        rows.splice(interceptRowIndex, 1);
+      }
       let weights = rows.map(x=>x.weight);
       let maxWeight = Math.max(...weights);
       let minWeight = Math.min(...weights);
       let maxSize = Math.max(maxWeight, -minWeight);
       for (let row of rows) {
-        row.graphSize = row.weight / maxSize * 100;
+        if (row.is_enabled) {
+          row.graphSize = row.weight / maxSize * 100;
+        } else {
+          row.graphSize = 0;
+        }
+      }
+      if (interceptRow) {
+        interceptRow.graphSize = 0;
+        rows.push(interceptRow);
+      }
+      this.setState({rows: rows});
+      return rows;
+    }
+
+    resortRows(rows = this.state.rows.slice()) {
+      const interceptRowIndex = rows.map(x=>x.name).indexOf("Intercept");
+      let interceptRow;
+      if (interceptRowIndex > -1) {
+        interceptRow = rows[interceptRowIndex];
+        rows.splice(interceptRowIndex, 1);
+      }
+      rows.sort((a, b) => { return Math.abs(a.weight) < Math.abs(b.weight) });
+      if (interceptRow) {
+        rows.push(interceptRow);
       }
       this.setState({rows: rows});
     }
@@ -378,6 +416,8 @@ class ModelView extends Component {
                 accuracy: data.accuracy,
                 confusionMatrices: data.confusion_matrices,
             });
+            this.updateGraphSizes(data.factors);
+            this.resortRows(data.factors);
             for (let factor of data.factors) {
                 if (factor.name === 'Intercept') {
                     this.setState({intercept: factor.weight})

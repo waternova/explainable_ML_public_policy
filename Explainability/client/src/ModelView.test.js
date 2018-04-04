@@ -27,7 +27,11 @@ describe('bar graph updates', () => {
         match={match} 
         skipFactorLoad={true} />
       ), div);
-    const rows = [{id: 3, weight: 1.2}, {id: 2, weight: -4.4}, {id: 6, weight: -2.2}];
+    const rows = [
+      {id: 3, weight: 1.2, is_enabled: true}, 
+      {id: 2, weight: -4.4, is_enabled: true}, 
+      {id: 6, weight: -2.2, is_enabled: true},
+    ];
     modelView.setState({rows: rows}, done);
   });
 
