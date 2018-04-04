@@ -138,6 +138,7 @@ class ModelView extends Component {
         this.loadFactors = this.loadFactors.bind(this);
         this.clearOtherBalanceSelect = this.clearOtherBalanceSelect.bind(this);
         this.resortRows = this.resortRows.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
@@ -190,9 +191,9 @@ class ModelView extends Component {
 
         return (
             <div className="wrapper">
-                <h1>Model #{this.state.model_id} : {this.state.model_name}</h1>
+                <h1>Model #{this.state.model_id}: {this.state.model_name}</h1>
                 <h3>Description</h3>
-                <p>{this.state.description}</p>
+                <textarea value={this.state.description} name="description" onChange={this.handleChange}/>
                 <p>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</p>
                 {confusionMatrices}
                 <p>
@@ -468,43 +469,11 @@ class ModelView extends Component {
             this.setState({rows:this.state.rows.concat(data[i])});
         }
     }
-/*
-    handleImportClick() {
-        document.getElementById('file').click();
-    }
 
-    importModelEnd(event) {
-        try {
-            var data = JSON.parse(event.target.result);
-       } catch(e) {
-            alert("Cannot parse the file as JSON.");
-            return;
-        }
-        if ("model" in data) {
-            this.loadModel(data["model"]);
-            if ("factors" in data) {
-                this.loadFactors(data["factors"]);
-            }
-        }
-        else
-        {
-            alert("Cannot find a model data.");
-        }
+    handleChange(event) {
+      const property = event.target.name;
+      this.setState({[property]: event.target.value});
     }
-
-    importModelBegin(event) {
-        if (!(window.File && window.FileReader && window.FileList && window.Blob))
-        {
-            alert('The File APIs are not fully supported by your browser.');
-            return;
-        }
-        var reader = new FileReader();
-        var fileInput = document.getElementById('file');
-        var file = fileInput.files[0];
-        reader.onload = this.importModelEnd;
-        reader.readAsText(file);
-    }
-*/
 }
 
 
