@@ -25,4 +25,8 @@ urlpatterns = [
     url(r'^api/', include('restapi.urls')),
     url(r'^$', views.model_viewer, name='model_viewer'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(
-    settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    settings.STATIC_URL, document_root=settings.STATIC_ROOT
+) + [
+    url(r'^.*$', views.model_viewer, name='model_viewer')
+]
+
