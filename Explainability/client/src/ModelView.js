@@ -139,6 +139,7 @@ class ModelView extends Component {
         this.clearOtherBalanceSelect = this.clearOtherBalanceSelect.bind(this);
         this.resortRows = this.resortRows.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.replaceModelDetails = this.replaceModelDetails.bind(this);
     }
 
     componentDidMount() {
@@ -148,12 +149,13 @@ class ModelView extends Component {
     }
 
     loadFactorsFromServer() {
-      fetch ("/api/model/" + this.state.model_id + "/?format=json", {
+      const modelId = this.state.model_id;
+      fetch ("/api/model/" + modelId + "/?format=json", {
         method: "GET",
         headers: {"Content-Type": "application/json;charset=UTF-8"},
       }).then(res => res.json()).then(data => {
         this.loadModel(data);
-        return fetch ("/api/factors/?model_id=" + data.id + "&format=json", {
+        return fetch("/api/factors/?model_id=" + data.id + "&format=json", {
           method: "GET",
           headers: {"Content-Type" : "application/json;charset=UTF-8"},
         });
@@ -161,6 +163,11 @@ class ModelView extends Component {
         this.loadFactors(data);
         let rows = this.updateGraphSizes();
         this.resortRows(rows);
+        return fetch("/api/modeldetail/?model_id=" + modelId + "&format=json", {
+          headers: {"Content-Type" : "application/json;charset=UTF-8"},
+        })
+      }).then(res => res.json()).then(data => {
+        this.loadDetail(data);
       }).catch(error => console.error("Request failed", error));
     }
 
@@ -177,20 +184,21 @@ class ModelView extends Component {
         const balancedFactor = this.state.rows.find(x => x.is_balanced);
         const factorName = balancedFactor ? balancedFactor.alias : null;
         let confusionMatrices;
-        if ('all' in this.state.confusionMatrices) {
-          const matrix = this.state.confusionMatrices['all'];
-          const maxSize = Math.max(...matrix.reduce((acc, val) => acc.concat(val), []));
+        const stateCmxs = this.state.confusionMatrices;
+        if ('all' in stateCmxs) {
+          const matrix = stateCmxs['all'];
+          const maxSize = Math.max(...Object.values(matrix));
           const headerText = 'Predictions for all'
           confusionMatrices = [
             <ConfusionMatrix 
               key='all' 
               headerText={headerText} 
-              matrix={confusionMatrices.all} 
+              matrix={stateCmxs.all} 
               maxSize={maxSize} />
           ]
-        } else if ('positive_class' in this.state.confusionMatrices && 'negative_class' in this.state.confusionMatrices) {
-          confusionMatrices = Object.entries(confusionMatrices).map(([key, matrix]) => {
-            const maxSize = Math.max(...matrix.reduce((acc, val) => acc.concat(val), []));
+        } else if ('positive_class' in stateCmxs && 'negative_class' in stateCmxs) {
+          confusionMatrices = Object.entries(stateCmxs).map(([key, matrix]) => {
+            const maxSize = Math.max(...Object.values(matrix));
             const isPositiveClass = key === 'positive_class';
             const headerText = `Predictions for cases where "${factorName}" is ${(isPositiveClass ? 'true' : 'false')}`;
             const threshold = isPositiveClass ? this.state.positiveThreshold : this.state.negativeThreshold;
@@ -384,12 +392,37 @@ class ModelView extends Component {
                 if (this.saveFactor(data.id, factors[i], isUpdate) === true) {count++;}
             }
             console.log("%d/%d factors saved.", factors.length, count);
+          return this.replaceModelDetails(data.id);
+        }).then(res => {
+          if (!res.ok) {
+            throw Error(res.statusText);
+          } else {
             alert("Successfully Saved: \n" + saveName);
+          }
         }).catch(error =>
         {
             console.log("Request failed: ", error);
             alert("Save Failure: \n" + error);
         });
+    }
+
+    replaceModelDetails(modelId) {
+      let details = {};
+      const cmxs = this.state.confusionMatrices;
+      for (let [matrixType, matrix] of Object.entries(cmxs)) {
+        for (let [key, value] of Object.entries(matrix)) {
+          details[matrixType + '#' + key] = value;
+        }
+      }
+      const updateJson = {
+        model_id: modelId,
+        details: details,
+      }
+      return fetch('/api/replacemodeldetails/', {
+        method: 'POST',
+        headers: {"Content-Type" : "application/json;charset=UTF-8"},
+        body: JSON.stringify(updateJson)
+      })
     }
 
     //Handler for Test Button
@@ -484,6 +517,18 @@ class ModelView extends Component {
             data[i].model_id = this.state.model_id;
             this.setState({rows:this.state.rows.concat(data[i])});
         }
+    }
+
+    loadDetail(data) {
+      let confusionMatrices = {};
+      for (let detail of data) {
+        let [matrixType, valueType] = detail.type.split('#', 2);
+        if (!(matrixType in confusionMatrices)) {
+          confusionMatrices[matrixType] = {};
+        }
+        confusionMatrices[matrixType][valueType] = detail.intValue;
+      }
+      this.setState({confusionMatrices: confusionMatrices})
     }
 
     handleChange(event) {

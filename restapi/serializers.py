@@ -7,6 +7,7 @@ from restapi.models import Factor
 from restapi.models import Comment
 from restapi.models import User
 from restapi.models import DataSet
+from restapi.models import MlModelDetail
 
 
 class MlModelSerializer(serializers.ModelSerializer):
@@ -60,3 +61,8 @@ class DataSetSerializer(serializers.ModelSerializer):
         model = DataSet
         fields = ('id', 'name', 'description', 'modified', 'file')
 
+
+class MlModelDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MlModelDetail
+        fields = ('id', 'model_id', 'type', 'intValue')

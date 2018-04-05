@@ -9,12 +9,14 @@ from .serializers import FactorSerializer
 from .serializers import CommentSerializer
 from .serializers import UserSerializer
 from .serializers import DataSetSerializer
+from .serializers import MlModelDetailSerializer
 
 from restapi.models import MlModel
 from restapi.models import Factor
 from restapi.models import Comment
 from restapi.models import User
 from restapi.models import DataSet
+from restapi.models import MlModelDetail
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -72,6 +74,17 @@ def factors(request):
         if model_id is not None:
             factors_obj = Factor.objects.filter(model_id=int(model_id))
             serializer = FactorSerializer(factors_obj, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def modelDetail(request):
+    if request.method == 'GET':
+        model_id = request.GET.get('model_id')
+        if model_id is not None:
+            details_obj = MlModelDetail.objects.filter(model_id=int(model_id))
+            serializer = MlModelDetailSerializer(details_obj, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
     return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
 
@@ -232,3 +245,18 @@ def new_model_with_factor_creation(request):
         )
         newFactor.save()
     return Response(newModel.id, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def replace_model_details(request):
+    data = json.loads(request.body.decode('utf-8'))
+    model_id = data['model_id']
+    # Delete old details
+    MlModelDetail.objects.filter(model_id=model_id).delete()
+    mlModel = MlModel.objects.get(pk=model_id)
+    for key, value in data['details'].items():
+        MlModelDetail.objects.create(
+            model_id=mlModel,
+            type=key,
+            intValue=value)
+    return Response("replaced", status=status.HTTP_200_OK)

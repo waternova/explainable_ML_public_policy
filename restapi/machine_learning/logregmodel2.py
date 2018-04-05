@@ -50,10 +50,10 @@ def test_model(model, X, y, thresholds=None, balanced_factor=None):
             accuracy_score(y_true, y_pred), 
             { 
                 'all': {
-                'true_negative_count': cm[0][0],
-                'false_positive_count': cm[0][1],
-                'false_negative_count': cm[1][0],
-                'true_positve_count': cm[1][1]}
+                    'true_negative_count': cm[0][0],
+                    'false_positive_count': cm[0][1],
+                    'false_negative_count': cm[1][0],
+                    'true_positive_count': cm[1][1]}
             }
         ]
     else:
@@ -74,12 +74,12 @@ def test_model(model, X, y, thresholds=None, balanced_factor=None):
                     'true_negative_count': cm0[0][0],
                     'false_positive_count': cm0[0][1],
                     'false_negative_count': cm0[1][0],
-                    'true_positve_count': cm0[1][1]},
+                    'true_positive_count': cm0[1][1]},
                 'positive_class': {
                     'true_negative_count': cm1[0][0],
                     'false_positive_count': cm1[0][1],
                     'false_negative_count': cm1[1][0],
-                    'true_positve_count': cm1[1][1]}
+                    'true_positive_count': cm1[1][1]}
             }
         ]
     return result
