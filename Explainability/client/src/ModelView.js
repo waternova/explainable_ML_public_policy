@@ -122,7 +122,7 @@ class ModelView extends Component {
             rows: [],
             positiveThreshold: null,
             negativeThreshold: null,
-            confusionMatrices: [[[0,0], [0,0]]],
+            confusionMatrices: {},
         };
 
         this.testModel = this.testModel.bind(this);
@@ -176,18 +176,34 @@ class ModelView extends Component {
         });
         const balancedFactor = this.state.rows.find(x => x.is_balanced);
         const factorName = balancedFactor ? balancedFactor.alias : null;
-        const confusionMatrices = this.state.confusionMatrices.map((matrix, index) => {
+        let confusionMatrices;
+        if ('all' in this.state.confusionMatrices) {
+          const matrix = this.state.confusionMatrices['all'];
           const maxSize = Math.max(...matrix.reduce((acc, val) => acc.concat(val), []));
-          var headerText;
-          var threshold;
-          if (this.state.confusionMatrices.length < 2) {
-            headerText = 'Predictions for all'
-          } else if (this.state.confusionMatrices.length === 2) {
-            headerText = `Predictions for cases where "${factorName}" is ${(index ? 'true' : 'false')}`;
-            threshold = index ? this.state.positiveThreshold : this.state.negativeThreshold;
-          }
-          return <ConfusionMatrix key={index} headerText={headerText} matrix={matrix} maxSize={maxSize} threshold={threshold} />
-        });
+          const headerText = 'Predictions for all'
+          confusionMatrices = [
+            <ConfusionMatrix 
+              key='all' 
+              headerText={headerText} 
+              matrix={confusionMatrices.all} 
+              maxSize={maxSize} />
+          ]
+        } else if ('positive_class' in this.state.confusionMatrices && 'negative_class' in this.state.confusionMatrices) {
+          confusionMatrices = Object.entries(confusionMatrices).map(([key, matrix]) => {
+            const maxSize = Math.max(...matrix.reduce((acc, val) => acc.concat(val), []));
+            const isPositiveClass = key === 'positive_class';
+            const headerText = `Predictions for cases where "${factorName}" is ${(isPositiveClass ? 'true' : 'false')}`;
+            const threshold = isPositiveClass ? this.state.positiveThreshold : this.state.negativeThreshold;
+            return (
+              <ConfusionMatrix 
+                key={key} 
+                headerText={headerText} 
+                matrix={matrix} 
+                maxSize={maxSize} 
+                threshold={threshold} />
+            )
+          })
+        }
 
         return (
             <div className="wrapper">

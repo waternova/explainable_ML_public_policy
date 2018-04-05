@@ -153,8 +153,8 @@ def test_model(request):
         y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
         X = drop_disabled_factors(X, data["factors"])
         model = build_model_from_factors(data["factors"], data["intercept"], y, X)
-        accuracy, confusion_matrix = test_logreg_model(model, X, y, thresholds, protected_attr)
-        res = {'accuracy': accuracy, 'confusion_matrices': confusion_matrix}
+        accuracy, confusion_matrices = test_logreg_model(model, X, y, thresholds, protected_attr)
+        res = {'accuracy': accuracy, 'confusion_matrices': confusion_matrices}
         return Response(res, status=status.HTTP_200_OK)
     return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
 

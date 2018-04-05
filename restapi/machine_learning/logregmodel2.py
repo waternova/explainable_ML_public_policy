@@ -45,9 +45,16 @@ def test_model(model, X, y, thresholds=None, balanced_factor=None):
     if balanced_factor is None:
         y_pred = model.predict(X_test) > 0.5
         y_true = y_test
+        cm = confusion_matrix(y_true, y_pred)
         result = [
             accuracy_score(y_true, y_pred), 
-            [confusion_matrix(y_true, y_pred)]
+            { 
+                'all': {
+                'true_negative_count': cm[0][0],
+                'false_positive_count': cm[0][1],
+                'false_negative_count': cm[1][0],
+                'true_positve_count': cm[1][1]}
+            }
         ]
     else:
         X_test_class1 = X_test[X_test[balanced_factor]==1]
@@ -58,9 +65,22 @@ def test_model(model, X, y, thresholds=None, balanced_factor=None):
         y_pred_1 = model.predict_proba(X_test_class1)[:,1] > thresholds[1]
         y_true = np.concatenate([y_test_class1, y_test_class0])
         y_pred = np.concatenate([y_pred_1, y_pred_0])
+        cm0 = confusion_matrix(y_test_class0, y_pred_0)
+        cm1 = confusion_matrix(y_test_class1, y_pred_1)
         result = [
             accuracy_score(y_true, y_pred), 
-            [confusion_matrix(y_test_class0, y_pred_0), confusion_matrix(y_test_class1, y_pred_1)]
+            { 
+                'negative_class': {
+                    'true_negative_count': cm0[0][0],
+                    'false_positive_count': cm0[0][1],
+                    'false_negative_count': cm0[1][0],
+                    'true_positve_count': cm0[1][1]},
+                'positive_class': {
+                    'true_negative_count': cm1[0][0],
+                    'false_positive_count': cm1[0][1],
+                    'false_negative_count': cm1[1][0],
+                    'true_positve_count': cm1[1][1]}
+            }
         ]
     return result
 
