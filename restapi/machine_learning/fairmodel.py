@@ -89,4 +89,8 @@ def get_fair_thresholds(model, X, y, protectiveAtt):
             final_thresholds = x
     return final_thresholds
   
+#Return Odd Ratios
+# Odd ratios are calculated by taking the exponent of the coefficients
+def get_odd_ratios(model):
+    return np.exp(model.coef_)
 
