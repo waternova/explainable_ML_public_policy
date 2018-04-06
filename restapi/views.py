@@ -144,11 +144,8 @@ def get_comments(request):
 def test_model(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
-        if "model_id" not in data or data["model_id"] is None:
-            model_id = 1
-        else:
-            model_id = data["model_id"]
-        mlmodel = MlModel.objects.get(pk=model_id)
+        model_id = data["model_id"]
+        mlmodel = MlModel.objects.get(pk=int(model_id))
         target_variable = mlmodel.target_variable
         dataset = mlmodel.dataset_id
         target_variable = mlmodel.target_variable

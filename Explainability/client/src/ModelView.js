@@ -123,6 +123,9 @@ class ModelView extends Component {
             positiveThreshold: null,
             negativeThreshold: null,
             confusionMatrices: {},
+            datasetId: null,
+            nonCategoricalColumns: null,
+            targetVariable: null,
         };
 
         this.testModel = this.testModel.bind(this);
@@ -343,18 +346,23 @@ class ModelView extends Component {
         var popup_title = isUpdate ? "Overwrite existing model:" : "Save as a new model:"
         var saveName = prompt(popup_title, this.state.model_name);
         if (saveName === null || saveName.length === 0 ) return;
-        var currentModel, requestType, requestURL;
+        var requestType, requestURL;
+        var currentModel = {
+          name: saveName,
+          description: this.state.description,
+          accuracy: this.state.accuracy,
+          intercept: this.state.intercept,
+          modified: new Date(),
+          dataset_id: this.state.datasetId,
+          non_categorical_columns: this.state.nonCategoricalColumns,
+          target_variable: this.state.targetVariable,
+          positive_threshold: this.state.positiveThreshold,
+          negative_threshold: this.state.negativeThreshold,
+        }
         if (isUpdate === true)
         {
             //Overwrite the model
-            currentModel = {
-                name: saveName,
-                description: this.state.description,
-                accuracy: this.state.accuracy,
-                intercept: this.state.intercept,
-                modified: new Date(),
-                parent_id: this.state.parent_id
-                };
+            currentModel.parent_id = this.state.parent_id;
             requestType = "PUT";
             requestURL = "/api/model/"+this.state.model_id+"/";
             console.log("Overwriting a model: %d", this.state.model_id );
@@ -363,14 +371,7 @@ class ModelView extends Component {
         else
         {
             //Save as a new model
-            currentModel = {
-                name: saveName,
-                description: this.state.description,
-                accuracy: this.state.accuracy,
-                intercept: this.state.intercept,
-                modified: new Date(),
-                parent_id: this.state.model_id
-                };
+            currentModel.parent_id = this.state.model_id;
             requestType = "POST";
             requestURL = "/api/model/";
             console.log("Save as a new model: ");
@@ -412,7 +413,7 @@ class ModelView extends Component {
       for (let [matrixType, matrix] of Object.entries(cmxs)) {
         for (let [key, value] of Object.entries(matrix)) {
           details[matrixType + '#' + key] = value;
-        }
+      }
       }
       const updateJson = {
         model_id: modelId,
@@ -507,7 +508,12 @@ class ModelView extends Component {
             accuracy: parseFloat(data.accuracy),
             intercept: parseFloat(data.intercept),
             modified: data.modified,
-            parent_id: data.parent_id
+            parent_id: data.parent_id,
+            datasetId: data.dataset_id,
+            nonCategoricalColumns: data.non_categorical_columns,
+            targetVariable: data.target_variable,
+            positiveThreshold: data.positive_threshold,
+            negativeThreshold: data.negative_threshold,
         });
     }
 
@@ -523,10 +529,10 @@ class ModelView extends Component {
       let confusionMatrices = {};
       for (let detail of data) {
         let [matrixType, valueType] = detail.type.split('#', 2);
-        if (!(matrixType in confusionMatrices)) {
-          confusionMatrices[matrixType] = {};
-        }
-        confusionMatrices[matrixType][valueType] = detail.intValue;
+          if (!(matrixType in confusionMatrices)) {
+            confusionMatrices[matrixType] = {};
+          }
+          confusionMatrices[matrixType][valueType] = detail.intValue;
       }
       this.setState({confusionMatrices: confusionMatrices})
     }

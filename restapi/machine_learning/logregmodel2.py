@@ -57,6 +57,8 @@ def test_model(model, X, y, thresholds=None, balanced_factor=None):
             }
         ]
     else:
+        assert len(thresholds) > 1, 'threshold must have length of at least 2'
+        assert thresholds[0] is not None, 'thresholds must have values'
         X_test_class1 = X_test[X_test[balanced_factor]==1]
         X_test_class0 = X_test[X_test[balanced_factor]==0]
         y_test_class1 = y_test[X_test[balanced_factor]==1]

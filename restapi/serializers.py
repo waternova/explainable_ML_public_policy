@@ -13,7 +13,10 @@ from restapi.models import MlModelDetail
 class MlModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = MlModel
-        fields = ('id', 'name', 'description', 'accuracy', 'parent_id', 'intercept', 'modified')
+        fields = ('id', 'name', 'description', 'accuracy', 'parent_id', 
+            'intercept', 'dataset_id', 'non_categorical_columns', 
+            'target_variable', 'negative_threshold', 'positive_threshold', 
+            'modified')
 
 
 class FactorSerializer(serializers.ModelSerializer):

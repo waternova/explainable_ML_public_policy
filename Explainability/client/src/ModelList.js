@@ -125,7 +125,7 @@ class ModelList extends React.Component {
                 ).catch(error => console.log("Model delete request failed:", error));*/
             }
         }
-        this.refreshModel();
+        this.refreshModelList();
     }
 
     handleImportClick() {
