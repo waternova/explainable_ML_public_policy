@@ -10,7 +10,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 * Appilication/Backend
   - Python 3.4 or greater,  Django 1.11
-  - numpy, pandas, patsy, sklearn, scipy, django-cors-headers, django-filter
+  - numpy, pandas, patsy, sklearn, scipy, django-cors-headers, django-filter, djangorestframework-bulk
     + To install: `pip install -r requirements.txt`
 
 * WebUI/Frontend
