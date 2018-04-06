@@ -13,6 +13,8 @@ class MlModel(models.Model):
     target_variable = models.TextField(max_length=65535, null=True)
     parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     modified = models.DateTimeField(auto_now_add=False, blank=True)
+    positive_threshold = models.FloatField(null=True)
+    negative_threshold = models.FloatField(null=True)
 
 
 class Factor(models.Model):
@@ -47,3 +49,7 @@ class DataSet(models.Model):
     file = models.FileField(blank=True)
 
 
+class MlModelDetail(models.Model):
+    model_id = models.ForeignKey('MlModel', on_delete=models.CASCADE, null=True)
+    type = models.CharField(max_length=255)
+    intValue = models.IntegerField()

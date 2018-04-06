@@ -33,6 +33,7 @@ router_bulk.register(r'comment_bulk', views.CommentBulkViewSet)
 
 urlpatterns = [
     url(r'^factors/', views.factors, name='Factors'),
+    url(r'^modeldetail/', views.modelDetail, name='ModelDetail'),
     url(r'^delfactors/', views.del_factors, name='DelFactors'),
     url(r'^comments/', views.comments, name='Comments'),
     url(r'^testmodel/', views.test_model, name='TestModel'),
@@ -40,7 +41,8 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^', include(router_bulk.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^newmodel/', views.new_model_with_factor_creation, name='New Model')
+    url(r'^newmodel/', views.new_model_with_factor_creation, name='New Model'),
+    url(r'^replacemodeldetails/', views.replace_model_details, name='ReplaceModelDetails'),
     #url(r'^model/$', views.MlModelListView.as_view()),
     #url(r'^model/(?P<pk>[0-9]+)/$', views.MlModelItemView.as_view()),
 ]

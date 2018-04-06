@@ -7,6 +7,7 @@ from restapi.models import Factor
 from restapi.models import Comment
 from restapi.models import User
 from restapi.models import DataSet
+from restapi.models import MlModelDetail
 
 from rest_framework_bulk import BulkListSerializer
 from rest_framework_bulk import BulkSerializerMixin
@@ -15,7 +16,10 @@ from rest_framework_bulk import BulkSerializerMixin
 class MlModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = MlModel
-        fields = ('id', 'name', 'description', 'accuracy', 'parent_id', 'intercept', 'modified')
+        fields = ('id', 'name', 'description', 'accuracy', 'parent_id', 
+            'intercept', 'dataset_id', 'non_categorical_columns', 
+            'target_variable', 'negative_threshold', 'positive_threshold', 
+            'modified')
 
 
 class FactorSerializer(serializers.ModelSerializer):
@@ -57,3 +61,8 @@ class DataSetSerializer(serializers.ModelSerializer):
         model = DataSet
         fields = ('id', 'name', 'description', 'modified', 'file')
 
+
+class MlModelDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MlModelDetail
+        fields = ('id', 'model_id', 'type', 'intValue')

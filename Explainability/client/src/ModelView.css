@@ -2,6 +2,14 @@ body {
   font-size: 14px;
 }
 
+textarea {
+  /* border: 2px solid #ccc; */
+  border-color: #ccc;
+  width: 500px;
+  height: 50px;
+  resize: vertical;
+}
+
 .comment-tooltip {background-color: white; border: 1px solid #555; width: 100px; height: 100px; padding: 10px}
 .comment-tooltip p {font-size: 0.8em;}
 .comment-tooltip input {width: 80px;}

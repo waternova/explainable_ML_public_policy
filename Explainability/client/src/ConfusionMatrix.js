@@ -2,27 +2,39 @@ import React from 'react';
 import './ConfusionMatrix.css';
 
 const ConfusionMatrix = props => (
-  <table className="confusion-matrix">
+  <div className="confusion-matrix">
+  <h4>{props.headerText}</h4>
+  {props.threshold ? <div>Threshold is {props.threshold.toFixed(2)}</div> : null}
+  <table>
     <thead>
       <tr>
-        <th>For class {props.index}</th>
+        <th></th>
         <th>Predicted negative</th>
         <th>Predicted positive</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>Actually negative</td>
-        <td>True negative: {props.matrix[0][0]}</td>
-        <td>False positive: {props.matrix[0][1]}</td>
+        <td className="left-border">Actually negative</td>
+        <td style={{backgroundColor: 'rgb(0, 255, 0,' + props.matrix.true_negative_count/props.maxSize +')'}}>
+          True negative: {props.matrix.true_negative_count}
+        </td>
+        <td style={{backgroundColor: 'rgb(255, 0, 0,' + props.matrix.false_positive_count/props.maxSize +')'}}>
+          False positive: {props.matrix.false_positive_count}
+        </td>
       </tr>
       <tr>
-        <td>Actually positive</td>
-        <td>False negative: {props.matrix[1][0]}</td>
-        <td>True positive: {props.matrix[1][1]}</td>
+        <td className="left-border">Actually positive</td>
+        <td style={{backgroundColor: 'rgb(255, 0, 0,' + props.matrix.false_negative_count/props.maxSize +')'}}>
+          False negative: {props.matrix.false_negative_count}
+        </td>
+        <td style={{backgroundColor: 'rgb(0, 255, 0,' + props.matrix.true_positive_count/props.maxSize +')'}}>
+          True positive: {props.matrix.true_positive_count}
+        </td>
       </tr>
     </tbody>
   </table>
+  </div>
 );
 
 export default ConfusionMatrix;

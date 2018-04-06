@@ -7,11 +7,11 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 # import matplotlib.pyplot as plt
 from restapi.machine_learning.util import preparedata
+from restapi.util import get_factor_list_from_file
+
 
 # Gets thresholds with positive class first
-def get_fair_thresholds(model, protectiveAtt, dataFile= 'df_math_cleaned.csv'):
-    df_math = pd.read_csv(dataFile)
-    y, X = preparedata(df_math)
+def get_fair_thresholds(model, X, y, protectiveAtt):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
     #splitting data into test for each group in protective attribute
     X_test_class1 = X_test[X_test[protectiveAtt]==1]
@@ -89,4 +89,8 @@ def get_fair_thresholds(model, protectiveAtt, dataFile= 'df_math_cleaned.csv'):
             final_thresholds = x
     return final_thresholds
   
+#Return Odd Ratios
+# Odd ratios are calculated by taking the exponent of the coefficients
+def get_odd_ratios(model):
+    return np.exp(model.coef_)
 

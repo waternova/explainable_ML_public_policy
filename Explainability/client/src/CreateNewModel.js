@@ -22,9 +22,10 @@ class CreateNewModel extends Component {
       modalIsOpen: false,
       name: '',
       dataset: null,
-      description: null,
+      description: '',
       datasetList: [],
       nonCategorical: '',
+      targetVariable: '',
     };
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
@@ -35,14 +36,20 @@ class CreateNewModel extends Component {
   }
 
   componentDidMount() {
-    fetch ("/api/dataset/?format=json", {
-      method: "GET",
-      headers: {"Content-Type" : "application/json;charset=UTF-8"},
+    if (this.props.staticDatasetList) {
+      this.setState({
+        datasetList: this.props.staticDatasetList
+      });
+    } else {
+      fetch ("/api/dataset/?format=json", {
+        method: "GET",
+        headers: {"Content-Type" : "application/json;charset=UTF-8"},
       }).then( res => res.json()).then(data => {
         this.setState({
           datasetList: data.map(x => ({value: x.id, label: x.name}))
         });
       }).catch(error => console.error("Request failed:", error));
+    }
   }
   
   openModal() {
@@ -115,6 +122,7 @@ class CreateNewModel extends Component {
               value={datasetValue}
               onChange={this.handleSelectChange}
               options={this.state.datasetList}
+              required={true}
             />
             <br/>
             <label>Description</label>
@@ -127,7 +135,7 @@ class CreateNewModel extends Component {
             <br/> <br/>
             <label>Target variable (must be binary)</label>
             <br/>
-            <input type="text" name="targetVariable" value={this.state.targetVariable} onChange={this.handleChange}/>  
+            <input type="text" name="targetVariable" value={this.state.targetVariable} onChange={this.handleChange} required/>  
             <br/> <br/>
             <button onClick={this.closeModal} className="btn">Cancel</button>
             <input type="submit" className="btn" value="Upload"/> &nbsp;

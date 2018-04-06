@@ -9,14 +9,17 @@ default_factor_list = ['C(school)', 'age', 'C(sex)', 'C(address)',
     'C(internet)', 'C(romantic)', 'C(famrel)', 'C(freetime)', 'C(goout)', 
     'C(Dalc)', 'C(Walc)', 'C(health)', 'absences']
 
-# preparing training and testing data
+# given a source dataframe with training data and a column name of a target variable, 
+# and a list of factors, get df with factors split
 def preparedata(df, target_variable='G3_class', factor_list=default_factor_list):
     y, X = dmatrices(target_variable + ' ~ ' + ' + '.join(factor_list),
                   df, return_type="dataframe")
     y = np.ravel(y)
     return y,X
 
-
-def get_column_names_from_file(path_to_file):
-    df = pd.read_csv(path_to_file)
-    return df.columns.values.tolist()
+def drop_disabled_factors(df, factors):
+    X = df
+    for factor in factors:
+        if not factor["is_enabled"]:
+            X = X.drop(factor["name"], axis=1)
+    return X

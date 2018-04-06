@@ -1,4 +1,17 @@
-table.confusion-matrix {
+.confusion-matrix table {
   width: 450px;
-  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.confusion-matrix h4 {
+  margin-bottom: 0px;
+}
+
+div.confusion-matrix {
+  display: inline-block;
+  padding-right: 30px;
+}
+
+.confusion-matrix td.left-border {
+  border-left: 1px solid #bebebe;
 }
