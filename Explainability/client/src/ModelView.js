@@ -19,12 +19,16 @@ class Row extends Component {
       name: value.name,
       index: this.props.index,
       description: value.description,
+      is_balanced: value.is_balanced,
       is_binary: value.is_binary,
       is_enabled: value.is_enabled,
+      comments: value.comments,
+      model_id: value.model_id,
     };
     this.handleWeightChange = this.handleWeightChange.bind(this);
     this.handleBalanceSelect = this.handleBalanceSelect.bind(this);
     this.handleFactorFormSubmit = this.handleFactorFormSubmit.bind(this);
+    this.handleUpdateComments = this.handleUpdateComments.bind(this);
   }
 
   render() {
@@ -59,7 +63,12 @@ class Row extends Component {
         </td>
         <td><div className="chart-bar" style={barChartStyle}></div></td>
         <td>
-            <CommentDropdown />
+            <CommentDropdown
+              className="comment-detail"
+              comments = {this.state.comments}
+              handleUpdateComments={this.handleUpdateComments}
+              model_id = {this.state.model_id}
+              />
             <input 
                 type="submit" 
                 value="Balance Model" 
@@ -97,6 +106,11 @@ class Row extends Component {
     }
   }
 
+  handleUpdateComments(comments) {
+    this.setState({'comments': comments});
+    this.props.onChange(this.props.index, 'comments', comments);
+  }
+
   handleBalanceSelect(event) {
     this.props.onChange(this.props.index, "is_balanced", !this.props.value.is_balanced);
     this.props.clearOtherBalanceSelect(this.state.id);
@@ -123,37 +137,17 @@ class ModelView extends Component {
         this.testModel = this.testModel.bind(this);
         this.retrainModel = this.retrainModel.bind(this);
         this.saveModel = this.saveModel.bind(this);
-        this.saveFactor = this.saveFactor.bind(this);
+        this.saveFactors = this.saveFactors.bind(this);
+        this.saveComments = this.saveComments.bind(this);
         this.updateFactor = this.updateFactor.bind(this);
         this.exportModel = this.exportModel.bind(this);
-        //this.importModelBegin = this.importModelBegin.bind(this);
-        //this.importModelEnd = this.importModelEnd.bind(this);
-        //this.handleImportClick = this.handleImportClick.bind(this);
-        this.loadModel = this.loadModel.bind(this);
-        this.loadFactors = this.loadFactors.bind(this);
         this.clearOtherBalanceSelect = this.clearOtherBalanceSelect.bind(this);
     }
 
     componentDidMount() {
       if (!this.props.skipFactorLoad) {
-        this.loadFactorsFromServer();
+        this.loadModelFromServer();
       }
-    }
-
-    loadFactorsFromServer() {
-      fetch ("/api/model/" + this.state.model_id + "/?format=json", {
-        method: "GET",
-        headers: {"Content-Type": "application/json;charset=UTF-8"},
-      }).then(res => res.json()).then(data => {
-        this.loadModel(data);
-        return fetch ("/api/factors/?model_id=" + data.id + "&format=json", {
-          method: "GET",
-          headers: {"Content-Type" : "application/json;charset=UTF-8"},
-        });
-      }).then(res => res.json()).then(data => {
-        this.loadFactors(data);
-        this.updateGraphSizes();
-      }).catch(error => console.error("Request failed", error));
     }
 
     render() {
@@ -232,224 +226,238 @@ class ModelView extends Component {
       }
     }
 
-    saveFactor(model_id, factor, isUpdate)
+    saveComments(comments, isUpdate) {
+      var requestType, requestURL;
+      if (isUpdate === true) {
+        requestType = "PUT";
+        requestURL = "/api/comment/";
+      }
+      else {
+        requestType = "POST";
+        requestURL = "/api/comment/";
+      }
+      var commentsJson = JSON.stringify(comments);
+      console.log(commentsJson);
+      fetch (requestURL, {
+        method: requestType,
+        headers: {"Content-Type" : "application/json;charset=UTF-8"},
+        body: commentsJson
+      }).then( res => res.json()).then(data => {
+        //console.log("Response: ", data);
+      }).catch(error => {
+         console.log('Request failed: ', error)
+         return false;
+      });
+      return true;
+    }
+
+  saveFactors(model_id, factors, isUpdate) {
+    var requestType, requestURL;
+    if (isUpdate === true) {
+      requestType = "PUT";
+      //requestURL = "/api/factor/"+factor.id+"/";
+      requestURL = "/api/factor_bulk/";
+    }
+    else {
+      requestType = "POST";
+      requestURL = "/api/factor_bulk/";
+    }
+    //split 'comments' field
+    var factor_write;
+    var factors_write = [];
+    var comments_write = [];
+    factors.map(factor => {
+      factor_write = {
+        id: factor.id,
+        weight: factor.weight,
+        alias: factor.alias,
+        name: factor.name,
+        description: factor.description,
+        is_balanced: factor.is_balanced,
+        is_binary: factor.is_binary,
+        is_enabled: factor.is_enabled,
+        model_id: model_id
+      };
+      factors_write.push(factor_write);
+      comments_write = comments_write.concat(factor.comments);
+      console.log(factor.comments);
+      return true;
+    });
+    var factorsJson = JSON.stringify(factors_write);
+    var commentsJson = JSON.stringify(comments_write);
+    console.log(comments_write);
+    console.log(commentsJson);
+    fetch (requestURL, {
+      method: requestType,
+      headers: {"Content-Type" : "application/json;charset=UTF-8"},
+      body: factorsJson
+    }).then( res => res.json()).then(data => {
+      requestURL = "/api/comment_bulk/";
+      fetch (requestURL, {
+        method: requestType,
+        headers: {"Content-Type" : "application/json;charset=UTF-8"},
+        body: commentsJson
+      });
+      return true;
+    }).catch(error => {
+      console.log('Request failed: ', error)
+      return false;
+    });
+    return true;
+  }
+
+  //Handler for Save Button
+  saveModel (event) {
+    var isUpdate = event.target.id==="overwrite" ? true : false ;
+    var popup_title = isUpdate ? "Overwrite existing model:" : "Save as a new model:"
+    var saveName = prompt(popup_title, this.state.model_name);
+    if (saveName === null || saveName.length === 0 ) return;
+    var currentModel, requestType, requestURL;
+    if (isUpdate === true) {
+      //Overwrite the model
+      currentModel = {
+        name: saveName,
+        description: this.state.description,
+        accuracy: this.state.accuracy,
+        intercept: this.state.intercept,
+        modified: new Date(),
+        parent_id: this.state.parent_id
+      };
+      requestType = "PUT";
+      requestURL = "/api/model/"+this.state.model_id+"/";
+      console.log("Overwriting a model: %d", this.state.model_id );
+      this.setState({model_name: saveName});
+    }
+    else {
+      //Save as a new model
+      currentModel = {
+        name: saveName,
+        description: this.state.description,
+        accuracy: this.state.accuracy,
+        intercept: this.state.intercept,
+        modified: new Date(),
+        parent_id: this.state.model_id
+      };
+      requestType = "POST";
+      requestURL = "/api/model/";
+      console.log("Save as a new model: ");
+    }
+    var modelJson = JSON.stringify(currentModel);
+    fetch (requestURL, {
+      method: requestType,
+      headers: {"Content-Type" : "application/json;charset=UTF-8"},
+      body: modelJson
+    }).then( res => res.json()).then(data => {
+      this.saveFactors(data.id, this.state.rows, isUpdate);
+    }).catch(error =>
     {
-        var requestType, requestURL;
-        if (isUpdate === true)
-        {
-            requestType = "PUT";
-            requestURL = "/api/factor/"+factor.id+"/";
-            //console.log("Update a factor:");
+        console.log("Request failed: ", error);
+        alert("Save Failure: \n" + error);
+    });
+  }
+
+  //Handler for Test Button
+  testModel () {
+    var data = {
+      factors: this.state.rows,
+      intercept: this.state.intercept,
+      positive_threshold: this.state.positiveThreshold,
+      negative_threshold: this.state.negativeThreshold,
+    };
+    var data_json = JSON.stringify(data);
+    console.log("Test request: %s", this.state.model_name);
+    console.log("Accuracy before test: %f", this.state.accuracy);
+    fetch ("/api/testmodel/", {
+      method: "POST",
+      headers: {"Content-Type" : "application/json;charset=UTF-8"},
+      body: data_json
+    }).then( res => res.json()).then(data => {
+      this.setState({
+        accuracy: parseFloat(data.accuracy),
+        confusionMatrices: data.confusion_matrices,
+      });
+      console.log("Accuracy after test: %f", this.state.accuracy);
+    }).catch(error => console.log("Request failed: ", error));
+  }
+
+  //Handler for Retrain Button
+  retrainModel () {
+    var data = {factors: this.state.rows, intercept: this.state.intercept};
+    var data_json = JSON.stringify(data);
+    console.log("Retrain request: %s", this.state.model_name);
+    fetch ("/api/retrainmodel/", {
+      method: "POST",
+      headers: {"Content-Type" : "application/json;charset=UTF-8"},
+      body: data_json
+    }).then( res => res.json()).then(data => {
+      this.setState({rows: []});
+      this.setState({
+        rows: data.factors,
+        positiveThreshold: data.positive_threshold,
+        negativeThreshold: data.negative_threshold,
+        accuracy: data.accuracy,
+        confusionMatrices: data.confusion_matrices,
+      });
+    }).catch(error => console.log("Request failed: ", error));
+  }
+
+  exportModel() {
+    var currentModel = {
+      name: this.state.model_name,
+      description: this.state.description,
+      accuracy: this.state.accuracy,
+      intercept: this.state.intercept,
+      modified: this.state.modified,
+      parent_id: this.state.parent_id
+    };
+    var data = {model:currentModel, factors:this.state.rows }
+    var data_json = JSON.stringify(data);
+    var blob = new Blob([data_json], {type: "application/json;charset=utf-8"});
+    console.log(blob);
+    FileSaver.saveAs(blob, this.state.model_name+".json");
+  }
+
+  loadModelFromServer() {
+    var model_id, i;
+    fetch ("/api/model/" + this.state.model_id , {
+      method: "GET",
+      headers: {"Content-Type": "application/json;charset=UTF-8"},
+    }).then(res => res.json()).then(data_model => {
+      this.setState({
+        model_name: data_model.name,
+        description: data_model.description,
+        accuracy: parseFloat(data_model.accuracy),
+        intercept: parseFloat(data_model.intercept),
+        modified: data_model.modified,
+        parent_id: data_model.parent_id});
+      model_id = data_model.id;
+      return fetch ("/api/factors/?model_id=" + model_id + "&format=json", {
+        method: "GET",
+        headers: {"Content-Type" : "application/json;charset=UTF-8"},
+      });
+    }).then(res => res.json()).then(data_factors => {
+      for (i=0; i<data_factors.length; i++) {
+        data_factors[i].comments = [];
+      }
+      this.setState({rows: data_factors});
+      this.updateGraphSizes();
+      return fetch ("/api/comments/?model_id=" +model_id + "&format=json", {
+        method: "GET",
+        headers: {"Content-Type" : "application/json;charset=UTF-8"},
+      });
+    }).then(res => res.json()).then(data_comments => {
+      data_comments.map(comment => {
+        var factors = this.state.rows.slice();
+        for (i=0; i<factors.length; i++) {
+          if (factors[i].id === comment.factor_id) {
+            factors[i].comments.push(comment);
+          }
         }
-        else
-        {
-            requestType = "POST";
-            requestURL = "/api/factor/";
-            factor.model_id = model_id
-            //console.log("Add a new factor:");
-        }
-        var factorJson = JSON.stringify(factor);
-        console.log(factorJson);
-        fetch (requestURL,
-        {
-            method: requestType,
-            headers: {"Content-Type" : "application/json;charset=UTF-8"},
-            body: factorJson
-        }).then( res => res.json()).then(data =>
-        {
-            //console.log("Response: ", data);
-        }).catch(error =>
-        {
-            console.log('Request failed: ', error)
-            return false;
-        });
+        this.setState({rows: factors});
         return true;
-    }
-
-    //Handler for Save Button
-    saveModel (event) {
-        var isUpdate = event.target.id==="overwrite" ? true : false ;
-        var popup_title = isUpdate ? "Overwrite existing model:" : "Save as a new model:"
-        var saveName = prompt(popup_title, this.state.model_name);
-        if (saveName === null || saveName.length === 0 ) return;
-        var currentModel, requestType, requestURL;
-        if (isUpdate === true)
-        {
-            //Overwrite the model
-            currentModel = {
-                name: saveName,
-                description: this.state.description,
-                accuracy: this.state.accuracy,
-                intercept: this.state.intercept,
-                modified: new Date(),
-                parent_id: this.state.parent_id
-                };
-            requestType = "PUT";
-            requestURL = "/api/model/"+this.state.model_id+"/";
-            console.log("Overwriting a model: %d", this.state.model_id );
-            this.setState({model_name: saveName});
-        }
-        else
-        {
-            //Save as a new model
-            currentModel = {
-                name: saveName,
-                description: this.state.description,
-                accuracy: this.state.accuracy,
-                intercept: this.state.intercept,
-                modified: new Date(),
-                parent_id: this.state.model_id
-                };
-            requestType = "POST";
-            requestURL = "/api/model/";
-            console.log("Save as a new model: ");
-        }
-        var modelJson = JSON.stringify(currentModel);
-        //console.log(modelJson);
-        fetch (requestURL,
-        {
-            method: requestType,
-            headers: {"Content-Type" : "application/json;charset=UTF-8"},
-            body: modelJson
-        }).then( res => res.json()).then(data =>
-        {
-            //console.log("Response: ", data);
-            var factors = this.state.rows;
-            var count = 0;
-            for (var i=0; i<factors.length; i++)
-            {
-                if (this.saveFactor(data.id, factors[i], isUpdate) === true) {count++;}
-            }
-            console.log("%d/%d factors saved.", factors.length, count);
-            alert("Successfully Saved: \n" + saveName);
-        }).catch(error =>
-        {
-            console.log("Request failed: ", error);
-            alert("Save Failure: \n" + error);
-        });
-    }
-
-    //Handler for Test Button
-    testModel ()
-    {
-        var data = {
-            factors: this.state.rows, 
-            intercept: this.state.intercept,
-            positive_threshold: this.state.positiveThreshold,
-            negative_threshold: this.state.negativeThreshold,
-        };
-        var data_json = JSON.stringify(data);
-        console.log("Test request: %s", this.state.model_name);
-        console.log("Accuracy before test: %f", this.state.accuracy);
-        fetch ("/api/testmodel/",
-            {
-                method: "POST",
-                headers: {"Content-Type" : "application/json;charset=UTF-8"},
-                body: data_json
-            }).then( res => res.json()).then(data =>
-            {
-                this.setState({
-                  accuracy: parseFloat(data.accuracy),
-                  confusionMatrices: data.confusion_matrices,
-                });
-                console.log("Accuracy after test: %f", this.state.accuracy);
-            }).catch(error => console.log("Request failed: ", error));
-    }
-
-    //Handler for Retrain Button
-    retrainModel ()
-    {
-        var data = {factors: this.state.rows, intercept: this.state.intercept};
-        var data_json = JSON.stringify(data);
-        console.log("Retrain request: %s", this.state.model_name);
-        fetch ("/api/retrainmodel/",
-            {
-                method: "POST",
-                headers: {"Content-Type" : "application/json;charset=UTF-8"},
-                body: data_json
-            }).then( res => res.json()).then(data => {
-                this.setState({rows: []});
-                this.setState({
-                    rows: data.factors,
-                    positiveThreshold: data.positive_threshold,
-                    negativeThreshold: data.negative_threshold,
-                    accuracy: data.accuracy,
-                    confusionMatrices: data.confusion_matrices,
-                });
-            }).catch(error => console.log("Request failed: ", error));
-    }
-
-    exportModel() {
-        var currentModel = {
-            name: this.state.model_name,
-            description: this.state.description,
-            accuracy: this.state.accuracy,
-            intercept: this.state.intercept,
-            modified: this.state.modified,
-            parent_id: this.state.parent_id
-        };
-        var data = {model:currentModel, factors:this.state.rows }
-        var data_json = JSON.stringify(data);
-        var blob = new Blob([data_json], {type: "application/json;charset=utf-8"});
-        console.log(blob);
-        FileSaver.saveAs(blob, this.state.model_name+".json");
-    }
-
-    loadModel (data) {
-        this.setState({
-            model_name: data.name,
-            description: data.description,
-            accuracy: parseFloat(data.accuracy),
-            intercept: parseFloat(data.intercept),
-            modified: data.modified,
-            parent_id: data.parent_id
-        });
-    }
-
-    loadFactors(data) {
-        this.setState({rows: []});
-        for (var i=0; i<data.length; i++) {
-            data[i].model_id = this.state.model_id;
-            this.setState({rows:this.state.rows.concat(data[i])});
-        }
-    }
-/*
-    handleImportClick() {
-        document.getElementById('file').click();
-    }
-
-    importModelEnd(event) {
-        try {
-            var data = JSON.parse(event.target.result);
-       } catch(e) {
-            alert("Cannot parse the file as JSON.");
-            return;
-        }
-        if ("model" in data) {
-            this.loadModel(data["model"]);
-            if ("factors" in data) {
-                this.loadFactors(data["factors"]);
-            }
-        }
-        else
-        {
-            alert("Cannot find a model data.");
-        }
-    }
-
-    importModelBegin(event) {
-        if (!(window.File && window.FileReader && window.FileList && window.Blob))
-        {
-            alert('The File APIs are not fully supported by your browser.');
-            return;
-        }
-        var reader = new FileReader();
-        var fileInput = document.getElementById('file');
-        var file = fileInput.files[0];
-        reader.onload = this.importModelEnd;
-        reader.readAsText(file);
-    }
-*/
+      });
+    });
+  }
 }
 
 

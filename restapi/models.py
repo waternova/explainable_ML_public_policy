@@ -31,6 +31,7 @@ class Comment (models.Model):
     updated_datetime = models.DateTimeField()
     comment_text = models.TextField(max_length=65535, null=True, blank=True)
     factor_id = models.ForeignKey('Factor', on_delete=models.CASCADE)
+    model_id = models.ForeignKey('MlModel', on_delete=models.CASCADE)
 
 
 class User (models.Model):

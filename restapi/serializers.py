@@ -8,6 +8,9 @@ from restapi.models import Comment
 from restapi.models import User
 from restapi.models import DataSet
 
+from rest_framework_bulk import BulkListSerializer
+from rest_framework_bulk import BulkSerializerMixin
+
 
 class MlModelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,34 +22,28 @@ class FactorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Factor
         fields = ('id', 'alias', 'name', 'description', 'weight', 'is_binary', 'is_balanced', 'is_enabled', 'model_id')
-        #list_serializer_class = FactorListSerializer
 
-'''
-class FactorListSerializer(serializers.ListSerializer):
-    child = FactorSerializer()
 
-    def update(self, instance, validated_data):
-        # Maps for id->instance and id->data item.
-        for item in validated_data:
-            print(item)
-        factor_mapping = {factor.id: factor for factor in instance}
-        data_mapping = {item.id: item for item in validated_data}
-        ret = []
-        for factor_id, data in data_mapping.items():
-            factor = factor_mapping.get(factor_id, None)
-            if factor in None:
-                ret.append(self.child.create(data))
-            else:
-                ret.append(self.child.update(factor, data))
-        #No deletions
-        return ret
-'''
+class FactorBulkSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+    class Meta(object):
+        model = Factor
+        # only necessary in DRF3
+        list_serializer_class = BulkListSerializer
+        fields = ('id', 'alias', 'name', 'description', 'weight', 'is_binary', 'is_balanced', 'is_enabled', 'model_id')
 
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('id', 'user_name', 'updated_datetime', 'comment_text', 'factor_id')
+        fields = ('id', 'user_name', 'updated_datetime', 'comment_text', 'factor_id', 'model_id')
+
+
+class CommentBulkSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+    class Meta(object):
+        model = Comment
+        # only necessary in DRF3
+        list_serializer_class = BulkListSerializer
+        fields = ('id', 'user_name', 'updated_datetime', 'comment_text', 'factor_id', 'model_id')
 
 
 class UserSerializer(serializers.ModelSerializer):

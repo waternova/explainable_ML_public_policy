@@ -55,6 +55,10 @@ input {
   float: right;
 }
 
+.comment-detail {
+  cursor: pointer;
+  float: right;
+}
 
 .factor_enabled {
     color: #000000;

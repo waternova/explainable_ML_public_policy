@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from rest_framework import routers
 from restapi import views
+from rest_framework_bulk.routes import BulkRouter
+
 
 router = routers.DefaultRouter()
 router.register(r'model', views.MLModelViewSet)
@@ -24,14 +26,19 @@ router.register(r'comment', views.CommentViewSet)
 router.register(r'user', views.UserViewSet)
 router.register(r'dataset', views.DateSetViewSet)
 
+
+router_bulk = BulkRouter()
+router_bulk.register(r'factor_bulk', views.FactorBulkViewSet)
+router_bulk.register(r'comment_bulk', views.CommentBulkViewSet)
+
 urlpatterns = [
-    url(r'^getmodels/', views.get_models, name='GetModels'),
     url(r'^factors/', views.factors, name='Factors'),
     url(r'^delfactors/', views.del_factors, name='DelFactors'),
-    url(r'^getcomments/', views.get_comments, name='GetComments'),
+    url(r'^comments/', views.comments, name='Comments'),
     url(r'^testmodel/', views.test_model, name='TestModel'),
     url(r'^retrainmodel/', views.retrain_model, name='RetrainModel'),
     url(r'^', include(router.urls)),
+    url(r'^', include(router_bulk.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^newmodel/', views.new_model_with_factor_creation, name='New Model')
     #url(r'^model/$', views.MlModelListView.as_view()),

@@ -1,0 +1,11 @@
+.comment_dialog_user {
+    width: 60%;
+}
+
+.comment_dialog_text {
+    width: 95%;
+}
+
+.comment_dialog_item {
+    margin-bottom : 0.2rem;
+}

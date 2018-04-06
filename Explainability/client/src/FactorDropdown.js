@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DropdownBox from './DropdownBox.js';
+import './common.css';
 import './FactorDropdown.css';
 
 class FactorDropdown extends Component {

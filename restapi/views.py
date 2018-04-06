@@ -8,6 +8,8 @@ from .serializers import FactorSerializer
 from .serializers import CommentSerializer
 from .serializers import UserSerializer
 from .serializers import DataSetSerializer
+from .serializers import FactorBulkSerializer
+from .serializers import CommentBulkSerializer
 
 from restapi.models import MlModel
 from restapi.models import Factor
@@ -24,6 +26,8 @@ from restapi.machine_learning.logregmodel2 import test_model as test_logreg_mode
 from restapi.machine_learning.logregmodel2 import retrain, build_model_from_factors
 from restapi.machine_learning.fairmodel import get_fair_thresholds
 
+from rest_framework_bulk import BulkModelViewSet
+
 
 class MLModelViewSet(viewsets.ModelViewSet):
     queryset = MlModel.objects.all()
@@ -33,20 +37,21 @@ class MLModelViewSet(viewsets.ModelViewSet):
 class FactorViewSet(viewsets.ModelViewSet):
     queryset = Factor.objects.all()
     serializer_class = FactorSerializer
-'''
-    def get_serializer(self, instance=None, data=None, many=False, partial=False):
-        if isinstance(data, list):
-            many = True
-        serializer = super(FactorViewSet, self).get_serializer(instance=instance, data=data, many=many, partial=partial)
-        serializer.is_valid()
-        return serializer
-            #super(FactorViewSet, self).get_serializer(instance=instance, data=data, many=many, partial=partial)
-'''
+
+
+class FactorBulkViewSet(BulkModelViewSet):
+    queryset = Factor.objects.all()
+    serializer_class = FactorBulkSerializer
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
+
+class CommentBulkViewSet(BulkModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentBulkSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -71,7 +76,7 @@ def factors(request):
 
 
 @api_view(['GET'])
-def del_factors(request):
+def del_factors(request): # Not working yet
     if request.method == 'GET':
         model_id = request.GET.get('model_id')
         if model_id is not None:
@@ -84,40 +89,19 @@ def del_factors(request):
     return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
 
 
-'''
-    elif request.method == 'PATCH':
-            factors_obj = Factor.objects.all()
-            print(factors_obj[0].id)
-            data = json.loads(request.body.decode('utf-8'))
-            print(request.data[0])
-            serializer = FactorListSerializer(factors_obj, data=data)
-            serializer.is_valid()
-            #serializer.save()
-            return Response("Updated factors", status=status.HTTP_200_OK)
-            #return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
-'''
-
-
-
 @api_view(['GET'])
-def get_models(request):
-    if request.method == 'GET':
-        #model_id = request.GET.get('model_id')
-        #//if model_id is not None:
-        model_obj = MlModel.objects.all()
-        model_serializer = MlModelSerializer(model_obj, many=True)
-        return Response(model_serializer.data, status=status.HTTP_200_OK)
-    return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET'])
-def get_comments(request):
+def comments(request):
     if request.method == 'GET':
         factor_id = request.GET.get('factor_id')
+        model_id = request.GET.get('model_id')
+        if model_id is not None:
+            comment_obj = Comment.objects.filter(model_id=int(model_id))
+            comment_serializer = CommentSerializer(comment_obj, many=True)
+            return Response(comment_serializer.data, status=status.HTTP_200_OK)
         if factor_id is not None:
             comment_obj = Comment.objects.filter(factor_id=int(factor_id))
             comment_serializer = CommentSerializer(comment_obj, many=True)
-            return Response({'comments': comment_serializer.data}, status=status.HTTP_200_OK)
+            return Response(comment_serializer.data, status=status.HTTP_200_OK)
     return Response("HTTP_400_BAD_REQUEST", status=status.HTTP_400_BAD_REQUEST)
 
 

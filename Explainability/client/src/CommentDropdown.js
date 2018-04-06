@@ -1,36 +1,49 @@
 import React, { Component } from 'react';
 import DropdownBox from './DropdownBox.js';
+import './common.css';
+import './CommentDropdown.css';
 
 class CommentDropdown extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      comments: [],
+      model_id: this.props.model_id,
+      comments: this.props.comments,
       newComment: '',
+      user_name: 'Anonymous',
       isOpen: false,
     };
-    this.handleNewComment = this.handleNewComment.bind(this);
+    this.handleNewCommentAdd = this.handleNewCommentAdd.bind(this);
     this.handleNewCommentChange = this.handleNewCommentChange.bind(this);
+    this.handleUserChange = this.handleUserChange.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
   }
 
-  handleNewComment(event) {
+  handleNewCommentAdd(event) {
     event.preventDefault();
     const newComment = {
-      username: 'User1',
-      text: this.state.newComment,
-      date: Date.now(),
+      model_id: this.state.model_id,
+      user_name: this.state.user_name,
+      comment_text: this.state.newComment,
+      updated_datetime: Date.now(),
     }
     this.setState({
       comments: this.state.comments.concat([newComment]),
       newComment: '',
     });
+    this.props.handleUpdateComments(this.state.comments);
   }
 
   handleNewCommentChange(event) {
     this.setState({
       newComment: event.target.value,
+    });
+  }
+
+  handleUserChange(event) {
+    this.setState({
+      user_name: event.target.value,
     });
   }
 
@@ -44,11 +57,11 @@ class CommentDropdown extends Component {
 
   render () {
     let comments = this.state.comments.map((comment) => {
-      const dateString = new Date(comment.date).toString();
+      const dateString = new Date(comment.updated_datetime).toLocaleString();
       return (
-        <li key={comment.date}>
-          <strong>{comment.username}: </strong>
-          {comment.text}
+        <li className="comment_dialog_item" key={comment.id}>
+          <strong>{comment.user_name}: </strong>
+          {comment.comment_text} <br/>
           <em> ({dateString})</em>
         </li>
       );
@@ -63,12 +76,19 @@ class CommentDropdown extends Component {
           <ul>
           {comments}
           </ul>
-          <form onSubmit={this.handleNewComment}>
+          <form onSubmit={this.handleNewCommentAdd}>
+            <label>
+              Comment by&nbsp;
+              <input className="comment_dialog_user" id="username" name="username" value={this.state.user_name} onChange={this.handleUserChange}/>
+            </label>
+            <br/>
             <label>
               Your comment:
-              <textarea value={this.state.newComment} onChange={this.handleNewCommentChange} />
+              <textarea className="comment_dialog_text" value={this.state.newComment} onChange={this.handleNewCommentChange} />
             </label>
-            <input type="submit" value="Submit" />
+            <input className="btn" name="close" type="button" value="Close" onClick={this.handleClose} />
+            <input className="btn" name="comment_add" type="submit" value="Add" />
+            <br/>
           </form>
         </div>
       </DropdownBox>

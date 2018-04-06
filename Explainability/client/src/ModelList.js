@@ -86,6 +86,8 @@ class ModelList extends React.Component {
             <button className="toolbar" onClick={this.handleImportClick}>Import a model...</button> &nbsp;
             <button className="toolbar" onClick={this.deleteModel}>Delete</button> &nbsp;
             <input type="file" className="hidden" id="file_import" name="file" accept=".json" onChange={this.importModelBegin}/>
+            <br/>
+            <br/>
             <table id="modelListTable">
                 <thead>
                     <tr>
@@ -125,7 +127,7 @@ class ModelList extends React.Component {
                 ).catch(error => console.log("Model delete request failed:", error));*/
             }
         }
-        this.refreshModel();
+        this.refreshModelList();
     }
 
     handleImportClick() {
@@ -179,7 +181,7 @@ class ModelList extends React.Component {
                 if (this.importFactor(data.id, factors[i]) === true) {count++;}
             }
             console.log("%d/%d factors Imported.", factors.length, count);
-            this.refreshModel();
+            this.refreshModelList();
         }).catch(error => {
             console.log("Request failed: ", error);
         });
