@@ -273,7 +273,7 @@ class ModelView extends Component {
       interceptRow = rows[interceptRowIndex];
       rows.splice(interceptRowIndex, 1);
     }
-    rows.sort((a, b) => { return Math.abs(a.weight) < Math.abs(b.weight) });
+    rows.sort((a, b) => { return Math.abs(a.weight) - Math.abs(b.weight) }).reverse();
     if (interceptRow) {
       rows.push(interceptRow);
     }
