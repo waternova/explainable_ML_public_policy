@@ -12,6 +12,7 @@ class CommentDropdown extends Component {
       newComment: '',
       user_name: 'Anonymous',
       isOpen: false,
+      factor_name: this.props.factor_name,
     };
     this.handleNewCommentAdd = this.handleNewCommentAdd.bind(this);
     this.handleNewCommentChange = this.handleNewCommentChange.bind(this);
@@ -23,16 +24,18 @@ class CommentDropdown extends Component {
   handleNewCommentAdd(event) {
     event.preventDefault();
     const newComment = {
-      model_id: this.state.model_id,
+      id : null,
       user_name: this.state.user_name,
       comment_text: this.state.newComment,
-      updated_datetime: Date.now(),
+      updated_datetime: new Date().toISOString(),
+      factor_name: this.state.factor_name,
+      model_id: this.state.model_id,
     }
-    this.setState({
-      comments: this.state.comments.concat([newComment]),
-      newComment: '',
-    });
-    this.props.handleUpdateComments(this.state.comments);
+    var comments_write = this.state.comments.slice();
+    comments_write.push(newComment);
+    this.setState({comments: comments_write});
+    this.setState({newComment: ''});
+    this.props.handleUpdateComments(comments_write);
   }
 
   handleNewCommentChange(event) {
@@ -56,10 +59,11 @@ class CommentDropdown extends Component {
   }
 
   render () {
-    let comments = this.state.comments.map((comment) => {
-      const dateString = new Date(comment.updated_datetime).toLocaleString();
+    let comments = this.state.comments.map((comment, index) => {
+      let dateString = new Date(comment.updated_datetime).toLocaleString();
+      let id =  index + comment.factor_name;
       return (
-        <li className="comment_dialog_item" key={comment.id}>
+        <li className="comment_dialog_item" key={id}>
           <strong>{comment.user_name}: </strong>
           {comment.comment_text} <br/>
           <em> ({dateString})</em>

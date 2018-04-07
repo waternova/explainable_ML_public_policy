@@ -7,20 +7,20 @@ import ModelView from './ModelView.js';
 import Header from './header.js';
 
 class App extends Component {
-    render()
-    {
-        return (
-            <Router>
-                <div>
-                    <Header />
-                    <Route exact path="/" component={Home}/>
-                    <Route path="/DataSetList" component={DataSetList}/>
-                    <Route path="/ModelList" component={ModelList}/>
-                    <Route path="/ModelView/:id" component={ModelView}/>
-                </div>
-            </Router>
-        );
-    }
+  render()
+  {
+    return (
+      <Router>
+        <div>
+          <Header />
+          <Route exact path="/" component={Home}/>
+          <Route path="/DataSetList" component={DataSetList}/>
+          <Route path="/ModelList" component={ModelList}/>
+          <Route path="/ModelView/:id" component={ModelView}/>
+        </div>
+      </Router>
+    );
+  }
 }
 
 export default App;

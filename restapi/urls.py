@@ -34,7 +34,6 @@ router_bulk.register(r'comment_bulk', views.CommentBulkViewSet)
 urlpatterns = [
     url(r'^factors/', views.factors, name='Factors'),
     url(r'^modeldetail/', views.modelDetail, name='ModelDetail'),
-    url(r'^delfactors/', views.del_factors, name='DelFactors'),
     url(r'^comments/', views.comments, name='Comments'),
     url(r'^testmodel/', views.test_model, name='TestModel'),
     url(r'^retrainmodel/', views.retrain_model, name='RetrainModel'),

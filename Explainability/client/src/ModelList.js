@@ -107,28 +107,20 @@ class ModelList extends React.Component {
         );
     }
 
-    async deleteModel() {
-        var isDelete = window.confirm("Do you want to delete selected models?");
-        if (isDelete === false) return;
-        var res;
-        for (var i=0; i<this.state.models.length; i++) {
-            var model_id = this.state.models[i].id;
-            if (document.getElementById(model_id).checked) {
-                console.log("Trying to delete model #%d", model_id);
-                res = await fetch ("/api/delfactors/?model_id=" + model_id, {method: "GET"},);
-                console.log(res.json());
-                res = await fetch ("/api/model/" + model_id + "/", {method: "DELETE"},);
-                console.log("DELETE status:%d", res.status);
-                /*fetch ("/api/delfactors/?model_id=" + model_id, {method: "GET"},
-                ).then(res => {console.log(res.status); }
-                ).catch(error => console.log("Factor delete request failed:", error));
-                fetch ("/api/model/" + model_id + "/", {method: "DELETE"},
-                ).then(res => {console.log(res.status); }
-                ).catch(error => console.log("Model delete request failed:", error));*/
-            }
-        }
-        this.refreshModelList();
+   async deleteModel() {
+    var isDelete = window.confirm("Do you want to delete selected models?");
+    if (isDelete === false) return;
+    var res;
+
+   for (var i=0; i<this.state.models.length; i++) {
+      var model_id = this.state.models[i].id;
+      if (document.getElementById(model_id).checked) {
+        res = await fetch ("/api/model/" + model_id + "/", {method: "DELETE"},);
+        console.log("DELETE status:%d", res.status);
+      }
     }
+    this.refreshModelList();
+  }
 
     handleImportClick() {
         document.getElementById('file_import').click();

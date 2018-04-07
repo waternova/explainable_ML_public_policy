@@ -39,7 +39,7 @@ class FactorBulkSerializer(BulkSerializerMixin, serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('id', 'user_name', 'updated_datetime', 'comment_text', 'factor_id', 'model_id')
+        fields = ('id', 'user_name', 'updated_datetime', 'comment_text', 'factor_name', 'model_id')
 
 
 class CommentBulkSerializer(BulkSerializerMixin, serializers.ModelSerializer):
@@ -47,7 +47,7 @@ class CommentBulkSerializer(BulkSerializerMixin, serializers.ModelSerializer):
         model = Comment
         # only necessary in DRF3
         list_serializer_class = BulkListSerializer
-        fields = ('id', 'user_name', 'updated_datetime', 'comment_text', 'factor_id', 'model_id')
+        fields = ('id', 'user_name', 'updated_datetime', 'comment_text', 'factor_name', 'model_id')
 
 
 class UserSerializer(serializers.ModelSerializer):

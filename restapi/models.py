@@ -11,7 +11,7 @@ class MlModel(models.Model):
     dataset_id = models.ForeignKey('DataSet', on_delete=models.CASCADE, null=True)
     non_categorical_columns = models.TextField(max_length=65535, null=True, blank=True)
     target_variable = models.TextField(max_length=65535, null=True)
-    parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+    parent_id = models.ForeignKey('self', on_delete=models.SET_NULL, null=True)
     modified = models.DateTimeField(auto_now_add=False, blank=True)
     positive_threshold = models.FloatField(null=True)
     negative_threshold = models.FloatField(null=True)
@@ -32,7 +32,7 @@ class Comment (models.Model):
     user_name = models.CharField(max_length=255)
     updated_datetime = models.DateTimeField()
     comment_text = models.TextField(max_length=65535, null=True, blank=True)
-    factor_id = models.ForeignKey('Factor', on_delete=models.CASCADE)
+    factor_name = models.CharField(max_length=255)
     model_id = models.ForeignKey('MlModel', on_delete=models.CASCADE)
 
 
