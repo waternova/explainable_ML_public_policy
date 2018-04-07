@@ -59,7 +59,8 @@ ROOT_URLCONF = 'Explainability.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['Explainability/templates'],
+        #'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,3 +133,4 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 MEDIA_URL = '/datasets/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'datasets')
+LOGIN_REDIRECT_URL = '/landingpage/'

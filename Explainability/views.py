@@ -8,3 +8,7 @@ def model_viewer(request):
     return HttpResponse(html)
     # context = {}
     # return render(request, 'Explainability/model_viewer.html', context)
+def landingpage(request):
+	t = loader.get_template('Explainability/templates/landing_page.html')
+	c = {'foo': 'bar'}
+	return HttpResponse(t.render(c, request), content_type='application/xhtml+xml')
