@@ -24,7 +24,7 @@ router.register(r'model', views.MLModelViewSet)
 router.register(r'factor', views.FactorViewSet)
 router.register(r'comment', views.CommentViewSet)
 router.register(r'user', views.UserViewSet)
-router.register(r'dataset', views.DateSetViewSet)
+router.register(r'dataset', views.DataSetViewSet)
 
 
 router_bulk = BulkRouter()
@@ -43,12 +43,4 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^newmodel/', views.new_model_with_factor_creation, name='New Model'),
     url(r'^replacemodeldetails/', views.replace_model_details, name='ReplaceModelDetails'),
-    #url(r'^model/$', views.MlModelListView.as_view()),
-    #url(r'^model/(?P<pk>[0-9]+)/$', views.MlModelItemView.as_view()),
 ]
-
-
-'''
-    url(r'^factor/$', views.FactorListView.as_view()),
-    url(r'^factor/(?P<pk>[0-9]+)/$', views.FactorItemView.as_view()),
-'''

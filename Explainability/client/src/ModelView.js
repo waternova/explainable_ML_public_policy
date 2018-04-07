@@ -564,65 +564,35 @@ class ModelView extends Component {
           }
         }
       });
-      return fetch("/api/modeldetail/?model_id=" + modelId + "&format=json", {
-          headers: {"Content-Type" : "application/json;charset=UTF-8"},});
-    }).then(res => res.json()).then(data => {
-        this.resortRows(rows);
-        this.loadDetail(data);
-      }).catch(error => console.error("Request failed", error));
-        this.setState({rows: factors});
-        return error;
+      return fetch("/api/modeldetail/?model_id=" + model_id, {
+        method: "GET",
+        headers: {"Content-Type" : "application/json;charset=UTF-8"},
       });
+    }).then(res => res.json()).then(data => {
+      this.resortRows(rows);
+      this.loadDetail(data);
+    }).catch(error => {
+      console.error("Request failed", error));
+      return error;
     });
   }
 
-    loadFactorsFromServer() {
-      const modelId = this.state.model_id;
-      fetch ("/api/model/" + modelId + "/?format=json", {
-        method: "GET",
-        headers: {"Content-Type": "application/json;charset=UTF-8"},
-      }).then(res => res.json()).then(data => {
-        this.loadModel(data);
-        return fetch("/api/factors/?model_id=" + data.id + "&format=json", {
-          method: "GET",
-          headers: {"Content-Type" : "application/json;charset=UTF-8"},
-        });
-      }).then(res => res.json()).then(data => {
-        this.loadFactors(data);
-        let rows = this.updateGraphSizes();
-        this.resortRows(rows);
-        return fetch("/api/modeldetail/?model_id=" + modelId + "&format=json", {
-          headers: {"Content-Type" : "application/json;charset=UTF-8"},
-        })
-      }).then(res => res.json()).then(data => {
-        this.loadDetail(data);
-      }).catch(error => console.error("Request failed", error));
-    }
-
-    loadFactors(data) {
-        this.setState({rows: []});
-        for (var i=0; i<data.length; i++) {
-            data[i].model_id = this.state.model_id;
-            this.setState({rows:this.state.rows.concat(data[i])});
+  loadDetail(data) {
+    let confusionMatrices = {};
+    for (let detail of data) {
+      let [matrixType, valueType] = detail.type.split('#', 2);
+        if (!(matrixType in confusionMatrices)) {
+          confusionMatrices[matrixType] = {};
         }
+        confusionMatrices[matrixType][valueType] = detail.intValue;
     }
+    this.setState({confusionMatrices: confusionMatrices})
+  }
 
-    loadDetail(data) {
-      let confusionMatrices = {};
-      for (let detail of data) {
-        let [matrixType, valueType] = detail.type.split('#', 2);
-          if (!(matrixType in confusionMatrices)) {
-            confusionMatrices[matrixType] = {};
-          }
-          confusionMatrices[matrixType][valueType] = detail.intValue;
-      }
-      this.setState({confusionMatrices: confusionMatrices})
-    }
-
-    handleChange(event) {
-      const property = event.target.name;
-      this.setState({[property]: event.target.value});
-    }
+  handleChange(event) {
+    const property = event.target.name;
+    this.setState({[property]: event.target.value});
+  }
 }
 
 
