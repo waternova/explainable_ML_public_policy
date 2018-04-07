@@ -24,8 +24,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'accounts/', include('django.contrib.auth.urls')),
     url(r'^api/', include('restapi.urls')),
-    url(r'^$', include('restapi.urls')),
-    #url(r'^$', views.model_viewer, name='model_viewer'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(
     settings.STATIC_URL, document_root=settings.STATIC_ROOT
 ) + [
