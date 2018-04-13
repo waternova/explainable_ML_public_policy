@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Modal from 'react-modal';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import './common.css';
 
 const customStyles = {
   content : {
@@ -104,7 +105,10 @@ class CreateNewModel extends Component {
 
     return (
       <span className="new-model-button">
-        <button className="toolbar" onClick={this.openModal}>New...</button> &nbsp;
+        <button className="toolbar" onClick={this.openModal}>
+          <img src="create_model.svg" className="icon_btn" alt="icon"/>
+          New...
+        </button>
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
