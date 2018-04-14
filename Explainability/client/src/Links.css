@@ -1,0 +1,30 @@
+h1 {
+  color: #606070;
+}
+
+.links_main {
+  margin-left: 2rem;
+  margin-right: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.link_item  {
+  font-size: 1rem;
+  font-weight: bold;
+  display: inline-block;
+  text-decoration: none;
+  color: #637583;
+}
+
+.link_table_row {
+  padding-left: 1rem;
+  padding-top: 1rem;
+}
+
+.link_icon {
+  height: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  display: inline-block;
+}

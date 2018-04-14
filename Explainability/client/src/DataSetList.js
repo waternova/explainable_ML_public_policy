@@ -85,12 +85,14 @@ class DataSetList extends Component {
     })
     return (
       <div className="wrapper">
-        <h1>Dataset List</h1>
-        <div>
-        <DataSetUpload onChange={this.refreshItems} /> &nbsp;
-        <button className="toolbar" onClick={this.deleteDataSet}>Delete</button> &nbsp;
+        <div className="page_title">Dataset List</div>
+        <div className="toolbar_frame">
+          <DataSetUpload onChange={this.refreshItems} />
+          <div className="toolbar" onClick={this.deleteDataSet}>
+            <img src="delete_dataset.svg" className="icon_btn" alt="icon"/>
+            Delete
+          </div>
         </div>
-        <br/>
         <table id="dataSetListTable">
         <thead>
         <tr>

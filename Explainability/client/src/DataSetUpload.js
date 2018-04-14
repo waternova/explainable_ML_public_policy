@@ -73,8 +73,11 @@ class DataSetUpload extends Component {
 
   render() {
     return (
-      <div className="upload_button">
-        <button className="toolbar" onClick={this.openModal}>Upload a Dataset...</button>
+      <span>
+        <div className="toolbar" onClick={this.openModal}>
+          <img src="upload_dataset.svg" className="icon_btn" alt="icon"/>
+          Upload a Dataset...
+        </div>
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
@@ -89,9 +92,8 @@ class DataSetUpload extends Component {
             <button onClick={this.closeModal} className="btn">Cancel</button>
             <input type="submit" className="btn" value="Upload"/> &nbsp;
           </form>
-
         </Modal>
-      </div>
+      </span>
     );
   }
 }

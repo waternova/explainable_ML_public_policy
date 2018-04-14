@@ -71,11 +71,11 @@ class Row extends Component {
               factor_name = {this.state.name}
               />
             <input 
-                type="submit" 
-                value="Balance Model" 
-                className={balanceButtonClassNames} 
-                disabled={!this.state.is_binary}
-                onClick={this.handleBalanceSelect} />
+              type="submit"
+              value="Balance Model"
+              className={balanceButtonClassNames}
+              disabled={!this.state.is_binary}
+              onClick={this.handleBalanceSelect} />
         </td>
         <td>
           <input 
@@ -200,18 +200,35 @@ class ModelView extends Component {
     }
     return (
       <div className="wrapper">
-        <h1>Model #{this.state.model_id}: {this.state.model_name}</h1>
+        <div className="page_title">
+          Model #{this.state.model_id}: {this.state.model_name}
+        </div>
         <h3>Description</h3>
         <textarea value={this.state.description} name="description" onChange={this.handleChange}/>
         <p>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</p>
         {confusionMatrices}
-        <p>
-          <button className="toolbar" onClick={this.retrainModel}>Retrain</button> &nbsp;
-          <button className="toolbar" onClick={this.testModel}>Test Model</button> &nbsp;
-          <button id="overwrite" className="toolbar" onClick={this.saveModel}>Save</button> &nbsp;
-          <button id="saveas" className="toolbar" onClick={this.saveModel}>Save as...</button> &nbsp;
-          <button className="toolbar" onClick={this.exportModel}>Export Model...</button> &nbsp;
-        </p>
+        <div className="toolbar_frame">
+          <div className="toolbar" onClick={this.retrainModel}>
+            <img src="/retrain_model.svg" className="icon_btn" alt="icon"/>
+            Retrain
+          </div>
+          <div className="toolbar" onClick={this.testModel}>
+            <img src="/test_model.svg" className="icon_btn" alt="icon"/>
+            Test Model
+          </div>
+          <div id="save" className="toolbar" onClick={this.saveModel}>
+            <img src="/save_model.svg" className="icon_btn" alt="icon"/>
+            Save
+          </div>
+          <div id="saveas" className="toolbar" onClick={this.saveModel}>
+            <img src="/saveas_model.svg" className="icon_btn" alt="icon"/>
+            Save as...
+          </div>
+          <div className="toolbar" onClick={this.exportModel}>
+            <img src="/export_model.svg" className="icon_btn" alt="icon"/>
+            Export Model...
+          </div>
+        </div>
         <table id="modelViewTable">
           <thead>
             <tr>

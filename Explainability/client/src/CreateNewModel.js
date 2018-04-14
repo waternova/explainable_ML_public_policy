@@ -11,7 +11,8 @@ const customStyles = {
     right                 : 'auto',
     bottom                : 'auto',
     marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
+    transform             : 'translate(-50%, -50%)',
+    backgroundColor       : '#B4CAD9'
   }
 };
 
@@ -104,11 +105,11 @@ class CreateNewModel extends Component {
     const datasetValue = dataset && dataset.value;
 
     return (
-      <span className="new-model-button">
-        <button className="toolbar" onClick={this.openModal}>
+      <span>
+        <div className="toolbar" onClick={this.openModal}>
           <img src="create_model.svg" className="icon_btn" alt="icon"/>
           New...
-        </button>
+        </div>
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
