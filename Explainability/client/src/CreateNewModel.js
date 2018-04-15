@@ -5,6 +5,14 @@ import 'react-select/dist/react-select.css';
 import './common.css';
 
 const customStyles = {
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)'
+  },
   content : {
     top                   : '50%',
     left                  : '50%',
@@ -12,7 +20,9 @@ const customStyles = {
     bottom                : 'auto',
     marginRight           : '-50%',
     transform             : 'translate(-50%, -50%)',
-    backgroundColor       : '#B4CAD9'
+    border: '3px solid #7096C9',
+    backgroundColor: '#E5ECFF',
+    padding: '0'
   }
 };
 
@@ -117,35 +127,40 @@ class CreateNewModel extends Component {
           style={customStyles}
           ariaHideApp={false}
           contentLabel="Create New Model">
-          <form method="post" onSubmit={this.handleSubmit}>
-            <label>Name</label>
-            <br/>
-            <input type="text" id="name" name="name" value={this.state.name} onChange={this.handleChange} required/> <br/> <br/>
-            <label>Dataset</label>
-            <Select
-              name="dataset"
-              value={datasetValue}
-              onChange={this.handleSelectChange}
-              options={this.state.datasetList}
-              required={true}
-            />
-            <br/>
-            <label>Description</label>
-            <br/>
-            <input type="text" id="description" name="description" value={this.state.description} onChange={this.handleChange}/>  
-            <br/> <br/>
-            <label>Non-categorical variables, as a comma-separated list</label>
-            <br/>
-            <input type="text" name="nonCategorical" value={this.state.nonCategorical} onChange={this.handleChange}/>  
-            <br/> <br/>
-            <label>Target variable (must be binary)</label>
-            <br/>
-            <input type="text" name="targetVariable" value={this.state.targetVariable} onChange={this.handleChange} required/>  
-            <br/> <br/>
-            <button onClick={this.closeModal} className="btn">Cancel</button>
-            <input type="submit" className="btn" value="Upload"/> &nbsp;
-          </form>
-
+          <div className="modal_label">
+            Create a new model based on a dataset
+          </div>
+          <div className="modal_main">
+            <form method="post" onSubmit={this.handleSubmit}>
+              <label>Dataset</label>
+              <Select
+                name="dataset"
+                value={datasetValue}
+                onChange={this.handleSelectChange}
+                options={this.state.datasetList}
+                required={true}
+              />
+              <br/>
+              <label>Name</label>
+              <br/>
+              <input className="edit_box" type="text" id="name" name="name" value={this.state.name} onChange={this.handleChange} required/>
+              <br/> <br/>
+              <label>Description</label>
+              <br/>
+              <input className="edit_box" type="text" id="description" name="description" value={this.state.description} onChange={this.handleChange}/>
+              <br/> <br/>
+              <label>Non-categorical variables, as a comma-separated list</label>
+              <br/>
+              <input className="edit_box"  type="text" name="nonCategorical" value={this.state.nonCategorical} onChange={this.handleChange}/>
+              <br/> <br/>
+              <label>Target variable (must be binary)</label>
+              <br/>
+              <input className="edit_box"  type="text" name="targetVariable" value={this.state.targetVariable} onChange={this.handleChange} required/>
+              <br/> <br/>
+              <button onClick={this.closeModal} className="btn">Cancel</button>
+              <input type="submit" className="btn" value="Upload"/> &nbsp;
+            </form>
+          </div>
         </Modal>
       </span>
     );

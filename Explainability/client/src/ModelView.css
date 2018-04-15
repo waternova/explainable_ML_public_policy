@@ -61,6 +61,7 @@ input {
 .factor-detail {
   cursor: pointer;
   float: right;
+  display: none;
 }
 
 .comment-detail {

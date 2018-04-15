@@ -1,22 +1,32 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
-import './DataSetUpload.css'
+import './common.css'
 
 const customStyles = {
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)'
+  },
   content : {
     top                   : '50%',
     left                  : '50%',
     right                 : 'auto',
     bottom                : 'auto',
     marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
+    transform             : 'translate(-50%, -50%)',
+    border: '3px solid #7096C9',
+    backgroundColor: '#E5ECFF',
+    padding: '0'
   }
 };
 
 
 class DataSetUpload extends Component {
-  constructor (props)
-    {
+  constructor (props) {
     super();
 
     this.state = {
@@ -28,14 +38,22 @@ class DataSetUpload extends Component {
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    } openModal() {
+    this.clickCancel = this.clickCancel.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    }
+
+  openModal() {
     this.setState({modalIsOpen: true});
   }
 
   afterOpenModal() {
     // references are now sync'd and can be accessed.
+  }
+
+  clickCancel() {
+    this.setState({name:'', description:''});
+    this.closeModal();
   }
 
   closeModal() {
@@ -85,13 +103,23 @@ class DataSetUpload extends Component {
           style={customStyles}
           ariaHideApp={false}
           contentLabel="Upload a Dataset">
-          <form method="post" action="api/dataset/" encType="multipart/form-data" onSubmit={this.handleSubmit}>
-            <label>Name</label><br/><input type="text" id="name" name="name" value={this.state.name} onChange={this.handleChange}/> <br/> <br/>
-            <label>Description</label><br/><input type="text" id="description" name="description" value={this.state.description} onChange={this.handleChange}/>  <br/> <br/>
-            <input type="file" id="file" name="file" accept=".csv" ref={e => {this.file = e;}}/>  <br/> <br/>
-            <button onClick={this.closeModal} className="btn">Cancel</button>
-            <input type="submit" className="btn" value="Upload"/> &nbsp;
-          </form>
+          <div className="modal_label">
+            Select a local file to upload a dataset
+          </div>
+          <div className="modal_main">
+            <form method="post" action="api/dataset/" encType="multipart/form-data" onSubmit={this.handleSubmit}>
+              <label>Name</label><br/>
+              <input className="edit_box" type="text" id="name" name="name" value={this.state.name} onChange={this.handleChange}/>
+              <br/><br/>
+              <label>Description</label><br/>
+              <input className="edit_box" type="text" id="description" name="description" value={this.state.description} onChange={this.handleChange}/>
+              <br/><br/>
+              <input type="file" id="file" name="file" accept=".csv" ref={e => {this.file = e;}}/>
+              <br/><br/>
+              <button onClick={this.clickCancel} className="btn">Cancel</button>
+              <input type="submit" className="btn" value="Upload"/> &nbsp;
+            </form>
+          </div>
         </Modal>
       </span>
     );
