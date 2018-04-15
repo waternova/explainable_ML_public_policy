@@ -83,7 +83,7 @@ class ModelList extends React.Component {
         <CreateNewModel onChange={this.refreshModelList} />
         <div className="toolbar" onClick={this.handleImportClick}>
           <img src="/import_model.svg" className="icon_btn" alt="icon"/>
-          Import a model...
+          Import...
         </div>
         <div className="toolbar" onClick={this.deleteModel}>
           <img src="/delete_model.svg" className="icon_btn" alt="icon"/>
@@ -91,21 +91,23 @@ class ModelList extends React.Component {
         </div>
       </div>
       <input type="file" className="hidden" id="file_import" name="file" accept=".json" onChange={this.importModelBegin}/>
-      <table id="modelListTable">
-        <thead>
-          <tr>
-            <th className="check"><input id="checkAll" type="checkbox" onClick={this.checkAll}/></th>
-            <th className="id">Id</th>
-            <th className="name">Model Name</th>
-            <th className="accuracy">Accuracy</th>
-            <th className="modified">Modified</th>
-            <th className="parent">Parent Id</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ListItems}
-        </tbody>
-      </table>
+      <div className="table_wrapper">
+        <table className="table_list" id="modelListTable">
+          <thead>
+            <tr>
+              <th className="check"><input id="checkAll" type="checkbox" onClick={this.checkAll}/></th>
+              <th className="id">Id</th>
+              <th className="name">Model Name</th>
+              <th className="accuracy">Accuracy</th>
+              <th className="modified">Modified</th>
+              <th className="parent">Parent Id</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ListItems}
+          </tbody>
+        </table>
+      </div>
     </div>);
   }
 

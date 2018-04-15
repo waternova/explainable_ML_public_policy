@@ -2,9 +2,22 @@ thead tr {background-color: #dcdee2; border-bottom: 1px solid #555;}
 thead th {padding: 5px 10px 5px 10px; }
 tbody tr {border-bottom: 1px solid #c1c1c1; }
 tbody td {padding: 5px 10px 5px 10px; }
-table {border-collapse: collapse; width: 100%;}
+.table_list {
+  border-collapse: collapse;
+  width: 100%;
+}
 
-.wrapper {padding: 30px;}
+
+.wrapper {
+  margin-top: 5rem;
+  margin-right: 2rem;
+  margin-left: 2rem;
+  margin-bottom: 2rem;
+}
+
+.table_wrapper {
+  min-width: 20rem;
+}
 
 .toolbar_frame {
   margin-top: 1rem;
@@ -13,10 +26,11 @@ table {border-collapse: collapse; width: 100%;}
 
 
 .toolbar {
-  width: 12rem;
-  height: 3rem;
-  line-height: 3rem;
-  font-size: 0.8rem;
+  width: 8rem;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 0.6rem;
+  font-weight: bold;
   border: 0.1rem solid #DCE0FF;
   border-radius: 0.7rem;
   margin-right: 1rem;
@@ -76,12 +90,12 @@ table {border-collapse: collapse; width: 100%;}
 }
 
 .icon_btn {
-  height: 2rem;
+  height: 1.5rem;
   display: inline-block;
-  line-height: 4rem;
+  line-height: 2rem;
   vertical-align: middle;
-  margin-right: 0.7rem;
-  margin-bottom: 0.1rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.2rem;
   filter: invert(.5) sepia(1) hue-rotate(200deg) saturate(200%);
 }
 

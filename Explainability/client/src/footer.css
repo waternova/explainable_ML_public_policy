@@ -1,0 +1,15 @@
+.footer_main {
+    width: calc(100% - 5rem);
+    height: 3rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border-top:0.2rem double #707D90;
+    font-size: 0.5rem;
+    text-align: right;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background-color: white;
+}

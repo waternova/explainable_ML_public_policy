@@ -214,7 +214,7 @@ class ModelView extends Component {
           </div>
           <div className="toolbar" onClick={this.testModel}>
             <img src="/test_model.svg" className="icon_btn" alt="icon"/>
-            Test Model
+            Test
           </div>
           <div id="save" className="toolbar" onClick={this.saveModel}>
             <img src="/save_model.svg" className="icon_btn" alt="icon"/>
@@ -226,23 +226,24 @@ class ModelView extends Component {
           </div>
           <div className="toolbar" onClick={this.exportModel}>
             <img src="/export_model.svg" className="icon_btn" alt="icon"/>
-            Export Model...
+            Export...
           </div>
         </div>
-        <table id="modelViewTable">
-          <thead>
-            <tr>
-              <th>Factor</th>
-              <th width="300px" style={{"textAlign": "center"}}><span>Less likely</span><span> &lt;- Passing -&gt; </span><span>More likely</span></th>
-              <th>Actions</th>
-              <th>Weight</th>
-            </tr>
-          </thead>
-          <tbody>
-          {rows}
-          </tbody>
-        </table>
-        <br />
+        <div className="table_wrapper">
+          <table className="table_list" id="modelViewTable">
+            <thead>
+              <tr>
+                <th>Factor</th>
+                <th width="300px" style={{"textAlign": "center"}}><span>Less likely</span><span> &lt;- Passing -&gt; </span><span>More likely</span></th>
+                <th>Actions</th>
+                <th>Weight</th>
+              </tr>
+            </thead>
+            <tbody>
+            {rows}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }

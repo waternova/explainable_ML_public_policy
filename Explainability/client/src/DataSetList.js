@@ -93,24 +93,25 @@ class DataSetList extends Component {
             Delete
           </div>
         </div>
-        <table id="dataSetListTable">
-        <thead>
-        <tr>
-        <th className="check"><input id="checkAll" type="checkbox" onClick={this.checkAll}/></th>
-        <th className="id">Id</th>
-        <th className="name">Dataset Name</th>
-        <th className="modified">Uploaded</th>
-        <th className="path">File URL</th>
-        </tr>
-        </thead>
-        <tbody>
-        {ListItems}
-        </tbody>
-        </table>
+        <div className="table_wrapper">
+          <table className="table_list" id="dataSetListTable">
+            <thead>
+              <tr>
+                <th className="check"><input id="checkAll" type="checkbox" onClick={this.checkAll}/></th>
+                <th className="id">Id</th>
+                <th className="name">Dataset Name</th>
+                <th className="modified">Uploaded</th>
+                <th className="path">File URL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ListItems}
+            </tbody>
+          </table>
         </div>
+      </div>
     );
   }
 }
-
 
 export default DataSetList

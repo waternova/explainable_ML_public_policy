@@ -1,6 +1,11 @@
 .header_table {
     background-color: #707D90;
     width: 100%;
+    min-width: 60rem;
+    border-collapse: collapse;
+    position: fixed;
+    left: 0;
+    top: 0;
 }
 
 .header_table_title_icon {
@@ -39,7 +44,6 @@
     color: #E3E3E3;
     margin-top: 0.2rem;
     margin-bottom: 0.2rem;
-    margin-right: 0.4rem;
     font-size: 1rem;
     height: 2.4rem;
     width: 9rem;

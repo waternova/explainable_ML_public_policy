@@ -6,6 +6,7 @@ import './Links.css';
 class Links extends Component {
   render() {
     return (
+      <div className="wrapper">
       <div className="links_main">
         <div className="page_title">Related Links</div>
         <table>
@@ -18,6 +19,7 @@ class Links extends Component {
             <a className="link_item" href = "https://www.fatml.org">Fairness, Accountability, and Transparency in Machine Learning</a>
           </td></tr>
         </table>
+      </div>
       </div>
     );
   }

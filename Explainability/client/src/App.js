@@ -5,6 +5,7 @@ import DataSetList from './DataSetList.js';
 import Home from './home.js';
 import ModelView from './ModelView.js';
 import Header from './header.js';
+import Footer from './footer.js';
 import Links from './Links.js';
 
 class App extends Component {
@@ -19,6 +20,7 @@ class App extends Component {
           <Route path="/ModelList" component={ModelList}/>
           <Route path="/Links" component={Links}/>
           <Route path="/ModelView/:id" component={ModelView}/>
+          <Footer />
         </div>
       </Router>
     );

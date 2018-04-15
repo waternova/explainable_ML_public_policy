@@ -76,7 +76,7 @@ class DataSetUpload extends Component {
       <span>
         <div className="toolbar" onClick={this.openModal}>
           <img src="upload_dataset.svg" className="icon_btn" alt="icon"/>
-          Upload a Dataset...
+          Upload...
         </div>
         <Modal
           isOpen={this.state.modalIsOpen}
