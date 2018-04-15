@@ -2,6 +2,8 @@ thead tr {background-color: #dcdee2; border-bottom: 1px solid #555;}
 thead th {padding: 5px 10px 5px 10px; }
 tbody tr {border-bottom: 1px solid #c1c1c1; }
 tbody td {padding: 5px 10px 5px 10px; }
+
+
 .table_list {
   border-collapse: collapse;
   width: 100%;
@@ -59,6 +61,15 @@ tbody td {padding: 5px 10px 5px 10px; }
 }
 
 .hidden {display:none;}
+
+.table_item_link {
+    text-decoration: none;
+    color: #303030
+}
+.table_item_link:hover {
+    text-decoration: underline;
+    color: #305ECC;
+}
 
 
 .check {text-align: center; width: 15px;}

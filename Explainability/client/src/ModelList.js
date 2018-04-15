@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom';
 import CreateNewModel from './CreateNewModel';
 
 class ModelListItem extends Component {
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
     this.state = {
         id: this.props.value.id,
@@ -19,15 +18,14 @@ class ModelListItem extends Component {
     };
   }
 
-  render()
-  {
+  render() {
     var dt = new Date(this.state.modified);
     return (
       <tr>
         <td className="check"><input id={this.state.id} type="checkbox"/></td>
         <td className="id">{this.state.id}</td>
         <td className="name">
-            <Link to={"/ModelView/"+this.state.id+"/"}>
+            <Link className="table_item_link" to={"/ModelView/"+this.state.id+"/"}>
                 {this.state.name}
             </Link>
         </td>

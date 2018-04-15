@@ -7,8 +7,8 @@ class Links extends Component {
   render() {
     return (
       <div className="wrapper">
+      <div className="page_title">Related Links</div>
       <div className="links_main">
-        <div className="page_title">Related Links</div>
         <table>
           <tr><td className="link_table_row">
             <img src="link.svg" className="link_icon icon_blue" alt="icon"/>
