@@ -74,7 +74,7 @@ class CommentDropdown extends Component {
       <DropdownBox
         icon_class={this.props.icon_class}
         icon_url={this.props.icon_url}
-        floating_text={this.state.comments.length}
+        floating_text={this.state.comments.length > 0 ? this.state.comments.length : null}
         isOpen={this.state.isOpen}
         handleClose={this.handleClose}
         handleOpen={this.handleOpen}>

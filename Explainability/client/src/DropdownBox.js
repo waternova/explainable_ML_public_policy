@@ -80,7 +80,7 @@ class DropdownBox extends Component {
       <img className={this.props.icon_class} src={this.props.icon_url} alt=""/> :
       <div>_<span className={arrowClass}></span></div>);
     const icon_text = (this.props.floating_text != null ?
-      <div className="overlay_text">{this.props.floating_text}</div> : "");
+      <div className="overlay_text">{this.props.floating_text}</div> : "" );
     return (
       <div className={dropdownClass}>
         <div className={`${baseClassName}-control ${disabledClass}`} 

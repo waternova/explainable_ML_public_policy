@@ -73,25 +73,10 @@ class Row extends Component {
           onChange={this.handleWeightSliderChange}
           onChangeComplete={this.handleWeightSliderComplete}
         /></td>
-        <td>
-            <CommentDropdown
-              className="comment-detail"
-              comments = {this.state.comments}
-              handleUpdateComments={this.handleUpdateComments}
-              model_id = {this.state.model_id}
-              factor_name = {this.state.name}
-              />
-            <input 
-              type="submit"
-              value="Balance Model"
-              className={balanceButtonClassNames}
-              disabled={!this.state.is_binary}
-              onClick={this.handleBalanceSelect} />
-        <td><div className="chart-bar" style={barChartStyle}></div></td>
         <td className="comment_column">
           <CommentDropdown className="overlay_img"
-            icon_class = {this.state.comments.length > 0 ? "icon_comment":"icon_comment_empty"}
-            icon_url = "/comment.svg"
+            icon_class = {this.state.comments.length > 0 ? "icon_comment" : "icon_comment_empty"}
+            icon_url = {this.state.comments.length > 0 ? "/comment.svg" : "/comment_empty.svg"}
             comments = {this.state.comments}
             handleUpdateComments={this.handleUpdateComments}
             model_id = {this.state.model_id}
@@ -106,7 +91,8 @@ class Row extends Component {
             onClick={this.handleBalanceSelect} />
         </td>
         <td>
-          <input 
+          <input
+            className="input_weight"
             value={this.state.textWeight}
             onChange={this.handleWeightInputChange}
             onBlur={this.handleWeightInputComplete}
@@ -278,11 +264,11 @@ class ModelView extends Component {
           <table className="table_list" id="modelViewTable">
             <thead>
               <tr>
-                <th>Factor</th>
-                <th width="300px" style={{"textAlign": "center"}}><span>Less likely</span><span> &lt;- Passing -&gt; </span><span>More likely</span></th>
-                <th>Comment</th>
-                <th>Balance</th>
-                <th>Weight</th>
+                <th className="factor_header_name">Factor</th>
+                <th className="factor_header_slider"><span>Less likely</span><span> &lt;- Passing -&gt; </span><span>More likely</span></th>
+                <th className="factor_header_comment">Comment</th>
+                <th className="factor_header_balance">Balance</th>
+                <th className="factor_header_weight">Weight</th>
               </tr>
             </thead>
             <tbody>
