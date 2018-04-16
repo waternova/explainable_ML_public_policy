@@ -13,7 +13,7 @@ class Header extends Component {
   render () {
     return (
       <div>
-        <table className="header_table"> <tbody>
+        <table className="header_table"><tbody>
           <tr>
             <td className="header_table_title">
               <img src="/MLE_icon.png" className="header_table_title_icon" alt="icon"/>
@@ -37,7 +37,7 @@ class Header extends Component {
               </MenuItem>
             </td>
          </tr>
-        </tbody> </table>
+        </tbody></table>
       </div>
     );
   }
