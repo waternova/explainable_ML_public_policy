@@ -50,9 +50,12 @@ class Row extends Component {
     });
     return (
       <tr>
-        <td><span className={this.state.is_enabled ? "factor_enabled" : "factor_disabled"}>{this.state.alias}</span>
+        <td>
+          <img className="icon_list" src={this.state.is_binary ? "/binary.svg" : "/empty.png"}
+            title={this.state.is_binary ? "Binary Variable" : "Not Binary Variable"} alt=""/>
           <FactorDropdown
-            className="factor-detail"
+            factor_id={this.state.id}
+            model_id={this.state.model_id}
             originalName={this.state.name}
             description={this.state.description === null ? "" : this.state.description }
             alias={this.state.alias}
@@ -60,22 +63,26 @@ class Row extends Component {
             is_binary={this.state.is_binary}
             is_enabled={this.state.is_enabled}
             handleFactorFormSubmit={this.handleFactorFormSubmit} />
+          <span className={this.state.is_enabled ? "factor_enabled" : "factor_disabled"}
+            title={this.state.is_enabled ? "Enabled" : "Disabled"}>{this.state.alias}</span>
         </td>
         <td><div className="chart-bar" style={barChartStyle}></div></td>
+        <td className="comment_column">
+          <CommentDropdown className="overlay_img"
+            icon_class = {this.state.comments.length > 0 ? "icon_comment":"icon_comment_empty"}
+            icon_url = "/comment.svg"
+            comments = {this.state.comments}
+            handleUpdateComments={this.handleUpdateComments}
+            model_id = {this.state.model_id}
+            factor_name = {this.state.name} />
+        </td>
         <td>
-            <CommentDropdown
-              className="comment-detail"
-              comments = {this.state.comments}
-              handleUpdateComments={this.handleUpdateComments}
-              model_id = {this.state.model_id}
-              factor_name = {this.state.name}
-              />
-            <input 
-              type="submit"
-              value="Balance Model"
-              className={balanceButtonClassNames}
-              disabled={!this.state.is_binary}
-              onClick={this.handleBalanceSelect} />
+          <input
+            type="submit"
+            value="Balance Model"
+            className={balanceButtonClassNames}
+            disabled={!this.state.is_binary}
+            onClick={this.handleBalanceSelect} />
         </td>
         <td>
           <input 
@@ -203,10 +210,6 @@ class ModelView extends Component {
         <div className="page_title">
           Model #{this.state.model_id}: {this.state.model_name}
         </div>
-        <h3>Description</h3>
-        <textarea value={this.state.description} name="description" onChange={this.handleChange}/>
-        <p>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</p>
-        {confusionMatrices}
         <div className="toolbar_frame">
           <div className="toolbar" onClick={this.retrainModel}>
             <img src="/retrain_model.svg" className="icon_btn" alt="icon"/>
@@ -229,13 +232,18 @@ class ModelView extends Component {
             Export...
           </div>
         </div>
+        <h3>Description</h3>
+        <textarea className="model_description" value={this.state.description} name="description" onChange={this.handleChange}/>
+        <p>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</p>
+        {confusionMatrices}
         <div className="table_wrapper">
           <table className="table_list" id="modelViewTable">
             <thead>
               <tr>
                 <th>Factor</th>
                 <th width="300px" style={{"textAlign": "center"}}><span>Less likely</span><span> &lt;- Passing -&gt; </span><span>More likely</span></th>
-                <th>Actions</th>
+                <th>Comment</th>
+                <th>Balance</th>
                 <th>Weight</th>
               </tr>
             </thead>

@@ -1,5 +1,15 @@
 .comment_dialog_user {
-    width: 60%;
+    width: 65%;
+    margin-bottom : 0.5rem;
+    float: right;
+}
+
+.comment_dialog_user_label {
+    width: 30%;
+    font-size: 0.7rem;
+    vertical-align: bottom;
+    text-align: right;
+    display: inline-block;
 }
 
 .comment_dialog_text {
@@ -7,5 +17,6 @@
 }
 
 .comment_dialog_item {
-    margin-bottom : 0.2rem;
+    margin-bottom : 0.5rem;
+    text-align: left;
 }

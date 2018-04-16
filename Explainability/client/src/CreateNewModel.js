@@ -42,6 +42,7 @@ class CreateNewModel extends Component {
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.clickCancel = this.clickCancel.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -74,6 +75,17 @@ class CreateNewModel extends Component {
 
   closeModal() {
     this.setState({modalIsOpen: false});
+  }
+
+  clickCancel() {
+    this.setState({
+      name: '',
+      dataset: null,
+      description: '',
+      nonCategorical: '',
+      targetVariable: '',
+    });
+    this.closeModal();
   }
 
   handleChange(event) {
@@ -157,8 +169,10 @@ class CreateNewModel extends Component {
               <br/>
               <input className="edit_box"  type="text" name="targetVariable" value={this.state.targetVariable} onChange={this.handleChange} required/>
               <br/> <br/>
-              <button onClick={this.closeModal} className="btn">Cancel</button>
-              <input type="submit" className="btn" value="Upload"/> &nbsp;
+              <div className="dialog_bottom_buttons">
+                <input type="submit" className="btn" value="Upload"/>
+                <button onClick={this.clickCancel} className="btn">Cancel</button>
+              </div>
             </form>
           </div>
         </Modal>

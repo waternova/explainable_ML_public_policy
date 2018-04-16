@@ -6,20 +6,16 @@
 .factor_dialog_name {
     font-size: 1.0rem;
     color: #A9A9A9;
-    width: 95%;
+    width: calc(100% - 0.7rem);
 }
 
 .factor_dialog_alias {
-    width: 95%;
+    width: calc(100% - 0.7rem);
 }
 
-.factor_dialog_weight {
-    text-align: right;
-    width: 95%;
-}
-
-.description {
+.factor_dialog_description {
     font-size: 0.8rem;
+    width: calc(100% - 0.5rem);
 }
 
 

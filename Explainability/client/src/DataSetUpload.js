@@ -27,8 +27,7 @@ const customStyles = {
 
 class DataSetUpload extends Component {
   constructor (props) {
-    super();
-
+    super(props);
     this.state = {
       modalIsOpen: false,
       name : '',
@@ -41,7 +40,7 @@ class DataSetUpload extends Component {
     this.clickCancel = this.clickCancel.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    }
+  }
 
   openModal() {
     this.setState({modalIsOpen: true});
@@ -116,8 +115,10 @@ class DataSetUpload extends Component {
               <br/><br/>
               <input type="file" id="file" name="file" accept=".csv" ref={e => {this.file = e;}}/>
               <br/><br/>
-              <button onClick={this.clickCancel} className="btn">Cancel</button>
-              <input type="submit" className="btn" value="Upload"/> &nbsp;
+              <div class="dialog_bottom_buttons">
+                <input type="submit" className="btn" value="Upload"/>
+                <button onClick={this.clickCancel} className="btn">Cancel</button>
+              </div>
             </form>
           </div>
         </Modal>

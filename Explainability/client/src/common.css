@@ -7,8 +7,8 @@ tbody td {padding: 5px 10px 5px 10px; }
 .table_list {
   border-collapse: collapse;
   width: 100%;
+  margin-bottom: 20rem;
 }
-
 
 .wrapper {
   margin-top: 5rem;
@@ -31,8 +31,7 @@ tbody td {padding: 5px 10px 5px 10px; }
   width: 8rem;
   height: 2rem;
   line-height: 2rem;
-  font-size: 0.6rem;
-  font-weight: bold;
+  font-size: 0.8rem;
   border: 0.1rem solid #DCE0FF;
   border-radius: 0.7rem;
   margin-right: 1rem;
@@ -41,17 +40,17 @@ tbody td {padding: 5px 10px 5px 10px; }
   display: inline-block;
   text-align: center;
   vertical-align: middle;
-  color: #8887A0;
+  color: #667093;
   background-color: white;
 }
 
 .toolbar:hover {
     background-color: #DCE0FF;
-    color: #305E76;
+    color: #254E66;
 }
 
 .btn {
-    float: right;
+    display: inline-block;
     width: 5rem;
     height: 1.5rem;
     font-family: "Verdana";
@@ -62,6 +61,27 @@ tbody td {padding: 5px 10px 5px 10px; }
     background-color: white;
     color: #507095;
     cursor: pointer;
+}
+.icon_list {
+    display: inline-block;
+    height: 1rem;
+    width: 1rem;
+}
+
+.btn_list {
+    display: inline-block;
+    width: 3rem;
+    height: 1.5rem;
+    font-family: "Verdana";
+    font-size: 0.75rem;
+    margin-right:0.3rem;
+    border-style: none;
+    color: #507095;
+    cursor: pointer;
+}
+
+.btn_list:hover {
+  background-color: #DCE0FF;
 }
 
 .hidden {display:none;}
@@ -90,9 +110,9 @@ tbody td {padding: 5px 10px 5px 10px; }
     margin-bottom: 2rem;
     padding-left: 2rem;
     padding-right: 2rem;
-    color: #99C5C0;
-    border-bottom:0.5rem solid #99C5C0;
-    border-left:0.5rem solid #99C5C0;
+    color: #60A0C0;
+    border-bottom:0.5rem solid #AAC9D0;
+    border-left:0.5rem solid #AAC9D0;
 }
 
 
@@ -135,11 +155,19 @@ tbody td {padding: 5px 10px 5px 10px; }
 }
 
 .modal_main {
-  padding: 1rem;
+  margin: 1rem;
 }
 
 .edit_box {
   float: right;
   border: 0.03rem solid #507095;
   width: calc(100% - 0.5rem);
+}
+
+.factor_title {
+  display: inline-block;
+}
+
+.dialog_bottom_buttons {
+  text-align: right;
 }

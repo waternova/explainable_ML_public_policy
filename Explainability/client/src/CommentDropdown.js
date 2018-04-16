@@ -71,28 +71,29 @@ class CommentDropdown extends Component {
       );
     })
     return (
-      <DropdownBox 
-      labelValue="Comments" 
-      isOpen={this.state.isOpen} 
-      handleClose={this.handleClose} 
-      handleOpen={this.handleOpen}>
-        <div>
+      <DropdownBox
+        icon_class={this.props.icon_class}
+        icon_url={this.props.icon_url}
+        floating_text={this.state.comments.length}
+        isOpen={this.state.isOpen}
+        handleClose={this.handleClose}
+        handleOpen={this.handleOpen}>
+        <div className="modal_main">
           <ul>
           {comments}
           </ul>
           <form onSubmit={this.handleNewCommentAdd}>
-            <label>
-              Comment by&nbsp;
-              <input className="comment_dialog_user" id="username" name="username" value={this.state.user_name} onChange={this.handleUserChange}/>
-            </label>
+            <div className="comment_dialog_user_label">Comment by</div>
+            <input className="comment_dialog_user" id="username" name="username" value={this.state.user_name} onChange={this.handleUserChange}/>
             <br/>
             <label>
-              Your comment:
               <textarea className="comment_dialog_text" value={this.state.newComment} onChange={this.handleNewCommentChange} />
             </label>
-            <input className="btn" name="close" type="button" value="Close" onClick={this.handleClose} />
-            <input className="btn" name="comment_add" type="submit" value="Add" />
             <br/>
+            <div className="dialog_bottom_buttons">
+              <input className="btn" name="comment_add" type="submit" value="Add" />
+              <input className="btn" name="close" type="button" value="Close" onClick={this.handleClose} />
+            </div>
           </form>
         </div>
       </DropdownBox>

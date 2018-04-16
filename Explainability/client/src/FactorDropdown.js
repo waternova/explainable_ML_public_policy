@@ -33,11 +33,10 @@ class FactorDropdown extends Component {
   render () {
     return (
       <DropdownBox 
-      labelValue="..." 
-      isOpen={this.state.isOpen} 
+      isOpen={this.state.isOpen}
       handleClose={this.handleClose} 
       handleOpen={this.handleOpen}>
-        <div>
+        <div className="modal_main">
           <form onSubmit={this.handleFactorFormSubmit}>
             <label className="factor_dialog_labels">Factor Name </label> <br/>
             <input type="text" className="factor_dialog_name" id="name" name="name" defaultValue={this.props.originalName} readOnly="" />
@@ -53,11 +52,12 @@ class FactorDropdown extends Component {
             <br/>
             <input id="is_enabled" name="is_enabled" type="checkbox" defaultChecked={this.props.is_enabled} />
             <label className="factor_dialog_labels">Enabled </label>
-            <br/> <br/>
-            <input className="btn" name="cancel" type="button" value="Cancel" onClick={this.handleClose}></input>
-            <input className="btn" name="apply" type="submit" value="Apply" />
+            <br/><br/>
+            <div className="dialog_bottom_buttons">
+              <input className="btn" name="apply" type="submit" value="Apply" />
+              <input className="btn" name="cancel" type="button" value="Cancel" onClick={this.handleClose}></input>
+            </div>
           </form>
-          <br/>
         </div>
       </DropdownBox>
     )

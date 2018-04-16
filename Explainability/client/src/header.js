@@ -13,14 +13,17 @@ class Header extends Component {
   render () {
     return (
       <div>
-        <table className="header_table"> <tbody>
+        <table className="header_table"><tbody>
           <tr>
-            <td className="header_table_title">
-              <img src="/MLE_icon.png" className="header_table_title_icon" alt="icon"/>
-              <br/>
-              <span className="header_big">M</span>achine
-              <span className="header_big">&nbsp;L</span>earning
-              <span className="header_big">&nbsp;E</span>xplorer
+            <td className="header_title_td">
+              <img src="/MLE_icon.png" className="header_title_icon" alt="icon"/>
+              <div className="header_title_div">
+                <span className="header_title_text">
+                  <span className="header_title_text_big">M</span>achine
+                  <span className="header_title_text_big">&nbsp;L</span>earning
+                  <span className="header_title_text_big">&nbsp;E</span>xplorer
+                </span>
+              </div>
             </td>
             <td className="header_table_menu">
               <MenuItem to={'/'}>
@@ -37,7 +40,7 @@ class Header extends Component {
               </MenuItem>
             </td>
          </tr>
-        </tbody> </table>
+        </tbody></table>
       </div>
     );
   }

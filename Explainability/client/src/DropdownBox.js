@@ -53,7 +53,7 @@ class DropdownBox extends Component {
 
   render () {
     const { baseClassName, menuClassName, arrowClassName, className, 
-      labelClassName, labelValue = "Menu" } = this.props
+      labelClassName, labelValue } = this.props
     const disabledClass = this.props.disabled ? 'Dropdown-disabled' : '';
 
     const dropdownClass = classNames({
@@ -74,16 +74,23 @@ class DropdownBox extends Component {
       [arrowClassName]: !!arrowClassName
     });
 
-    const value = (<div className={labelClass}>{labelValue}</div>)
+    const value = (labelValue !=null ? <div className={labelClass}>{labelValue}</div> : "");
     const menu = this.props.isOpen ? <div className={menuClass}>{this.props.children}</div> : null
-    
+    const icon_custom = (this.props.icon_url != null ?
+      <img className={this.props.icon_class} src={this.props.icon_url} alt=""/> :
+      <div>_<span className={arrowClass}></span></div>);
+    const icon_text = (this.props.floating_text != null ?
+      <div className="overlay_text">{this.props.floating_text}</div> : "");
     return (
       <div className={dropdownClass}>
         <div className={`${baseClassName}-control ${disabledClass}`} 
         onMouseDown={this.handleMouseDown} 
         onTouchEnd={this.handleMouseDown}>
           {value}
-          <span className={arrowClass} />
+          <div className="overlay_ground">
+            {icon_custom}
+            {icon_text}
+          </div>
         </div>
         {menu}
       </div>

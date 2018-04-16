@@ -5,8 +5,7 @@ body {
 textarea {
   /* border: 2px solid #ccc; */
   border-color: #ccc;
-  width: 500px;
-  height: 50px;
+  height: 2rem;
   resize: vertical;
 }
 
@@ -54,26 +53,36 @@ input {
   background-color: palegreen;
 }
 
-.factor-detail .Dropdown-control {
-  padding-right: 6px;
-}
-
-.factor-detail {
-  cursor: pointer;
-  float: right;
-  display: none;
-}
-
-.comment-detail {
-  cursor: pointer;
-  float: right;
-}
-
 .factor_enabled {
     color: #000000;
+    margin-left: 0.5rem;
 }
 
 .factor_disabled {
     color: #B9B9B9;
     text-decoration:line-through;
+    margin-left: 0.5rem;
+}
+
+.icon_empty {
+    width: 1rem;
+}
+
+.comment_column {
+  text-align: center;
+}
+
+.icon_comment {
+    width: 1.5rem;
+    filter: invert(.4) sepia(1) hue-rotate(160deg) saturate(300%);
+}
+
+.icon_comment_empty {
+    width: 1.5rem;
+    filter: invert(.5) opacity(20%);
+}
+
+.model_description {
+    width: 100%;
+    height: 5rem;
 }

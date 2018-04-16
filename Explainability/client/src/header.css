@@ -1,5 +1,5 @@
 .header_table {
-    background-color: #707D90;
+    background-color: #505D70;
     width: 100%;
     min-width: 60rem;
     border-collapse: collapse;
@@ -9,29 +9,36 @@
     z-index: 1000;
 }
 
-.header_table_title_icon {
+.header_title_td {
+    width: 16rem;
+}
+
+.header_title_div {
+    position: relative;
+    top: 0.7rem;
+    display: inline;
+}
+
+.header_title_icon {
     height: 3.0rem;
     display: inline-block;
     float: left;
     margin-right: 0.5rem;
 }
 
-.header_table_title {
-    width: 16rem;
-    color: #D0D9D0;
+.header_title_text {
+    font-family: 'Roboto', sans-serif;
     font-size: 0.8rem;
     font-weight: normal;
-    font-family: "Georgia";
+    color: #D9E5D9;
     text-align: left;
-    display: table-cell;
-    padding-top: 0;
-    padding-bottom: 0;
 }
 
-.header_big {
+.header_title_text_big {
+    font-family: 'Roboto', sans-serif;
     font-size: 1.1rem;
     font-weight: normal;
-    color: #B0CFDE;
+    color: #C0EFFF;
 }
 
 .header_table_menu {
@@ -53,10 +60,10 @@
     transition: background-color 0.5s;
     transition: color 0.5s;
     text-decoration: none;
-    background-color: #707D90;
+    background-color: #505D70;
 }
 
 .menu-item:hover {
-    background-color: #697082;
+    background-color: #657080;
     color: #FFFFFF;
 }
