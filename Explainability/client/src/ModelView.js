@@ -7,6 +7,7 @@ import FactorDropdown from './FactorDropdown.js';
 import ConfusionMatrix from './ConfusionMatrix';
 import classNames from 'classnames';
 import FileSaver from 'file-saver';
+import Slider from './RangeSlider/RangeSlider';
 
 class Row extends Component {
   constructor(props) {
@@ -14,7 +15,8 @@ class Row extends Component {
     const value = this.props.value;
     this.state = {
       id: value.id,
-      weight: value.weight,
+      sliderWeight: value.weight,
+      textWeight: value.weight,
       alias: value.alias,
       name: value.name,
       index: this.props.index,
@@ -25,25 +27,18 @@ class Row extends Component {
       comments: value.comments,
       model_id: value.model_id,
     };
-    this.handleWeightChange = this.handleWeightChange.bind(this);
+    this.handleWeightSliderChange = this.handleWeightSliderChange.bind(this);
+    this.handleWeightInputChange = this.handleWeightInputChange.bind(this);
     this.handleBalanceSelect = this.handleBalanceSelect.bind(this);
     this.handleFactorFormSubmit = this.handleFactorFormSubmit.bind(this);
     this.handleUpdateComments = this.handleUpdateComments.bind(this);
+    this.handleWeightSliderComplete = this.handleWeightSliderComplete.bind(this);
+    this.handleWeightInputComplete = this.handleWeightInputComplete.bind(this);
   }
 
   render() {
     const positiveColor = "#75acff";
     const negativeColor = "#aa6bf9";
-    const graphSize = this.props.value.graphSize;
-    let leftMargin = 150;
-    if (graphSize < 0) {
-      leftMargin = 150 + graphSize;
-    }
-    const barChartStyle = {
-      backgroundColor: graphSize > 0 ? positiveColor:negativeColor,
-      width: String(Math.abs(graphSize)) + 'px',
-      marginLeft: String(leftMargin) + 'px',
-    }
     const balanceButtonClassNames = classNames({
         'balance-button': true,
         'selected': this.props.value.is_balanced,
@@ -59,13 +54,39 @@ class Row extends Component {
             originalName={this.state.name}
             description={this.state.description === null ? "" : this.state.description }
             alias={this.state.alias}
-            weight={this.state.weight}
+            weight={this.props.value.weight}
             is_binary={this.state.is_binary}
             is_enabled={this.state.is_enabled}
             handleFactorFormSubmit={this.handleFactorFormSubmit} />
           <span className={this.state.is_enabled ? "factor_enabled" : "factor_disabled"}
             title={this.state.is_enabled ? "Enabled" : "Disabled"}>{this.state.alias}</span>
         </td>
+        <td><Slider
+          value={this.state.sliderWeight}
+          startZero={true}
+          min={-this.props.maxGraphSize}
+          max={this.props.maxGraphSize}
+          step={0.01}
+          format={x=>x.toFixed(2)}
+          positiveColor={positiveColor}
+          negativeColor={negativeColor}
+          onChange={this.handleWeightSliderChange}
+          onChangeComplete={this.handleWeightSliderComplete}
+        /></td>
+        <td>
+            <CommentDropdown
+              className="comment-detail"
+              comments = {this.state.comments}
+              handleUpdateComments={this.handleUpdateComments}
+              model_id = {this.state.model_id}
+              factor_name = {this.state.name}
+              />
+            <input 
+              type="submit"
+              value="Balance Model"
+              className={balanceButtonClassNames}
+              disabled={!this.state.is_binary}
+              onClick={this.handleBalanceSelect} />
         <td><div className="chart-bar" style={barChartStyle}></div></td>
         <td className="comment_column">
           <CommentDropdown className="overlay_img"
@@ -86,20 +107,34 @@ class Row extends Component {
         </td>
         <td>
           <input 
-            defaultValue={this.state.weight.toFixed(6)} 
-            onChange={this.handleWeightChange} 
-            onBlur={(event) => this.props.resortRows()} />
+            value={this.state.textWeight}
+            onChange={this.handleWeightInputChange}
+            onBlur={this.handleWeightInputComplete}
+            />
         </td>
       </tr>
     );
   }
 
-  handleWeightChange(event) {
+  handleWeightSliderChange(newWeight) {
+    this.setState({sliderWeight: newWeight});
+  }
+
+  handleWeightSliderComplete(event) {
+    const newWeight = parseFloat(this.state.sliderWeight.toFixed(2));
+    this.setState({textWeight: newWeight});
+    this.props.onChange(this.props.index, "weight", newWeight);
+  }
+
+  handleWeightInputChange(event) {
     var newWeight = parseFloat(event.target.value);
-    if (isNaN (newWeight) === false)
-    {
-        this.setState({weight: newWeight} );
-        this.props.onChange(this.props.index, "weight", newWeight);
+    this.setState({textWeight: newWeight});
+  }
+
+  handleWeightInputComplete(event) {
+    if (!isNaN(this.state.textWeight)) {
+      this.setState({sliderWeight: Number(this.state.textWeight)});
+      this.props.onChange(this.props.index, "weight", this.state.textWeight);
     }
   }
 
@@ -144,6 +179,7 @@ class ModelView extends Component {
       datasetId: null,
       nonCategoricalColumns: null,
       targetVariable: null,
+      maxGraphSize: 1,
     };
 
     this.testModel = this.testModel.bind(this);
@@ -172,7 +208,9 @@ class ModelView extends Component {
         value={entry}
         onChange={this.updateFactor}
         clearOtherBalanceSelect={this.clearOtherBalanceSelect}
-        resortRows={this.resortRows}/>);
+        resortRows={this.resortRows}
+        maxGraphSize={this.state.maxGraphSize}
+      />);
     });
     const balancedFactor = this.state.rows.find(x => x.is_balanced);
     const factorName = balancedFactor ? balancedFactor.alias : null;
@@ -288,7 +326,7 @@ class ModelView extends Component {
       interceptRow.graphSize = 0;
       rows.push(interceptRow);
     }
-    this.setState({rows: rows});
+    this.setState({rows: rows, maxGraphSize: maxSize});
     return rows;
   }
 
@@ -366,8 +404,8 @@ class ModelView extends Component {
 
   //Handler for Save Button
   saveModel (event) {
-    var isUpdate = event.target.id==="overwrite" ? true : false ;
-    var popup_title = isUpdate ? "Overwrite existing model:" : "Save as a new model:"
+    const isUpdate = event.target.id==="save";
+    var popup_title = isUpdate ? "Overwrite existing model:" : "Save as a new model:";
     var saveName = prompt(popup_title, this.state.model_name);
     if (saveName === null || saveName.length === 0 ) return;
     var requestType, requestURL;
