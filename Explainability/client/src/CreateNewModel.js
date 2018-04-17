@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import './common.css';
+import CreateImg from './images/create_model.svg';
 
 const customStyles = {
   overlay: {
@@ -132,7 +133,7 @@ class CreateNewModel extends Component {
     return (
       <span>
         <div className="toolbar" onClick={this.openModal}>
-          <img src="create_model.svg" className="icon_btn" alt="icon"/>
+          <img src={CreateImg} className="icon_btn" alt="icon"/>
           New...
         </div>
         <Modal

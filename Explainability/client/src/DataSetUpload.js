@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
-import './common.css'
+import './common.css';
+import UploadImg from './images/upload_dataset.svg';
 
 const customStyles = {
   overlay: {
@@ -92,7 +93,7 @@ class DataSetUpload extends Component {
     return (
       <span>
         <div className="toolbar" onClick={this.openModal}>
-          <img src="upload_dataset.svg" className="icon_btn" alt="icon"/>
+          <img src={UploadImg} className="icon_btn" alt="icon"/>
           Upload...
         </div>
         <Modal

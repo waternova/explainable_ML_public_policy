@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import './common.css';
 import './header.css';
 import { Link } from 'react-router-dom';
+import HomeImg from './images/home.svg';
+import ModelsImg from './images/models.svg';
+import DatasetsImg from './images/datasets.svg';
+import LinksImg from './images/links.svg';
+import IconImg from './images/MLE_icon.png';
 
 const MenuItem = ({children, to}) => (
     <Link to={to} className="menu-item">
@@ -16,7 +21,7 @@ class Header extends Component {
         <table className="header_table"><tbody>
           <tr>
             <td className="header_title_td">
-              <img src="/MLE_icon.png" className="header_title_icon" alt="icon"/>
+              <img src={IconImg} className="header_title_icon" alt="icon"/>
               <div className="header_title_div">
                 <span className="header_title_text">
                   <span className="header_title_text_big">M</span>achine
@@ -27,16 +32,16 @@ class Header extends Component {
             </td>
             <td className="header_table_menu">
               <MenuItem to={'/'}>
-                <img src="/home.svg" className="icon_small icon_red" alt="icon"/>Home
+                <img src={HomeImg} className="icon_small icon_red" alt="icon"/>Home
               </MenuItem>
               <MenuItem to={'/ModelList'}>
-                <img src="/models.svg" className="icon_small icon_purple" alt="icon"/>Models
+                <img src={ModelsImg} className="icon_small icon_purple" alt="icon"/>Models
               </MenuItem>
               <MenuItem to={'/DataSetList'}>
-                <img src="/datasets.svg" className="icon_small icon_blue" alt="icon"/>Datasets
+                <img src={DatasetsImg} className="icon_small icon_blue" alt="icon"/>Datasets
               </MenuItem>
               <MenuItem to={'/Links'}>
-                <img src="/links.svg" className="icon_small icon_green" alt="icon"/>Links
+                <img src={LinksImg} className="icon_small icon_green" alt="icon"/>Links
               </MenuItem>
             </td>
          </tr>

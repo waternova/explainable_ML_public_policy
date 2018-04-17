@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import DataSetUpload from './DataSetUpload.js'
 import './common.css';
 import './DataSetList.css';
+import DeleteImg from './images/delete_dataset.svg';
 
 class DataSetListItem extends Component {
   constructor(props) {
@@ -89,7 +90,7 @@ class DataSetList extends Component {
         <div className="toolbar_frame">
           <DataSetUpload onChange={this.refreshItems} />
           <div className="toolbar" onClick={this.deleteDataSet}>
-            <img src="delete_dataset.svg" className="icon_btn" alt="icon"/>
+            <img src={DeleteImg} className="icon_btn" alt="icon"/>
             Delete
           </div>
         </div>

@@ -3,6 +3,8 @@ import './common.css';
 import './ModelList.css';
 import { Link } from 'react-router-dom';
 import CreateNewModel from './CreateNewModel';
+import ImportModelImg from './images/import_model.svg';
+import DeleteModelImg from './images/delete_model.svg';
 
 class ModelListItem extends Component {
   constructor(props) {
@@ -80,11 +82,11 @@ class ModelList extends React.Component {
       <div className="toolbar_frame">
         <CreateNewModel onChange={this.refreshModelList} />
         <div className="toolbar" onClick={this.handleImportClick}>
-          <img src="/import_model.svg" className="icon_btn" alt="icon"/>
+          <img src={ImportModelImg} className="icon_btn" alt="icon"/>
           Import...
         </div>
         <div className="toolbar" onClick={this.deleteModel}>
-          <img src="/delete_model.svg" className="icon_btn" alt="icon"/>
+          <img src={DeleteModelImg} className="icon_btn" alt="icon"/>
           Delete
         </div>
       </div>

@@ -8,6 +8,15 @@ import ConfusionMatrix from './ConfusionMatrix';
 import classNames from 'classnames';
 import FileSaver from 'file-saver';
 import Slider from './RangeSlider/RangeSlider';
+import BinaryImg from './images/binary.svg';
+import EmptyImg from './images/empty.png';
+import CommentImg from './images/comment.svg';
+import CommentEmptyImg from './images/comment_empty.svg';
+import SaveModelImg from './images/save_model.svg';
+import SaveAsModelImg from './images/saveas_model.svg';
+import ExportModelImg from './images/export_model.svg';
+import RetrainImg from './images/retrain_model.svg';
+import TestModelImg from './images/test_model.svg';
 
 class Row extends Component {
   constructor(props) {
@@ -46,7 +55,7 @@ class Row extends Component {
     return (
       <tr>
         <td>
-          <img className="icon_list" src={this.state.is_binary ? "/binary.svg" : "/empty.png"}
+          <img className="icon_list" src={this.state.is_binary ? BinaryImg : EmptyImg}
             title={this.state.is_binary ? "Binary Variable" : "Not Binary Variable"} alt=""/>
           <FactorDropdown
             factor_id={this.state.id}
@@ -76,7 +85,7 @@ class Row extends Component {
         <td className="comment_column">
           <CommentDropdown className="overlay_img"
             icon_class = {this.state.comments.length > 0 ? "icon_comment" : "icon_comment_empty"}
-            icon_url = {this.state.comments.length > 0 ? "/comment.svg" : "/comment_empty.svg"}
+            icon_url = {this.state.comments.length > 0 ? CommentImg : CommentEmptyImg}
             comments = {this.state.comments}
             handleUpdateComments={this.handleUpdateComments}
             model_id = {this.state.model_id}
@@ -257,15 +266,15 @@ class ModelView extends Component {
         </div>
         <div className="toolbar_frame">
           <div id="save" className="toolbar" onClick={this.saveModel}>
-            <img src="/save_model.svg" className="icon_btn" alt="icon"/>
+            <img src={SaveModelImg} className="icon_btn" alt="icon"/>
             Save
           </div>
           <div id="saveas" className="toolbar" onClick={this.saveModel}>
-            <img src="/saveas_model.svg" className="icon_btn" alt="icon"/>
+            <img src={SaveAsModelImg} className="icon_btn" alt="icon"/>
             Save as...
           </div>
           <div className="toolbar" onClick={this.exportModel}>
-            <img src="/export_model.svg" className="icon_btn" alt="icon"/>
+            <img src={ExportModelImg} className="icon_btn" alt="icon"/>
             Export...
           </div>
         </div>
@@ -285,11 +294,11 @@ class ModelView extends Component {
         </div>
         <div className="toolbar_frame_2">
           <div className="toolbar" onClick={this.retrainModel}>
-            <img src="/retrain_model.svg" className="icon_btn_2" alt="icon"/>
+            <img src={RetrainImg} className="icon_btn_2" alt="icon"/>
             Retrain
           </div>
           <div className="toolbar" onClick={this.testModel}>
-            <img src="/test_model.svg" className="icon_btn_2" alt="icon"/>
+            <img src={TestModelImg} className="icon_btn_2" alt="icon"/>
             Test
           </div>
         </div>
