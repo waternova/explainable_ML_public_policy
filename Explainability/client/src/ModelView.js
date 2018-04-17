@@ -215,18 +215,22 @@ class ModelView extends Component {
     if ('all' in stateCmxs) {
       const matrix = stateCmxs['all'];
       const maxSize = Math.max(...Object.values(matrix));
+      const totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
       const headerText = 'Predictions for all' + this.getModifiedText();
       confusionMatrices = [
         <ConfusionMatrix
           key='all'
           headerText={headerText}
-          matrix={stateCmxs.all}
+          matrix={matrix}
           maxSize={maxSize}
-          tableOpacity={opacity}/>
+          totalSize={totalSize}
+          tableOpacity={opacity}
+        />
       ]
     } else if ('positive_class' in stateCmxs && 'negative_class' in stateCmxs) {
       confusionMatrices = Object.entries(stateCmxs).map(([key, matrix]) => {
         const maxSize = Math.max(...Object.values(matrix));
+        const totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
         const isPositiveClass = key === 'positive_class';
         const headerText = `Predictions for cases where "${factorName}" is ${(isPositiveClass ? 'true' : 'false')}`;
         const threshold = isPositiveClass ? this.state.positiveThreshold : this.state.negativeThreshold;
@@ -237,6 +241,7 @@ class ModelView extends Component {
             headerText={headerText}
             matrix={matrix}
             maxSize={maxSize}
+            totalSize={totalSize}
             thresholdText={thresholdText}
             tableOpacity={opacity}/>
         )
@@ -262,8 +267,8 @@ class ModelView extends Component {
           </div>
         </div>
         <div className="div_model_attribute">
-          <span className="value_label">Target Variable:</span> [{this.state.targetVariable}]
-          <span> &rArr; which means if it is true: </span>
+          <span className="value_label">Predicted Variable:</span> "{this.state.targetVariable}"
+          <span> &rArr; which willl be used to decide: </span>
           <input value={this.state.target_var_alias} name="target_var_alias" onChange={this.handleChange}/>
         </div>
         <div className="div_model_attribute">
@@ -292,10 +297,10 @@ class ModelView extends Component {
                 <th className="factor_header_name">Factor</th>
                 <th className="factor_header_slider">
                   <div>
-                    {this.state.target_var_alias!=="" ? this.state.target_var_alias : "["+this.state.targetVariable+"]" }
+                    If factor is true, <em>{this.state.target_var_alias!=="" ? this.state.target_var_alias : "["+this.state.targetVariable+"]" }</em> is
                   </div>
                   <span className="header_likely_left">Less likely &larr;</span>
-                  <span className="header_likely_center">|</span>
+                  <span className="header_likely_center">&nbsp;|</span>
                   <span className="header_likely_right">&rarr; More likely</span>
                 </th>
                 <th className="factor_header_comment">Comment</th>

@@ -19,13 +19,13 @@ const ConfusionMatrix = props => (
         <td style={{backgroundColor: 'rgb(124, 255, 124,' + props.matrix.true_negative_count/props.maxSize +')'}}>
           <div className="matrix_item">
             <div className="matrix_item_label">True negative</div>
-            <div className="matrix_item_value">{props.matrix.true_negative_count}%</div>
+            <div className="matrix_item_value">{props.matrix.true_negative_count}<br/>({(100*props.matrix.true_negative_count/props.totalSize).toFixed(1)}%)</div>
           </div>
         </td>
         <td style={{backgroundColor: 'rgb(255, 132, 132,' + props.matrix.false_positive_count/props.maxSize +')'}}>
           <div className="matrix_item">
             <div className="matrix_item_label">False positive</div>
-            <div className="matrix_item_value">{props.matrix.false_positive_count}%</div>
+            <div className="matrix_item_value">{props.matrix.false_positive_count}<br/>({(100*props.matrix.false_positive_count/props.totalSize).toFixed(1)}%)</div>
           </div>
         </td>
       </tr>
@@ -34,13 +34,13 @@ const ConfusionMatrix = props => (
         <td style={{backgroundColor: 'rgb(255, 132, 132,' + props.matrix.false_negative_count/props.maxSize +')'}}>
           <div className="matrix_item">
             <div className="matrix_item_label">False negative</div>
-            <div className="matrix_item_value">{props.matrix.false_negative_count}%</div>
+            <div className="matrix_item_value">{props.matrix.false_negative_count}<br/>({(100*props.matrix.false_negative_count/props.totalSize).toFixed(1)}%)</div>
           </div>
         </td>
         <td style={{backgroundColor: 'rgb(124, 255, 124,' + props.matrix.true_positive_count/props.maxSize +')'}}>
           <div className="matrix_item">
             <div className="matrix_item_label">True positive</div>
-            <div className="matrix_item_value">{props.matrix.true_positive_count}%</div>
+            <div className="matrix_item_value">{props.matrix.true_positive_count}<br/>({(100*props.matrix.true_positive_count/props.totalSize).toFixed(1)}%)</div>
           </div>
         </td>
       </tr>
