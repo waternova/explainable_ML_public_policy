@@ -1,6 +1,8 @@
+.confusion-matrix {
+  margin-top: 0.5rem;
+}
 .confusion-matrix table {
   width: 400px;
-  margin-bottom: 20px;
 }
 
 .confusion-matrix h4 {

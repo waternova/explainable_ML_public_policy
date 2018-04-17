@@ -93,12 +93,12 @@ class ModelList extends React.Component {
         <table className="table_list" id="modelListTable">
           <thead>
             <tr>
-              <th className="check"><input id="checkAll" type="checkbox" onClick={this.checkAll}/></th>
-              <th className="id">Id</th>
-              <th className="name">Model Name</th>
-              <th className="accuracy">Accuracy</th>
-              <th className="modified">Modified</th>
-              <th className="parent">Parent Id</th>
+              <th className="list_col_check"><input id="checkAll" type="checkbox" onClick={this.checkAll}/></th>
+              <th className="list_col_id">Id</th>
+              <th className="list_col_name">Model Name</th>
+              <th className="list_col_accuracy">Accuracy</th>
+              <th className="list_col_modified">Modified</th>
+              <th className="list_col_parent">Parent Id</th>
             </tr>
           </thead>
           <tbody>

@@ -3,7 +3,7 @@ import './ConfusionMatrix.css';
 
 const ConfusionMatrix = props => (
   <div className="confusion-matrix">
-  <h4>{props.headerText}</h4>
+  <span>{props.headerText}</span>
   {props.thresholdText ? <div>{props.thresholdText}</div> : null}
   <table style={{opacity: props.tableOpacity}}>
     <thead>

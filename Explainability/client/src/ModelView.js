@@ -168,6 +168,7 @@ class ModelView extends Component {
       datasetId: null,
       nonCategoricalColumns: null,
       targetVariable: null,
+      target_var_alias: "",
       maxGraphSize: 1,
       untestedModel: false,
     };
@@ -220,9 +221,8 @@ class ModelView extends Component {
           key='all'
           headerText={headerText}
           matrix={stateCmxs.all}
-          maxSize={maxSize} 
-          tableOpacity={opacity}
-        />
+          maxSize={maxSize}
+          tableOpacity={opacity}/>
       ]
     } else if ('positive_class' in stateCmxs && 'negative_class' in stateCmxs) {
       confusionMatrices = Object.entries(stateCmxs).map(([key, matrix]) => {
@@ -237,9 +237,8 @@ class ModelView extends Component {
             headerText={headerText}
             matrix={matrix}
             maxSize={maxSize}
-            thresholdText={thresholdText} 
-            tableOpacity={opacity}
-          />
+            thresholdText={thresholdText}
+            tableOpacity={opacity}/>
         )
       })
     }
@@ -262,9 +261,20 @@ class ModelView extends Component {
             Export...
           </div>
         </div>
-        <h3>Target Variable: {this.state.targetVariable}</h3>
-        <p>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</p>
-        {confusionMatrices}
+        <div className="div_model_attribute">
+          <span className="value_label">Target Variable:</span> [{this.state.targetVariable}]
+          <span> &rArr; which means if it is true: </span>
+          <input value={this.state.target_var_alias} name="target_var_alias" onChange={this.handleChange}/>
+        </div>
+        <div className="div_model_attribute">
+          <span className="value_label">Accuracy:</span> {(this.state.accuracy * 100).toFixed(2)}%
+        </div>
+        <div className="div_model_attribute">
+          <div className="value_label">
+            {'all' in stateCmxs ? "Confusion Matrix:" : "Confusion Matrices:"}
+          </div>
+          {confusionMatrices}
+        </div>
         <div className="toolbar_frame_2">
           <div className="toolbar" onClick={this.retrainModel}>
             <img src="/retrain_model.svg" className="icon_btn_2" alt="icon"/>
@@ -280,7 +290,14 @@ class ModelView extends Component {
             <thead>
               <tr>
                 <th className="factor_header_name">Factor</th>
-                <th className="factor_header_slider"><div>If this factor increases, "Passing" is</div><span>Less likely</span><span> &lt;-  -&gt; </span><span>More likely</span></th>
+                <th className="factor_header_slider">
+                  <div>
+                    {this.state.target_var_alias!=="" ? this.state.target_var_alias : "["+this.state.targetVariable+"]" }
+                  </div>
+                  <span className="header_likely_left">Less likely &larr;</span>
+                  <span className="header_likely_center">|</span>
+                  <span className="header_likely_right">&rarr; More likely</span>
+                </th>
                 <th className="factor_header_comment">Comment</th>
                 <th className="factor_header_balance">Balance</th>
                 <th className="factor_header_weight">Weight</th>
@@ -293,7 +310,7 @@ class ModelView extends Component {
           </table>
         </div>
         <div className="div_description">
-          <div className="block_label">Description</div>
+          <div className="value_label">Description:</div>
           <textarea className="model_description" value={this.state.description} name="description" onChange={this.handleChange}/>
         </div>
       </div>
@@ -430,6 +447,7 @@ class ModelView extends Component {
       dataset_id: this.state.datasetId,
       non_categorical_columns: this.state.nonCategoricalColumns,
       target_variable: this.state.targetVariable,
+      target_var_alias: this.state.target_var_alias,
       positive_threshold: this.state.positiveThreshold,
       negative_threshold: this.state.negativeThreshold,
     }
@@ -582,6 +600,7 @@ class ModelView extends Component {
         datasetId: data_model.dataset_id,
         nonCategoricalColumns: data_model.non_categorical_columns,
         targetVariable: data_model.target_variable,
+        target_var_alias: (data_model.target_var_alias ? data_model.target_var_alias : ""),
         positiveThreshold: data_model.positive_threshold,
         negativeThreshold: data_model.negative_threshold,
       });

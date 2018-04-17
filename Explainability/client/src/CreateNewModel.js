@@ -38,6 +38,7 @@ class CreateNewModel extends Component {
       datasetList: [],
       nonCategorical: '',
       targetVariable: '',
+      target_var_alias: '',
     };
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
@@ -84,6 +85,7 @@ class CreateNewModel extends Component {
       description: '',
       nonCategorical: '',
       targetVariable: '',
+      target_var_alias: '',
     });
     this.closeModal();
   }
@@ -106,6 +108,7 @@ class CreateNewModel extends Component {
       dataset_id: this.state.dataset.value,
       non_categorical_columns: this.state.nonCategorical,
       target_variable: this.state.targetVariable,
+      target_var_alias: this.state.target_var_alias,
     }
     fetch ("/api/newmodel/", {
       method: "POST",
@@ -163,14 +166,18 @@ class CreateNewModel extends Component {
               <br/> <br/>
               <label>Non-categorical variables, as a comma-separated list</label>
               <br/>
-              <input className="edit_box"  type="text" name="nonCategorical" value={this.state.nonCategorical} onChange={this.handleChange}/>
+              <input className="edit_box" type="text" name="nonCategorical" value={this.state.nonCategorical} onChange={this.handleChange}/>
               <br/> <br/>
               <label>Target variable (must be binary)</label>
               <br/>
-              <input className="edit_box"  type="text" name="targetVariable" value={this.state.targetVariable} onChange={this.handleChange} required/>
+              <input className="edit_box" type="text" name="targetVariable" value={this.state.targetVariable} onChange={this.handleChange} required/>
+              <br/> <br/>
+              <label>Meaning of the target variable being true</label>
+              <br/>
+              <input className="edit_box" type="text" name="target_var_alias" value={this.state.target_var_alias} onChange={this.handleChange} required/>
               <br/> <br/>
               <div className="dialog_bottom_buttons">
-                <input type="submit" className="btn" value="Upload"/>
+                <input type="submit" className="btn" value="Create"/>
                 <button onClick={this.clickCancel} className="btn">Cancel</button>
               </div>
             </form>
