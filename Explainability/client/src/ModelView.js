@@ -404,6 +404,11 @@ class ModelView extends Component {
     });
   }
 
+  getNewIntercept() {
+    const interceptRowIndex = this.state.rows.map(x=>x.name).indexOf("Intercept");
+    return this.state.rows[interceptRowIndex].weight;
+  }
+
   //Handler for Save Button
   saveModel (event) {
     const isUpdate = event.target.id==="save";
@@ -415,7 +420,7 @@ class ModelView extends Component {
       name: saveName,
       description: this.state.description,
       accuracy: this.state.accuracy,
-      intercept: this.state.intercept,
+      intercept: this.getNewIntercept(),
       modified: new Date(),
       dataset_id: this.state.datasetId,
       non_categorical_columns: this.state.nonCategoricalColumns,
@@ -485,7 +490,7 @@ class ModelView extends Component {
   testModel() {
     var data = {
       factors: this.state.rows,
-      intercept: this.state.intercept,
+      intercept: this.getNewIntercept(),
       positive_threshold: this.state.positiveThreshold,
       negative_threshold: this.state.negativeThreshold,
       model_id: this.state.model_id,
