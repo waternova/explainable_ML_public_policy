@@ -242,6 +242,9 @@ class ModelView extends Component {
         )
       })
     }
+    else {
+      confusionMatrices =  "Not ready / Retrain and test required";
+    }
     return (
       <div className="wrapper">
         <div className="page_title">
@@ -267,7 +270,7 @@ class ModelView extends Component {
           <input value={this.state.target_var_alias} name="target_var_alias" onChange={this.handleChange}/>
         </div>
         <div className="div_model_attribute">
-          <span className="value_label">Accuracy:</span> {(this.state.accuracy * 100).toFixed(2)}%
+          <span className="value_label">Accuracy:</span> {this.state.accuracy ? (this.state.accuracy * 100).toFixed(2) + "%" : "Not ready / Test required"}
         </div>
         <div className="div_model_attribute">
           <div className="value_label">
