@@ -166,6 +166,7 @@ class ModelView extends Component {
       nonCategoricalColumns: null,
       targetVariable: null,
       maxGraphSize: 1,
+      untestedModel: false,
     };
 
     this.testModel = this.testModel.bind(this);
@@ -186,6 +187,10 @@ class ModelView extends Component {
     }
   }
 
+  getModifiedText() {
+    return this.state.untestedModel ? ' (values not valid until "Test" run again)' : '';
+  }
+
   render() {
     const rows = this.state.rows.map((entry, number) => {
       return (<Row
@@ -202,16 +207,19 @@ class ModelView extends Component {
     const factorName = balancedFactor ? balancedFactor.alias : null;
     let confusionMatrices;
     const stateCmxs = this.state.confusionMatrices;
+    const opacity = this.state.untestedModel ? 0.4 : 1;
     if ('all' in stateCmxs) {
       const matrix = stateCmxs['all'];
       const maxSize = Math.max(...Object.values(matrix));
-      const headerText = 'Predictions for all'
+      const headerText = 'Predictions for all' + this.getModifiedText();
       confusionMatrices = [
         <ConfusionMatrix
           key='all'
           headerText={headerText}
           matrix={stateCmxs.all}
-          maxSize={maxSize} />
+          maxSize={maxSize} 
+          tableOpacity={opacity}
+        />
       ]
     } else if ('positive_class' in stateCmxs && 'negative_class' in stateCmxs) {
       confusionMatrices = Object.entries(stateCmxs).map(([key, matrix]) => {
@@ -219,13 +227,16 @@ class ModelView extends Component {
         const isPositiveClass = key === 'positive_class';
         const headerText = `Predictions for cases where "${factorName}" is ${(isPositiveClass ? 'true' : 'false')}`;
         const threshold = isPositiveClass ? this.state.positiveThreshold : this.state.negativeThreshold;
+        const thresholdText = `Threshold is ${threshold.toFixed(2)}${this.getModifiedText()}`;
         return (
           <ConfusionMatrix
             key={key}
             headerText={headerText}
             matrix={matrix}
             maxSize={maxSize}
-            threshold={threshold} />
+            thresholdText={thresholdText} 
+            tableOpacity={opacity}
+          />
         )
       })
     }
@@ -265,7 +276,7 @@ class ModelView extends Component {
             <thead>
               <tr>
                 <th className="factor_header_name">Factor</th>
-                <th className="factor_header_slider"><span>Less likely</span><span> &lt;- Passing -&gt; </span><span>More likely</span></th>
+                <th className="factor_header_slider"><div>If this factor increases, "Passing" is</div><span>Less likely</span><span> &lt;-  -&gt; </span><span>More likely</span></th>
                 <th className="factor_header_comment">Comment</th>
                 <th className="factor_header_balance">Balance</th>
                 <th className="factor_header_weight">Weight</th>
@@ -288,6 +299,7 @@ class ModelView extends Component {
     if (field === 'weight' || field === 'is_enabled') {
       this.updateGraphSizes(newRows);
     }
+    this.setState({untestedModel: true});
   }
 
   updateGraphSizes(rows = this.state.rows.slice()) {
@@ -467,61 +479,61 @@ class ModelView extends Component {
 
   //Handler for Test Button
   testModel() {
-      var data = {
-          factors: this.state.rows,
-          intercept: this.state.intercept,
-          positive_threshold: this.state.positiveThreshold,
-          negative_threshold: this.state.negativeThreshold,
-          model_id: this.state.model_id,
-      };
-      var data_json = JSON.stringify(data);
-      console.log("Test request: %s", this.state.model_name);
-      console.log("Accuracy before test: %f", this.state.accuracy);
-      fetch ("/api/testmodel/",
-          {
-              method: "POST",
-              headers: {"Content-Type" : "application/json;charset=UTF-8"},
-              body: data_json
-          }).then( res => res.json()).then(data =>
-          {
-              this.setState({
-                accuracy: parseFloat(data.accuracy),
-                confusionMatrices: data.confusion_matrices,
-              });
-              console.log("Accuracy after test: %f", this.state.accuracy);
-          }).catch(error => console.log("Request failed: ", error));
+    var data = {
+      factors: this.state.rows,
+      intercept: this.state.intercept,
+      positive_threshold: this.state.positiveThreshold,
+      negative_threshold: this.state.negativeThreshold,
+      model_id: this.state.model_id,
+    };
+    var data_json = JSON.stringify(data);
+    console.log("Test request: %s", this.state.model_name);
+    console.log("Accuracy before test: %f", this.state.accuracy);
+    fetch ("/api/testmodel/", {
+      method: "POST",
+      headers: {"Content-Type" : "application/json;charset=UTF-8"},
+      body: data_json
+    }).then( res => res.json()).then(data => {
+      this.setState({
+        accuracy: parseFloat(data.accuracy),
+        confusionMatrices: data.confusion_matrices,
+        untestedModel: false,
+      });
+      console.log("Accuracy after test: %f", this.state.accuracy);
+    }).catch(error => console.log("Request failed: ", error));
   }
 
   //Handler for Retrain Button
   retrainModel() {
-      var data = {
-          factors: this.state.rows,
-          intercept: this.state.intercept,
-          model_id: this.state.model_id,
-      };
-      var data_json = JSON.stringify(data);
-      console.log("Retrain request: %s", this.state.model_name);
-      fetch ("/api/retrainmodel/", {
-          method: "POST",
-          headers: {"Content-Type" : "application/json;charset=UTF-8"},
-          body: data_json
-      }).then( res => res.json()).then(data => {
-          this.setState({rows: []});
-          this.setState({
-              rows: data.factors,
-              positiveThreshold: data.positive_threshold,
-              negativeThreshold: data.negative_threshold,
-              accuracy: data.accuracy,
-              confusionMatrices: data.confusion_matrices,
-          });
-          this.updateGraphSizes(data.factors);
-          this.resortRows(data.factors);
-          for (let factor of data.factors) {
-              if (factor.name === 'Intercept') {
-                  this.setState({intercept: factor.weight})
-              }
-          }
-      }).catch(error => console.log("Request failed: ", error));
+    var data = {
+      factors: this.state.rows,
+      intercept: this.state.intercept,
+      model_id: this.state.model_id,
+    };
+    var data_json = JSON.stringify(data);
+    console.log("Retrain request: %s", this.state.model_name);
+    fetch ("/api/retrainmodel/", {
+      method: "POST",
+      headers: {"Content-Type" : "application/json;charset=UTF-8"},
+      body: data_json
+    }).then( res => res.json()).then(data => {
+      this.setState({rows: []});
+      this.setState({
+        rows: data.factors,
+        positiveThreshold: data.positive_threshold,
+        negativeThreshold: data.negative_threshold,
+        accuracy: data.accuracy,
+        confusionMatrices: data.confusion_matrices,
+        untestedModel: false,
+      });
+      this.updateGraphSizes(data.factors);
+      this.resortRows(data.factors);
+      for (let factor of data.factors) {
+        if (factor.name === 'Intercept') {
+          this.setState({intercept: factor.weight})
+        }
+      }
+    }).catch(error => console.log("Request failed: ", error));
   }
 
   exportModel() {

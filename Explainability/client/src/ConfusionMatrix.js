@@ -4,8 +4,8 @@ import './ConfusionMatrix.css';
 const ConfusionMatrix = props => (
   <div className="confusion-matrix">
   <h4>{props.headerText}</h4>
-  {props.threshold ? <div>Threshold is {props.threshold.toFixed(2)}</div> : null}
-  <table>
+  {props.thresholdText ? <div>{props.thresholdText}</div> : null}
+  <table style={{opacity: props.tableOpacity}}>
     <thead>
       <tr>
         <th></th>
