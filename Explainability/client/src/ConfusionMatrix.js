@@ -16,19 +16,19 @@ const ConfusionMatrix = props => (
     <tbody>
       <tr>
         <td className="left-border">Actually negative</td>
-        <td style={{backgroundColor: 'rgb(0, 255, 0,' + props.matrix.true_negative_count/props.maxSize +')'}}>
+        <td style={{backgroundColor: 'rgb(124, 255, 124,' + props.matrix.true_negative_count/props.maxSize +')'}}>
           True negative: {props.matrix.true_negative_count}
         </td>
-        <td style={{backgroundColor: 'rgb(255, 0, 0,' + props.matrix.false_positive_count/props.maxSize +')'}}>
+        <td style={{backgroundColor: 'rgb(255, 132, 132,' + props.matrix.false_positive_count/props.maxSize +')'}}>
           False positive: {props.matrix.false_positive_count}
         </td>
       </tr>
       <tr>
         <td className="left-border">Actually positive</td>
-        <td style={{backgroundColor: 'rgb(255, 0, 0,' + props.matrix.false_negative_count/props.maxSize +')'}}>
+        <td style={{backgroundColor: 'rgb(255, 132, 132,' + props.matrix.false_negative_count/props.maxSize +')'}}>
           False negative: {props.matrix.false_negative_count}
         </td>
-        <td style={{backgroundColor: 'rgb(0, 255, 0,' + props.matrix.true_positive_count/props.maxSize +')'}}>
+        <td style={{backgroundColor: 'rgb(124, 255, 124,' + props.matrix.true_positive_count/props.maxSize +')'}}>
           True positive: {props.matrix.true_positive_count}
         </td>
       </tr>

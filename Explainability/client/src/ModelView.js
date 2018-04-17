@@ -98,6 +98,9 @@ class Row extends Component {
             onBlur={this.handleWeightInputComplete}
             />
         </td>
+        <td>
+          <div className="factor-odds-ratio">{Math.exp(this.props.value.weight).toFixed(2)}</div>
+        </td>
       </tr>
     );
   }
@@ -280,6 +283,7 @@ class ModelView extends Component {
                 <th className="factor_header_comment">Comment</th>
                 <th className="factor_header_balance">Balance</th>
                 <th className="factor_header_weight">Weight</th>
+                <th className="factor_header_odds_ratio">Odds Ratio</th>
               </tr>
             </thead>
             <tbody>

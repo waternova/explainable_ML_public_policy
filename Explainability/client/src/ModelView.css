@@ -117,10 +117,20 @@ input {
 }
 
 .factor_header_weight {
-    width: 11rem;
+    width: 9rem;
+    text-align: center;
+}
+
+.factor_header_odds_ratio {
+    width: 7rem;
     text-align: center;
 }
 
 .input_weight {
     text-align: right;
+    width: 7rem;
+}
+
+.factor-odds-ratio {
+    text-align: center;
 }
