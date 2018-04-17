@@ -459,7 +459,14 @@ class ModelView extends Component {
       if (!res.ok) {
         throw Error(res.statusText);
       } else {
-        alert("Successfully Saved: \n" + saveName);
+        return res.json();
+      }
+    }).then(data => {
+      alert("Successfully Saved!");
+      if (!isUpdate) {
+        // Note: there is probably a cleaner way to do this with react-router,
+        // but making the back button work correctly was too hard
+        window.location.replace('/ModelView/' + data.model_id);
       }
     }).catch(error => {
         console.log("Request failed: ", error);
