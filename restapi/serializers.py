@@ -18,7 +18,7 @@ class MlModelSerializer(serializers.ModelSerializer):
         model = MlModel
         fields = ('id', 'name', 'description', 'accuracy', 'parent_id', 
             'intercept', 'dataset_id', 'non_categorical_columns', 
-            'target_variable', 'negative_threshold', 'positive_threshold', 
+            'target_variable', 'target_var_alias', 'negative_threshold', 'positive_threshold',
             'modified')
 
 

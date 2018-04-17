@@ -202,13 +202,15 @@ def new_model_with_factor_creation(request):
     dataset_id = data['dataset_id']
     non_categorical_columns = data['non_categorical_columns']
     target_variable = data['target_variable']
+    target_var_alias = data['target_var_alias']
     newModel = MlModel(
         name = data['name'], 
         description = data['description'], 
         dataset_id = DataSet.objects.get(pk=dataset_id), 
         modified = timezone.now(),
         non_categorical_columns = non_categorical_columns,
-        target_variable = target_variable
+        target_variable = target_variable,
+        target_var_alias = target_var_alias
     )
     newModel.save()
     # Get factor names from file

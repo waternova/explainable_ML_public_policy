@@ -7,7 +7,8 @@ import './footer.css';
 //  render () {
 //    return (
 const Footer = () => (
-      <div className="wrapper">
+      <div className="footer_frame">
+        <div className="footer_border"></div>
         <div className="footer_main">
           School of Information, University of California, Berkeley, 2018<br/>
           MIMS Final Project - Explainable Machine Learning
