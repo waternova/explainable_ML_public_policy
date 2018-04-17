@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.utils import timezone
+from django.http import JsonResponse
 
 # Create your views here.
 from rest_framework import viewsets
@@ -188,7 +189,7 @@ def replace_model_details(request):
            model_id=mlModel,
            type=key,
            intValue=value)
-   return Response("replaced", status=status.HTTP_200_OK)
+   return JsonResponse({'model_id': model_id}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
