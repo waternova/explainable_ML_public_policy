@@ -1,15 +1,27 @@
-.footer_main {
-    width: calc(100% - 5rem);
+.footer_frame {
+    width: 100%;
     height: 3rem;
-    margin-left: 2rem;
-    margin-right: 2rem;
+    margin-left: 0rem;
+    margin-right: 0rem;
     margin-top: 1rem;
     padding: 0.5rem;
-    border-top:0.2rem double #707D90;
-    font-size: 0.5rem;
-    text-align: right;
     position: fixed;
     left: 0;
     bottom: 0;
+    background-color: white;
+}
+
+.footer_main {
+    margin-top: 0.5rem;
+    margin-right: 2rem;
+    font-size: 0.5rem;
+    text-align: right;
+}
+
+.footer_border {
+    width: calc(100% - 4rem);
+    margin-left: 2rem;
+    margin-right: 2rem;
+    border-top:0.2rem double #707D90;
     background-color: white;
 }

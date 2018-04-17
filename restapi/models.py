@@ -15,6 +15,7 @@ class MlModel(models.Model):
     modified = models.DateTimeField(auto_now_add=False, blank=True)
     positive_threshold = models.FloatField(null=True)
     negative_threshold = models.FloatField(null=True)
+    #target_variable = models.TextField(max_length=65535, null=True)
 
 
 class Factor(models.Model):

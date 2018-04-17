@@ -87,7 +87,7 @@ class Row extends Component {
             type="submit"
             value="Balance Model"
             className={balanceButtonClassNames}
-            disabled={!this.state.is_binary}
+            disabled={!(this.state.is_binary && this.state.is_enabled)}
             onClick={this.handleBalanceSelect} />
         </td>
         <td>
@@ -249,14 +249,6 @@ class ModelView extends Component {
           Model #{this.state.model_id}: {this.state.model_name}
         </div>
         <div className="toolbar_frame">
-          <div className="toolbar" onClick={this.retrainModel}>
-            <img src="/retrain_model.svg" className="icon_btn" alt="icon"/>
-            Retrain
-          </div>
-          <div className="toolbar" onClick={this.testModel}>
-            <img src="/test_model.svg" className="icon_btn" alt="icon"/>
-            Test
-          </div>
           <div id="save" className="toolbar" onClick={this.saveModel}>
             <img src="/save_model.svg" className="icon_btn" alt="icon"/>
             Save
@@ -270,10 +262,19 @@ class ModelView extends Component {
             Export...
           </div>
         </div>
-        <h3>Description</h3>
-        <textarea className="model_description" value={this.state.description} name="description" onChange={this.handleChange}/>
+        <h3>Target Variable: {this.state.targetVariable}</h3>
         <p>Accuracy: {(this.state.accuracy * 100).toFixed(2)}%</p>
         {confusionMatrices}
+        <div className="toolbar_frame_2">
+          <div className="toolbar" onClick={this.retrainModel}>
+            <img src="/retrain_model.svg" className="icon_btn_2" alt="icon"/>
+            Retrain
+          </div>
+          <div className="toolbar" onClick={this.testModel}>
+            <img src="/test_model.svg" className="icon_btn_2" alt="icon"/>
+            Test
+          </div>
+        </div>
         <div className="table_wrapper">
           <table className="table_list" id="modelViewTable">
             <thead>
@@ -290,6 +291,10 @@ class ModelView extends Component {
             {rows}
             </tbody>
           </table>
+        </div>
+        <div className="div_description">
+          <div className="block_label">Description</div>
+          <textarea className="model_description" value={this.state.description} name="description" onChange={this.handleChange}/>
         </div>
       </div>
     );

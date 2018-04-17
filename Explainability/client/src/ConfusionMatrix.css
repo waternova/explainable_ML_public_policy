@@ -1,5 +1,5 @@
 .confusion-matrix table {
-  width: 450px;
+  width: 400px;
   margin-bottom: 20px;
 }
 
@@ -13,5 +13,33 @@ div.confusion-matrix {
 }
 
 .confusion-matrix td.left-border {
-  border-left: 1px solid #bebebe;
+  background-color: #ECECEC;
+  width: 5rem;
+}
+
+.confusion-matrix th {
+  font-weight: normal;
+}
+
+.matrix_item{
+  display: table;
+  width: 100%;
+}
+
+.matrix_item_label {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 3px solid #77777750;
+  border-radius: 1rem;
+  width: auto;
+  padding-right: 0.5rem;
+}
+
+.matrix_item_value {
+  display: table-cell;
+  text-align: right;
+  vertical-align: middle;
+  width: 3rem;
+  font-weight: bold;
 }

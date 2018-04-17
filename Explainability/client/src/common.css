@@ -7,14 +7,14 @@ tbody td {padding: 5px 10px 5px 10px; }
 .table_list {
   border-collapse: collapse;
   width: 100%;
-  margin-bottom: 20rem;
+  margin-bottom: 1rem;
 }
 
 .wrapper {
   margin-top: 5rem;
   margin-right: 2rem;
   margin-left: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 5rem;
 }
 
 .table_wrapper {
@@ -25,7 +25,6 @@ tbody td {padding: 5px 10px 5px 10px; }
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
-
 
 .toolbar {
   width: 8rem;
@@ -102,7 +101,7 @@ tbody td {padding: 5px 10px 5px 10px; }
     min-width: 60rem;
     font-size: 1.8rem;
     font-weight: bold;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     padding-left: 2rem;
     padding-right: 2rem;
     color: #60A0C0;
@@ -126,7 +125,7 @@ tbody td {padding: 5px 10px 5px 10px; }
   vertical-align: middle;
   margin-right: 0.5rem;
   margin-bottom: 0.2rem;
-  filter: invert(.5) sepia(1) hue-rotate(200deg) saturate(200%);
+  filter: invert(.45) sepia(1) hue-rotate(200deg) saturate(400%);
 }
 
 .icon_white { filter: invert(1); }
@@ -164,4 +163,26 @@ tbody td {padding: 5px 10px 5px 10px; }
 
 .dialog_bottom_buttons {
   text-align: right;
+}
+
+.toolbar_frame_2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0rem;
+}
+
+.icon_btn_2 {
+  height: 1.5rem;
+  display: inline-block;
+  line-height: 2rem;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+  margin-bottom: 0.2rem;
+  filter: invert(.5) sepia(1) hue-rotate(180deg) saturate(300%);
+}
+
+.block_label {
+  color : #456588;
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }

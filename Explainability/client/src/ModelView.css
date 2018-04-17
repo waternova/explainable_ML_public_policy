@@ -93,7 +93,7 @@ input {
 
 .model_description {
     width: 100%;
-    height: 5rem;
+    height: 8rem;
 }
 
 .factor_header_name {
@@ -107,7 +107,7 @@ input {
 }
 
 .factor_header_comment {
-    width: 7.5rem;
+    width: 5rem;
     text-align: center;
 }
 
@@ -117,7 +117,7 @@ input {
 }
 
 .factor_header_weight {
-    width: 9rem;
+    width: 10rem;
     text-align: center;
 }
 
@@ -128,9 +128,14 @@ input {
 
 .input_weight {
     text-align: right;
-    width: 7rem;
+    width: 10rem;
 }
 
 .factor-odds-ratio {
     text-align: center;
+}
+
+.div_description {
+  margin-top: 3rem;
+  width:99%;
 }
