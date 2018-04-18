@@ -599,7 +599,10 @@ class ModelView extends Component {
       method: "POST",
       headers: {"Content-Type" : "application/json;charset=UTF-8"},
       body: data_json
-    }).then( res => res.json()).then(data => {
+    }).then( res => {
+      if(res.ok) return res.json(); else return res.text();
+    }).then(data => {
+      if (typeof data === 'string') throw data;
       this.setState({
         accuracy: parseFloat(data.accuracy),
         confusionMatrices: data.confusion_matrices,

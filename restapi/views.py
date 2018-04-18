@@ -101,31 +101,37 @@ def comments(request):
 
 @api_view(['POST'])
 def test_model(request):
-   if request.method == 'POST':
-       data = json.loads(request.body.decode('utf-8'))
-       model_id = data["model_id"]
-       mlmodel = MlModel.objects.get(pk=int(model_id))
-       target_variable = mlmodel.target_variable
-       dataset = mlmodel.dataset_id
-       target_variable = mlmodel.target_variable
-       dataFilePath = os.path.join(settings.MEDIA_ROOT, dataset.file.name)
-       protected_attr = None
-       for factor in data["factors"]:
-           if factor["is_balanced"]:
-               protected_attr = factor["name"]
-       thresholds = None
-       if "positive_threshold" in data and "negative_threshold" in data:
-           thresholds = (data["negative_threshold"], data["positive_threshold"])
-       numeric_columns = get_numeric_columns(model_id)
-       factor_list_wo_categories = get_factor_list_from_file(dataFilePath, target_variable, numeric_columns)
-       df_data = pd.read_csv(dataFilePath)
-       y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
-       X = drop_disabled_factors(X, data["factors"])
-       model = build_model_from_factors(data["factors"], data["intercept"], y, X)
-       accuracy, confusion_matrices = test_logreg_model(model, X, y, thresholds, protected_attr)
-       res = {'accuracy': accuracy, 'confusion_matrices': confusion_matrices}
-       return Response(res, status=status.HTTP_200_OK)
-   return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        model_id = data["model_id"]
+        mlmodel = MlModel.objects.get(pk=int(model_id))
+        target_variable = mlmodel.target_variable
+        dataset = mlmodel.dataset_id
+        target_variable = mlmodel.target_variable
+        dataFilePath = os.path.join(settings.MEDIA_ROOT, dataset.file.name)
+        protected_attr = None
+        for factor in data["factors"]:
+            if factor["is_balanced"]:
+                protected_attr = factor["name"]
+        thresholds = None
+        if protected_attr is not None:
+            if ("positive_threshold" in data and "negative_threshold" in data and
+                    data["negative_threshold"] is not None and 
+                    data["positive_threshold"] is not None):
+                thresholds = (data["negative_threshold"], data["positive_threshold"])
+                print(thresholds)
+            else:
+                return Response('Retrain needed, thresholds missing', status=status.HTTP_400_BAD_REQUEST)
+        numeric_columns = get_numeric_columns(model_id)
+        factor_list_wo_categories = get_factor_list_from_file(dataFilePath, target_variable, numeric_columns)
+        df_data = pd.read_csv(dataFilePath)
+        y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
+        X = drop_disabled_factors(X, data["factors"])
+        model = build_model_from_factors(data["factors"], data["intercept"], y, X)
+        accuracy, confusion_matrices = test_logreg_model(model, X, y, thresholds, protected_attr)
+        res = {'accuracy': accuracy, 'confusion_matrices': confusion_matrices}
+        return Response(res, status=status.HTTP_200_OK)
+    return Response('HTTP_400_BAD_REQUEST', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
