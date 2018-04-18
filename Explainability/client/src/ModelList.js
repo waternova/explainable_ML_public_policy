@@ -50,7 +50,7 @@ class ModelList extends React.Component {
     this.importFactor = this.importFactor.bind(this);
     this.refreshModelList = this.refreshModelList.bind(this);
     this.state = {
-        models: []
+      models: [],
     };
   }
 
@@ -68,7 +68,9 @@ class ModelList extends React.Component {
           this.setState({models:this.state.models.concat(data[i])});
       }
       console.log("%d Models Loaded", data.length);
-    }).catch(error => console.log("Request failed:", error));
+    }).catch(error => {
+      console.log("Request failed:", error);
+    });
   }
 
   render() {

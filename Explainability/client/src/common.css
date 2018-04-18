@@ -139,12 +139,12 @@ tbody td {padding: 5px 10px 5px 10px; }
   position: relative;
   top: 0;
   left: 0;
-  height: 1.1rem;
+  height: 1.2rem;
   background-color: #7096C9;
   color: white;
-  padding: 0.5rem;
+  padding: 0.2rem;
   width: auto;
-  border: 0.1rem solid;
+  border: 0.05rem solid;
 }
 
 .modal_main {

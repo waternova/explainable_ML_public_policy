@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './common.css';
 import './ModelView.css';
 import './Dropdown.css';
+import Modal from 'react-modal';
 import CommentDropdown from './CommentDropdown.js';
 import FactorDropdown from './FactorDropdown.js';
 import ConfusionMatrix from './ConfusionMatrix';
@@ -159,6 +160,29 @@ class Row extends Component {
   }
 }
 
+const modalStyles = {
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)'
+  },
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+    border: '3px solid #7096C9',
+    backgroundColor: '#E5ECFF',
+    boxShadow: '0.5rem 0.5rem 0.5rem #666666',
+    padding: '0'
+  }
+};
+
 class ModelView extends Component {
   constructor (props) {
     super(props);
@@ -180,6 +204,9 @@ class ModelView extends Component {
       target_var_alias: "",
       maxGraphSize: 1,
       untestedModel: false,
+      isShowModal: false,
+      isModalButton: false,
+      modalMessage: "",
     };
 
     this.testModel = this.testModel.bind(this);
@@ -192,6 +219,8 @@ class ModelView extends Component {
     this.resortRows = this.resortRows.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.replaceModelDetails = this.replaceModelDetails.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -202,6 +231,18 @@ class ModelView extends Component {
 
   getModifiedText() {
     return this.state.untestedModel ? ' (values not valid until "Test" run again)' : '';
+  }
+
+  openModal(message, isShowCloseButton = false) {
+    this.setState({
+      isShowModal: true,
+      isModalButton: isShowCloseButton,
+      modalMessage: message,
+    });
+  }
+
+  closeModal() {
+    this.setState({isShowModal: false});
   }
 
   render() {
@@ -261,6 +302,15 @@ class ModelView extends Component {
     }
     return (
       <div className="wrapper">
+        <Modal
+          isOpen={this.state.isShowModal}
+          style={modalStyles}
+          ariaHideApp={false}
+          contentLabel="Message">
+            <div className="modal_label">Machine Learning Explorer</div>
+            <div className="msg_dialog">{this.state.modalMessage}</div>
+            <button onClick={this.closeModal} className={this.state.isModalButton ? "msg_close_btn" : "hidden"}>Close</button>
+        </Modal>
         <div className="page_title">
           Model #{this.state.model_id}: {this.state.model_name}
         </div>
@@ -280,7 +330,7 @@ class ModelView extends Component {
         </div>
         <div className="div_model_attribute">
           <span className="value_label">Predicted Variable:</span> "{this.state.targetVariable}"
-          <span> &rArr; which willl be used to decide: </span>
+          <span> &rArr; which will be used to decide: </span>
           <input value={this.state.target_var_alias} name="target_var_alias" onChange={this.handleChange}/>
         </div>
         <div className="div_model_attribute">
@@ -450,7 +500,7 @@ class ModelView extends Component {
 
   //Handler for Save Button
   saveModel (event) {
-    const isUpdate = event.target.id==="save";
+    const isUpdate = event.target.id === "save";
     var popup_title = isUpdate ? "Overwrite existing model:" : "Save as a new model:";
     var saveName = prompt(popup_title, this.state.model_name);
     if (saveName === null || saveName.length === 0 ) return;
@@ -473,7 +523,7 @@ class ModelView extends Component {
       currentModel.parent_id = this.state.parent_id;
       requestType = "PUT";
       requestURL = "/api/model/"+this.state.model_id+"/";
-      console.log("Overwriting a model: ", this.state.model_id );
+      console.log("Overwriting model: ", this.state.model_id );
       this.setState({model_name: saveName});
     }
     else {
@@ -485,7 +535,7 @@ class ModelView extends Component {
     }
     var modelJson = JSON.stringify(currentModel);
     var model_id = null;
-    //console.log(modelJson);
+    this.openModal("Saving a Model...");
     fetch (requestURL, {
       method: requestType,
       headers: {"Content-Type" : "application/json;charset=UTF-8"},
@@ -502,15 +552,15 @@ class ModelView extends Component {
         return res.json();
       }
     }).then(data => {
-      alert("Successfully Saved!");
       if (!isUpdate) {
         // Note: there is probably a cleaner way to do this with react-router,
         // but making the back button work correctly was too hard
         window.location.replace('/ModelView/' + data.model_id);
       }
+      this.openModal("Successfully Saved: \n\n" + saveName, true);
     }).catch(error => {
         console.log("Request failed: ", error);
-        alert("Save Failure: \n" + error);
+        this.openModal("Save Failure: \n\n" + error, true);
     });
   }
 
@@ -543,8 +593,8 @@ class ModelView extends Component {
       model_id: this.state.model_id,
     };
     var data_json = JSON.stringify(data);
-    console.log("Test request: %s", this.state.model_name);
-    console.log("Accuracy before test: %f", this.state.accuracy);
+    var msg = "Test Finished.\n\nAccuracy before test: " + (this.state.accuracy * 100).toFixed(2) + "%";
+    this.openModal("Testing a Model...");
     fetch ("/api/testmodel/", {
       method: "POST",
       headers: {"Content-Type" : "application/json;charset=UTF-8"},
@@ -555,8 +605,11 @@ class ModelView extends Component {
         confusionMatrices: data.confusion_matrices,
         untestedModel: false,
       });
-      console.log("Accuracy after test: %f", this.state.accuracy);
-    }).catch(error => console.log("Request failed: ", error));
+      msg = msg + "\nAccuracy after test: " + (this.state.accuracy * 100).toFixed(2) + "%";
+      this.openModal(msg, true);
+    }).catch(error => {
+      this.openModal("Request failed: \n" + error, true);
+    });
   }
 
   //Handler for Retrain Button
@@ -568,6 +621,7 @@ class ModelView extends Component {
     };
     var data_json = JSON.stringify(data);
     console.log("Retrain request: %s", this.state.model_name);
+    this.openModal("Retraining a Model...");
     fetch ("/api/retrainmodel/", {
       method: "POST",
       headers: {"Content-Type" : "application/json;charset=UTF-8"},
@@ -589,7 +643,10 @@ class ModelView extends Component {
           this.setState({intercept: factor.weight})
         }
       }
-    }).catch(error => console.log("Request failed: ", error));
+      this.openModal("Finished Retraining.", true);
+    }).catch(error => {
+      this.openModal("Request failed: \m"+ error, true);
+    });
   }
 
   exportModel() {
@@ -610,6 +667,8 @@ class ModelView extends Component {
 
   loadModelFromServer() {
     var model_id, i;
+    var isAlreadyWaiting = this.state.isShowModal;
+    if (!isAlreadyWaiting) this.openModal("Loading a Model...");
     fetch ("/api/model/" + this.state.model_id + "/?format=json", {
       method: "GET",
       headers: {"Content-Type": "application/json;charset=UTF-8"},
@@ -660,9 +719,9 @@ class ModelView extends Component {
       let rows = this.updateGraphSizes();
       this.resortRows(rows);
       this.loadDetail(data);
+      if (!isAlreadyWaiting) this.closeModal();
     }).catch(error => {
-      console.error("Request failed", error);
-      return error;
+      this.openModal("Request failed: \n" + error, true);
     });
   }
 

@@ -166,3 +166,35 @@ input {
   text-align: center;
   color : #909090;
 }
+
+.msg_dialog {
+  display : block;
+  min-width: 15rem;
+  min-height: 4rem;
+  max-width: 40rem;
+  max-height: 30rem;
+  text-align: center;
+  color: #000000;
+  font-size: 0.9rem;
+  padding-top: 1.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  white-space: pre-line;
+}
+
+.msg_close_btn {
+    display : block;
+    width: 50%;
+    height: 2rem;
+    font-family: "Verdana";
+    font-size: 0.9rem;
+    margin-left:25%;
+    margin-bottom: 1rem;
+    border: 0.1rem solid #7096C9;
+    border-radius: 1rem;
+    background-color: white;
+    color: #507095;
+    cursor: pointer;
+    text-align: center;
+}
