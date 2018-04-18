@@ -7,6 +7,7 @@ import CommentDropdown from './CommentDropdown.js';
 import FactorDropdown from './FactorDropdown.js';
 import ConfusionMatrix from './ConfusionMatrix';
 import ModelTypeDescription from './ModelTypeDescription';
+import OddsRatioDescription from './OddsRatioDescription';
 import classNames from 'classnames';
 import FileSaver from 'file-saver';
 import Slider from './RangeSlider/RangeSlider';
@@ -19,6 +20,7 @@ import SaveAsModelImg from './images/saveas_model.svg';
 import ExportModelImg from './images/export_model.svg';
 import RetrainImg from './images/retrain_model.svg';
 import TestModelImg from './images/test_model.svg';
+import BalanceDescription from './BalanceDescription';
 
 class Row extends Component {
   constructor(props) {
@@ -368,9 +370,9 @@ class ModelView extends Component {
                   <span className="header_likely_right">&rarr; More likely</span>
                 </th>
                 <th className="factor_header_comment">Comment</th>
-                <th className="factor_header_balance">Balance</th>
+                <th className="factor_header_balance">Balance <BalanceDescription /></th>
                 <th className="factor_header_weight">Weight</th>
-                <th className="factor_header_odds_ratio">Odds Ratio</th>
+                <th className="factor_header_odds_ratio">Odds Ratio <OddsRatioDescription /></th>
               </tr>
             </thead>
             <tbody>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Popover from 'react-simple-popover';
 
-class ModelTypeDescription extends Component {
+class OddsRatioDescription extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,26 +19,24 @@ class ModelTypeDescription extends Component {
  
   render() {
     return (
-      <div className="div_model_attribute" style={{position: 'relative', }}>
-        <span className='value_label'>Model Type: </span><span>Logistic Regression</span>
+      <div style={{position: 'relative', display: 'inline'}}>
         <button
           className="button"
           ref="target"
           onClick={this.handleClick.bind(this)}>?</button>
         <Popover
-          placement='right'
+          placement='left'
           container={this}
           target={this.refs.target}
           show={this.state.open}
           onHide={this.handleClose.bind(this)} >
           <div>
-            <h4>Logistic Regression</h4>
-            <p>Logistic Regression finds the best fit for each factor. It's like a linear regression (y = mx + b), but a bit more complicated.</p>
-            <p>Learn more from <a 
-              href='https://en.wikipedia.org/wiki/Logistic_regression'
-              target='_blank'>
-              Wikipedia's article on logistic regression
-            </a>.</p>
+            <h4>Odds Ratio</h4>
+            <p>
+              If the factor is at its maximum, the predicted variable will be that many times more likely.
+              For example, if the odds ratio is 2, the predicted variable is twice as likely when 
+              the factor is at its maximum.
+            </p>
           </div>
         </Popover>
       </div>
@@ -46,4 +44,4 @@ class ModelTypeDescription extends Component {
   }
 }
 
-export default ModelTypeDescription;
+export default OddsRatioDescription;
