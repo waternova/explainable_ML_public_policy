@@ -645,7 +645,7 @@ class ModelView extends Component {
       }
       this.openModal("Finished Retraining.", true);
     }).catch(error => {
-      this.openModal("Request failed: \m"+ error, true);
+      this.openModal("Request failed: \n"+ error, true);
     });
   }
 

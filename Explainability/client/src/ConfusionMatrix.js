@@ -46,6 +46,9 @@ const ConfusionMatrix = props => (
       </tr>
     </tbody>
   </table>
+  <div>
+    True Positive Rate: {(100 * props.matrix.true_positive_count / (props.matrix.false_positive_count + props.matrix.true_positive_count)).toFixed(1)}%
+  </div>
   </div>
 );
 
