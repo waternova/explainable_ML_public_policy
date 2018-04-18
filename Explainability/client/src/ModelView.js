@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import CommentDropdown from './CommentDropdown.js';
 import FactorDropdown from './FactorDropdown.js';
 import ConfusionMatrix from './ConfusionMatrix';
+import ModelTypeDescription from './ModelTypeDescription';
 import classNames from 'classnames';
 import FileSaver from 'file-saver';
 import Slider from './RangeSlider/RangeSlider';
@@ -328,6 +329,7 @@ class ModelView extends Component {
             Export...
           </div>
         </div>
+        <ModelTypeDescription />
         <div className="div_model_attribute">
           <span className="value_label">Predicted Variable:</span> "{this.state.targetVariable}"
           <span> &rArr; which will be used to decide: </span>
