@@ -36,7 +36,8 @@ class ModelTypeDescription extends Component {
             <p>Logistic Regression finds the best fit for each factor. It's like a linear regression (y = mx + b), but a bit more complicated.</p>
             <p>Learn more from <a 
               href='https://en.wikipedia.org/wiki/Logistic_regression'
-              target='_blank'>
+              target='_blank'
+              rel='noopener noreferrer'>
               Wikipedia's article on logistic regression
             </a>.</p>
           </div>

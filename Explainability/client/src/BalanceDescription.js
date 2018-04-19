@@ -38,7 +38,8 @@ class BalanceDescription extends Component {
               having been properly classified if they are predicted to meet the conditions.
               See <a 
                 href='https://research.google.com/bigpicture/attacking-discrimination-in-ml/'
-                target='_blank'>
+                target='_blank'
+                rel='noopener noreferrer'>
               A longer summary from Google</a>.
             </p>
           </div>
