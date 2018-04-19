@@ -1,11 +1,10 @@
 .footer_frame {
     width: 100%;
-    height: 3rem;
+    height: 2rem;
     margin-left: 0rem;
     margin-right: 0rem;
     margin-top: 1rem;
     padding: 0.5rem;
-    position: fixed;
     left: 0;
     bottom: 0;
     background-color: white;
