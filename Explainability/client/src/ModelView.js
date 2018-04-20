@@ -21,6 +21,7 @@ import ExportModelImg from './images/export_model.svg';
 import RetrainImg from './images/retrain_model.svg';
 import TestModelImg from './images/test_model.svg';
 import BalanceDescription from './BalanceDescription';
+import ResultBucket from './ResultBucket.js';
 
 class Row extends Component {
   constructor(props) {
@@ -271,14 +272,16 @@ class ModelView extends Component {
       const totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
       const headerText = 'Predictions for all' + this.getModifiedText();
       confusionMatrices = [
+        <div>
         <ConfusionMatrix
           key='all'
           headerText={headerText}
           matrix={matrix}
           maxSize={maxSize}
           totalSize={totalSize}
-          tableOpacity={opacity}
-        />
+          tableOpacity={opacity}/>
+        <ResultBucket matrix={matrix} totalSize={totalSize}/>
+        </div>
       ]
     } else if ('positive_class' in stateCmxs && 'negative_class' in stateCmxs) {
       confusionMatrices = Object.entries(stateCmxs).map(([key, matrix]) => {
@@ -289,6 +292,7 @@ class ModelView extends Component {
         const threshold = isPositiveClass ? this.state.positiveThreshold : this.state.negativeThreshold;
         const thresholdText = `Threshold is ${threshold.toFixed(2)}${this.getModifiedText()}`;
         return (
+        <div>
           <ConfusionMatrix
             key={key}
             headerText={headerText}
@@ -297,8 +301,10 @@ class ModelView extends Component {
             totalSize={totalSize}
             thresholdText={thresholdText}
             tableOpacity={opacity}/>
+          <ResultBucket matrix={matrix} totalSize={totalSize}/>
+        </div>
         )
-      })
+})
     }
     else {
       confusionMatrices =  "Not ready / Retrain and test required";
