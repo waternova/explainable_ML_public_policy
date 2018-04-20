@@ -222,11 +222,9 @@ def new_model_with_factor_creation(request):
     # Get factor names from file
     dataset = DataSet.objects.get(pk=dataset_id)
     datafile = dataset.file
-    print(datafile.name)
-    all_columns = get_column_names_from_file('datasets/' + datafile.name)
+    dataFilePath = 'datasets/' + datafile.name
     numeric_columns = non_categorical_columns.split(',')
-    categorical_columns = set(all_columns) - set(target_variable) - set(numeric_columns)
-    factor_list = numeric_columns + ['C(' + x + ')' for x in categorical_columns]
+    factor_list = get_factor_list_from_file(dataFilePath, target_variable, numeric_columns)
     y,X = preparedata(pd.read_csv('datasets/' + datafile.name), target_variable, factor_list)
     factors_to_save = X.columns.values.tolist()
     # Save factors
