@@ -154,12 +154,12 @@ input {
 
 .header_likely_left {
   float: left;
-  color : #aa6bf9;
+  color : #FF0000;
 }
 
 .header_likely_right {
   float: right;
-  color : #5590E0;
+  color : #00A000;
 }
 
 .header_likely_center {

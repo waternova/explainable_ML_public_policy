@@ -1,58 +1,65 @@
 .result_bucket {
   display: table;
   table-layout: fixed;
-  width: 14rem;
-  height: 8rem;
+  width: 16rem;
+  min-height: 10rem;
+  background-color: white;
   word-break: break-all;
   font-family: "Verdana";
   font-size: 1rem;
   line-height: 0.7rem;
   font-weight: bold;
   letter-spacing:0.01rem;
+  text-align: left;
+  border-spacing: 1rem;
+  margin:auto;
 }
 
 .positive_bucket {
   display: table-cell;
-  border-left: 0.5rem solid blue;
-  border-right: 0.5rem solid blue;
-  border-top: 0.5rem solid blue;
+  border-left: 0.5rem solid #00A000;
+  border-right: 0.5rem solid #00A000;
+  border-top: 0.5rem solid #00A000;
   padding: 0.2rem;
   vertical-align: top;
   width: 6.2rem;
-  height: 9rem;
+  height: 6rem;
   transform: rotate(-180deg);
 }
 
-.center_bucket {
+.label_bucket {
   display: table-cell;
-  width: 6rem;
-  height: 9rem;
+  width: auto;
+  height: auto;
+  font-size: 0.6rem;
+  font-weight: normal;
+  text-align: left;
 }
 
 .negative_bucket {
   display: table-cell;
-  border-left: 0.5rem solid red;
-  border-right: 0.5rem solid red;
-  border-top: 0.5rem solid red;
+  border-left: 0.5rem solid #FF0000;
+  border-right: 0.5rem solid #FF0000;
+  border-top: 0.5rem solid #FF0000;
   padding: 0.2rem;
   vertical-align: top;
   width: 6.2rem;
-  height: 9rem;
+  height: 6rem;
   transform: rotate(-180deg);
 }
 
 .ball_true_positive {
-  color: blue;
+  color: #00A000;
 }
 
 .ball_false_positive {
-  color: red;
+  color: #FF0000;
 }
 
 .ball_true_negative {
-  color: red;
+  color: #FF0000;
 }
 
 .ball_false_negative {
-  color: blue;
+  color: #00A000;
 }

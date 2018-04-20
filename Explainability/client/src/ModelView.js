@@ -51,8 +51,8 @@ class Row extends Component {
   }
 
   render() {
-    const positiveColor = "#75acff";
-    const negativeColor = "#aa6bf9";
+    const positiveColor = '#00A000'//"#75acff";
+    const negativeColor = '#FF0000'//"#aa6bf9";
     const balanceButtonClassNames = classNames({
         'balance-button': true,
         'selected': this.props.value.is_balanced,
@@ -272,7 +272,6 @@ class ModelView extends Component {
       const totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
       const headerText = 'Predictions for all' + this.getModifiedText();
       confusionMatrices = [
-        <div>
         <ConfusionMatrix
           key='all'
           headerText={headerText}
@@ -280,8 +279,6 @@ class ModelView extends Component {
           maxSize={maxSize}
           totalSize={totalSize}
           tableOpacity={opacity}/>
-        <ResultBucket matrix={matrix} totalSize={totalSize}/>
-        </div>
       ]
     } else if ('positive_class' in stateCmxs && 'negative_class' in stateCmxs) {
       confusionMatrices = Object.entries(stateCmxs).map(([key, matrix]) => {
@@ -292,7 +289,6 @@ class ModelView extends Component {
         const threshold = isPositiveClass ? this.state.positiveThreshold : this.state.negativeThreshold;
         const thresholdText = `Threshold is ${threshold.toFixed(2)}${this.getModifiedText()}`;
         return (
-        <div>
           <ConfusionMatrix
             key={key}
             headerText={headerText}
@@ -301,8 +297,6 @@ class ModelView extends Component {
             totalSize={totalSize}
             thresholdText={thresholdText}
             tableOpacity={opacity}/>
-          <ResultBucket matrix={matrix} totalSize={totalSize}/>
-        </div>
         )
 })
     }
@@ -603,7 +597,9 @@ class ModelView extends Component {
       model_id: this.state.model_id,
     };
     var data_json = JSON.stringify(data);
-    var msg = "Test Finished.\n\nAccuracy before test: " + (this.state.accuracy * 100).toFixed(2) + "%";
+    var msgs = [];
+    const balancedFactor = this.state.rows.find(x => x.is_balanced);
+    const factorName = balancedFactor ? balancedFactor.alias : null;
     this.openModal("Testing a Model...");
     fetch ("/api/testmodel/", {
       method: "POST",
@@ -618,8 +614,30 @@ class ModelView extends Component {
         confusionMatrices: data.confusion_matrices,
         untestedModel: false,
       });
-      msg = msg + "\nAccuracy after test: " + (this.state.accuracy * 100).toFixed(2) + "%";
-      this.openModal(msg, true);
+      const stateCmxs = this.state.confusionMatrices;
+      let matrix, totalSize, headerText;
+        msgs.push(
+          <span>Test Result:<br/><br/></span>);
+      if ('all' in stateCmxs) {
+        matrix = stateCmxs['all'];
+        totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
+        msgs.push(
+          <ResultBucket matrix = {matrix} totalSize = {totalSize} target={this.state.target_var_alias}/>);
+      } else if ('positive_class' in stateCmxs && 'negative_class' in stateCmxs) {
+        matrix = stateCmxs['positive_class'];
+        totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
+        msgs.push(
+          <span>Predictions for cases where {factorName} is true</span> );
+        msgs.push(
+          <ResultBucket matrix = {matrix} totalSize = {totalSize} target={this.state.target_var_alias}/> );
+        matrix = stateCmxs['negative_class'];
+        totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
+        msgs.push(
+          <span><br/>Predictions for cases where {factorName} is false</span> );
+        msgs.push(
+          <ResultBucket matrix = {matrix} totalSize = {totalSize} target={this.state.target_var_alias}/>);
+      }
+      this.openModal(msgs, true);
     }).catch(error => {
       this.openModal("Request failed: \n" + error, true);
     });
