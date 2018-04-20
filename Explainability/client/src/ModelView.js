@@ -51,8 +51,8 @@ class Row extends Component {
   }
 
   render() {
-    const positiveColor = '#00A000'//"#75acff";
-    const negativeColor = '#FF0000'//"#aa6bf9";
+    const positiveColor = "#75acff";
+    const negativeColor = "#aa6bf9";
     const balanceButtonClassNames = classNames({
         'balance-button': true,
         'selected': this.props.value.is_balanced,
