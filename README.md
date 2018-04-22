@@ -19,7 +19,7 @@ These instructions will get you a copy of the project up and running on your loc
       + To install: cd Explainability/client; npm install 
 
 * If using virtualenv, create a new virtualenv before running `pip install -r requirements.txt`   
-* If using Anaconda, run `conda create --name explainableml`
+* If using Anaconda, run `conda create --name explainableml python=3.5` and `source activate explainableml`
 
 
 ### Deploying

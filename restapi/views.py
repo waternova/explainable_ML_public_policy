@@ -225,7 +225,7 @@ def new_model_with_factor_creation(request):
     dataFilePath = 'datasets/' + datafile.name
     numeric_columns = non_categorical_columns.split(',')
     factor_list = get_factor_list_from_file(dataFilePath, target_variable, numeric_columns)
-    y,X = preparedata(pd.read_csv('datasets/' + datafile.name), target_variable, factor_list)
+    y,X = preparedata(pd.read_csv(dataFilePath), target_variable, factor_list)
     factors_to_save = X.columns.values.tolist()
     # Save factors
     for factor in factors_to_save:
