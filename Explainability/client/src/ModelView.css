@@ -172,7 +172,6 @@ input {
   min-width: 15rem;
   min-height: 4rem;
   max-width: 40rem;
-  max-height: 30rem;
   text-align: center;
   color: #000000;
   font-size: 0.9rem;
@@ -181,6 +180,10 @@ input {
   padding-right: 1rem;
   padding-bottom: 1rem;
   white-space: pre-line;
+}
+
+.ReactModal__Content {
+    max-height: 30rem;
 }
 
 .msg_close_btn {

@@ -171,7 +171,7 @@ const modalStyles = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.4)'
+    backgroundColor: 'rgba(169, 169, 169, 0.7)'
   },
   content : {
     top                   : '50%',
@@ -180,9 +180,8 @@ const modalStyles = {
     bottom                : 'auto',
     marginRight           : '-50%',
     transform             : 'translate(-50%, -50%)',
-    border: '3px solid #7096C9',
-    backgroundColor: '#E5ECFF',
-    boxShadow: '0.5rem 0.5rem 0.5rem #666666',
+    border: '1px solid rgba(0,0,0,0.2)',
+    backgroundColor: '#fff',
     padding: '0'
   }
 };
@@ -211,6 +210,7 @@ class ModelView extends Component {
       isShowModal: false,
       isModalButton: false,
       modalMessage: "",
+      modalTitle: 'Machine Learning Explorer',
     };
 
     this.testModel = this.testModel.bind(this);
@@ -237,11 +237,12 @@ class ModelView extends Component {
     return this.state.untestedModel ? ' (values not valid until "Test" run again)' : '';
   }
 
-  openModal(message, isShowCloseButton = false) {
+  openModal(message, title, isShowCloseButton = false) {
     this.setState({
       isShowModal: true,
       isModalButton: isShowCloseButton,
       modalMessage: message,
+      modalTitle: title,
     });
   }
 
@@ -297,10 +298,9 @@ class ModelView extends Component {
             totalSize={totalSize}
             thresholdText={thresholdText}
             tableOpacity={opacity}/>
-        )
-})
-    }
-    else {
+        );
+      });
+    } else {
       confusionMatrices =  "Not ready / Retrain and test required";
     }
     return (
@@ -310,7 +310,7 @@ class ModelView extends Component {
           style={modalStyles}
           ariaHideApp={false}
           contentLabel="Message">
-            <div className="modal_label">Machine Learning Explorer</div>
+            <div className="modal_label">{this.state.modalTitle}</div>
             <div className="msg_dialog">{this.state.modalMessage}</div>
             <button onClick={this.closeModal} className={this.state.isModalButton ? "msg_close_btn" : "hidden"}>Close</button>
         </Modal>
@@ -539,7 +539,7 @@ class ModelView extends Component {
     }
     var modelJson = JSON.stringify(currentModel);
     var model_id = null;
-    this.openModal("Saving a Model...");
+    this.openModal("Saving a Model...", "Machine Learning Explorer");
     fetch (requestURL, {
       method: requestType,
       headers: {"Content-Type" : "application/json;charset=UTF-8"},
@@ -561,10 +561,10 @@ class ModelView extends Component {
         // but making the back button work correctly was too hard
         window.location.replace('/ModelView/' + data.model_id);
       }
-      this.openModal("Successfully Saved: \n\n" + saveName, true);
+      this.openModal("Successfully Saved: \n\n" + saveName, 'Machine Learning Explorer', true);
     }).catch(error => {
         console.log("Request failed: ", error);
-        this.openModal("Save Failure: \n\n" + error, true);
+        this.openModal("Save Failure: \n\n" + error, 'Machine Learning Explorer', true);
     });
   }
 
@@ -600,7 +600,7 @@ class ModelView extends Component {
     var msgs = [];
     const balancedFactor = this.state.rows.find(x => x.is_balanced);
     const factorName = balancedFactor ? balancedFactor.alias : null;
-    this.openModal("Testing a Model...");
+    this.openModal("Testing a Model...", 'Machine Learning Explorer');
     fetch ("/api/testmodel/", {
       method: "POST",
       headers: {"Content-Type" : "application/json;charset=UTF-8"},
@@ -615,9 +615,7 @@ class ModelView extends Component {
         untestedModel: false,
       });
       const stateCmxs = this.state.confusionMatrices;
-      let matrix, totalSize, headerText;
-        msgs.push(
-          <span>Test Result:<br/><br/></span>);
+      let matrix, totalSize;
       if ('all' in stateCmxs) {
         matrix = stateCmxs['all'];
         totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
@@ -627,19 +625,19 @@ class ModelView extends Component {
         matrix = stateCmxs['positive_class'];
         totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
         msgs.push(
-          <span>Predictions for cases where {factorName} is true</span> );
+          <h4>Predictions for cases where <em>{factorName}</em> is true</h4> );
         msgs.push(
           <ResultBucket matrix = {matrix} totalSize = {totalSize} target={this.state.target_var_alias}/> );
         matrix = stateCmxs['negative_class'];
         totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
         msgs.push(
-          <span><br/>Predictions for cases where {factorName} is false</span> );
+          <h4><br/>Predictions for cases where <em>{factorName}</em> is false</h4> );
         msgs.push(
           <ResultBucket matrix = {matrix} totalSize = {totalSize} target={this.state.target_var_alias}/>);
       }
-      this.openModal(msgs, true);
+      this.openModal(msgs, 'Test Result', true);
     }).catch(error => {
-      this.openModal("Request failed: \n" + error, true);
+      this.openModal("Request failed: \n" + error, 'Test Result', true);
     });
   }
 
@@ -652,7 +650,7 @@ class ModelView extends Component {
     };
     var data_json = JSON.stringify(data);
     console.log("Retrain request: %s", this.state.model_name);
-    this.openModal("Retraining a Model...");
+    this.openModal("Retraining a Model...", 'Machine Learning Explorer');
     fetch ("/api/retrainmodel/", {
       method: "POST",
       headers: {"Content-Type" : "application/json;charset=UTF-8"},
@@ -674,9 +672,9 @@ class ModelView extends Component {
           this.setState({intercept: factor.weight})
         }
       }
-      this.openModal("Finished Retraining.", true);
+      this.openModal("Finished Retraining.", 'Machine Learning Explorer', true);
     }).catch(error => {
-      this.openModal("Request failed: \n"+ error, true);
+      this.openModal("Request failed: \n"+ error, 'Machine Learning Explorer', true);
     });
   }
 
@@ -699,7 +697,7 @@ class ModelView extends Component {
   loadModelFromServer() {
     var model_id, i;
     var isAlreadyWaiting = this.state.isShowModal;
-    if (!isAlreadyWaiting) this.openModal("Loading a Model...");
+    if (!isAlreadyWaiting) this.openModal("Loading a Model...", 'Machine Learning Explorer');
     fetch ("/api/model/" + this.state.model_id + "/?format=json", {
       method: "GET",
       headers: {"Content-Type": "application/json;charset=UTF-8"},
@@ -752,7 +750,7 @@ class ModelView extends Component {
       this.loadDetail(data);
       if (!isAlreadyWaiting) this.closeModal();
     }).catch(error => {
-      this.openModal("Request failed: \n" + error, true);
+      this.openModal("Request failed: \n" + error, 'Machine Learning Explorer', true);
     });
   }
 

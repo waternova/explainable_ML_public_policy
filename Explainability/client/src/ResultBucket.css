@@ -1,7 +1,7 @@
 .result_bucket {
   display: table;
   table-layout: fixed;
-  width: 16rem;
+  width: 24rem;
   min-height: 10rem;
   background-color: white;
   word-break: break-all;
@@ -17,9 +17,9 @@
 
 .positive_bucket {
   display: table-cell;
-  border-left: 0.5rem solid #00A000;
-  border-right: 0.5rem solid #00A000;
-  border-top: 0.5rem solid #00A000;
+  border-left: 0.5rem solid #75acff;
+  border-right: 0.5rem solid #75acff;
+  border-top: 0.5rem solid #75acff;
   padding: 0.2rem;
   vertical-align: top;
   width: 6.2rem;
@@ -38,9 +38,9 @@
 
 .negative_bucket {
   display: table-cell;
-  border-left: 0.5rem solid #FF0000;
-  border-right: 0.5rem solid #FF0000;
-  border-top: 0.5rem solid #FF0000;
+  border-left: 0.5rem solid #aa6bf9;
+  border-right: 0.5rem solid #aa6bf9;
+  border-top: 0.5rem solid #aa6bf9;
   padding: 0.2rem;
   vertical-align: top;
   width: 6.2rem;
@@ -49,17 +49,17 @@
 }
 
 .ball_true_positive {
-  color: #00A000;
+  color: #75acff;
 }
 
 .ball_false_positive {
-  color: #FF0000;
+  color: #aa6bf9;
 }
 
 .ball_true_negative {
-  color: #FF0000;
+  color: #aa6bf9;
 }
 
 .ball_false_negative {
-  color: #00A000;
+  color: #75acff;
 }
