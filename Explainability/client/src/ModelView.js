@@ -333,9 +333,14 @@ class ModelView extends Component {
         </div>
         <ModelTypeDescription />
         <div className="div_model_attribute">
-          <span className="value_label">Predicted Variable:</span> "{this.state.targetVariable}"
-          <span> &rArr; which will be used to decide: </span>
+          <span className="value_label">Predicted Variable:</span>
           <input value={this.state.target_var_alias} name="target_var_alias" onChange={this.handleChange}/>
+          <br/>
+          <span>(called "{this.state.targetVariable}" in the original dataset)</span>
+        </div>
+        <div className="div_description">
+          <div className="value_label">Description:</div>
+          <textarea className="model_description" value={this.state.description} name="description" onChange={this.handleChange}/>
         </div>
         <div className="div_model_attribute">
           <span className="value_label">Accuracy:</span> {this.state.accuracy ? (this.state.accuracy * 100).toFixed(2) + "%" : "Not ready / Test required"}
@@ -379,10 +384,6 @@ class ModelView extends Component {
             {rows}
             </tbody>
           </table>
-        </div>
-        <div className="div_description">
-          <div className="value_label">Description:</div>
-          <textarea className="model_description" value={this.state.description} name="description" onChange={this.handleChange}/>
         </div>
       </div>
     );

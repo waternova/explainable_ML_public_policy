@@ -93,7 +93,7 @@ input {
 
 .model_description {
     width: 100%;
-    height: 8rem;
+    min-height: 4rem;
     margin-top: 0.5rem;
 }
 
@@ -138,8 +138,11 @@ input {
 }
 
 .div_description {
-  margin-top: 3rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
   width:99%;
+  border-left: 0.25rem solid lightgray;
+  padding-left: 0.3rem;
 }
 
 .div_model_attribute {
