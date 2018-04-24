@@ -3,18 +3,11 @@ import './common.css';
 import './ModelView.css';
 import './Dropdown.css';
 import Modal from 'react-modal';
-import CommentDropdown from './CommentDropdown.js';
-import FactorDropdown from './FactorDropdown.js';
 import ConfusionMatrix from './ConfusionMatrix';
+import ModelRow from './ModelRow';
 import ModelTypeDescription from './ModelTypeDescription';
 import OddsRatioDescription from './OddsRatioDescription';
-import classNames from 'classnames';
 import FileSaver from 'file-saver';
-import Slider from './RangeSlider/RangeSlider';
-import BinaryImg from './images/binary.svg';
-import EmptyImg from './images/empty.png';
-import CommentImg from './images/comment.svg';
-import CommentEmptyImg from './images/comment_empty.svg';
 import SaveModelImg from './images/save_model.svg';
 import SaveAsModelImg from './images/saveas_model.svg';
 import ExportModelImg from './images/export_model.svg';
@@ -22,169 +15,6 @@ import RetrainImg from './images/retrain_model.svg';
 import TestModelImg from './images/test_model.svg';
 import BalanceDescription from './BalanceDescription';
 import ResultBucket from './ResultBucket.js';
-
-class Row extends Component {
-  constructor(props) {
-    super(props);
-    const value = this.props.value;
-    this.state = {
-      id: value.id,
-      sliderWeight: value.weight,
-      textWeight: value.weight,
-      alias: value.alias,
-      name: value.name,
-      index: this.props.index,
-      description: value.description,
-      is_balanced: value.is_balanced,
-      is_binary: value.is_binary,
-      is_enabled: value.is_enabled,
-      comments: value.comments,
-      model_id: value.model_id,
-    };
-    this.handleWeightSliderChange = this.handleWeightSliderChange.bind(this);
-    this.handleWeightInputChange = this.handleWeightInputChange.bind(this);
-    this.handleBalanceSelect = this.handleBalanceSelect.bind(this);
-    this.handleFactorFormSubmit = this.handleFactorFormSubmit.bind(this);
-    this.handleUpdateComments = this.handleUpdateComments.bind(this);
-    this.handleWeightSliderComplete = this.handleWeightSliderComplete.bind(this);
-    this.handleWeightInputComplete = this.handleWeightInputComplete.bind(this);
-  }
-
-  render() {
-    const positiveColor = "#75acff";
-    const negativeColor = "#aa6bf9";
-    const balanceButtonClassNames = classNames({
-        'balance-button': true,
-        'selected': this.props.value.is_balanced,
-    });
-    return (
-      <tr>
-        <td>
-          <img className="icon_list" src={this.state.is_binary ? BinaryImg : EmptyImg}
-            title={this.state.is_binary ? "Binary Variable" : "Not Binary Variable"} alt=""/>
-          <FactorDropdown
-            factor_id={this.state.id}
-            model_id={this.state.model_id}
-            originalName={this.state.name}
-            description={this.state.description === null ? "" : this.state.description }
-            alias={this.state.alias}
-            weight={this.props.value.weight}
-            is_binary={this.state.is_binary}
-            is_enabled={this.state.is_enabled}
-            handleFactorFormSubmit={this.handleFactorFormSubmit} />
-          <span className={this.state.is_enabled ? "factor_enabled" : "factor_disabled"}
-            title={this.state.is_enabled ? "Enabled" : "Disabled"}>{this.state.alias}</span>
-        </td>
-        <td><Slider
-          value={this.state.sliderWeight}
-          startZero={true}
-          min={-this.props.maxGraphSize}
-          max={this.props.maxGraphSize}
-          step={0.01}
-          format={x=>x.toFixed(2)}
-          positiveColor={positiveColor}
-          negativeColor={negativeColor}
-          onChange={this.handleWeightSliderChange}
-          onChangeComplete={this.handleWeightSliderComplete}
-        /></td>
-        <td className="comment_column">
-          <CommentDropdown className="overlay_img"
-            icon_class = {this.state.comments.length > 0 ? "icon_comment" : "icon_comment_empty"}
-            icon_url = {this.state.comments.length > 0 ? CommentImg : CommentEmptyImg}
-            comments = {this.state.comments}
-            handleUpdateComments={this.handleUpdateComments}
-            model_id = {this.state.model_id}
-            factor_name = {this.state.name} />
-        </td>
-        <td>
-          <input
-            type="submit"
-            value="Balance Model"
-            className={balanceButtonClassNames}
-            disabled={!(this.state.is_binary && this.state.is_enabled)}
-            onClick={this.handleBalanceSelect} />
-        </td>
-        <td>
-          <input
-            className="input_weight"
-            value={this.state.textWeight}
-            onChange={this.handleWeightInputChange}
-            onBlur={this.handleWeightInputComplete}
-            />
-        </td>
-        <td>
-          <div className="factor-odds-ratio">{Math.exp(this.props.value.weight).toFixed(2)}</div>
-        </td>
-      </tr>
-    );
-  }
-
-  handleWeightSliderChange(newWeight) {
-    this.setState({sliderWeight: newWeight});
-  }
-
-  handleWeightSliderComplete(event) {
-    const newWeight = parseFloat(this.state.sliderWeight.toFixed(2));
-    this.setState({textWeight: newWeight});
-    this.props.onChange(this.props.index, "weight", newWeight);
-  }
-
-  handleWeightInputChange(event) {
-    var newWeight = parseFloat(event.target.value);
-    this.setState({textWeight: newWeight});
-  }
-
-  handleWeightInputComplete(event) {
-    if (!isNaN(this.state.textWeight)) {
-      this.setState({sliderWeight: Number(this.state.textWeight)});
-      this.props.onChange(this.props.index, "weight", this.state.textWeight);
-    }
-  }
-
-  handleFactorFormSubmit(event) {
-    event.preventDefault();
-    for (var i=0; i<event.target.length; i++) {
-      var name = event.target[i].name;
-      if (name!=="apply" && name!=="cancel"){
-        var value = event.target[i].type === 'checkbox' ? event.target[i].checked : event.target[i].value;
-        this.setState( {[name]: value} );
-        this.props.onChange(this.props.index, name, value);
-      }
-    }
-  }
-
-  handleUpdateComments(comments) {
-    this.setState({'comments': comments});
-    this.props.onChange(this.props.index, 'comments', comments);
-  }
-
-  handleBalanceSelect(event) {
-    this.props.onChange(this.props.index, "is_balanced", !this.props.value.is_balanced);
-    this.props.clearOtherBalanceSelect(this.state.id);
-  }
-}
-
-const modalStyles = {
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(169, 169, 169, 0.7)'
-  },
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)',
-    border: '1px solid rgba(0,0,0,0.2)',
-    backgroundColor: '#fff',
-    padding: '0'
-  }
-};
 
 class ModelView extends Component {
   constructor (props) {
@@ -251,8 +81,30 @@ class ModelView extends Component {
   }
 
   render() {
+    const modalStyles = {
+      overlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(169, 169, 169, 0.7)'
+      }, 
+      content: {
+        top                   : '50%',
+        left                  : '50%',
+        right                 : 'auto',
+        bottom                : 'auto',
+        marginRight           : '-50%',
+        transform             : 'translate(-50%, -50%)',
+        border: '1px solid rgba(0,0,0,0.2)',
+        backgroundColor: '#fff',
+        padding: '0'
+      },
+    };
+
     const rows = this.state.rows.map((entry, number) => {
-      return (<Row
+      return (<ModelRow
         key={entry.id}
         index={number}
         value={entry}
