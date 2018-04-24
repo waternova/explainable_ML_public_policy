@@ -15,7 +15,7 @@ class ModelRow extends Component {
     this.state = {
       id: value.id,
       sliderWeight: value.weight,
-      textWeight: value.weight,
+      textWeight: String(value.weight),
       alias: value.alias,
       name: value.name,
       index: this.props.index,
@@ -91,6 +91,7 @@ class ModelRow extends Component {
         </td>
         <td>
           <input
+            pattern='-?[0-9]*\.?[0-9]*'
             className="input_weight"
             value={this.state.textWeight}
             onChange={this.handleWeightInputChange}
@@ -115,8 +116,7 @@ class ModelRow extends Component {
   }
 
   handleWeightInputChange(event) {
-    var newWeight = parseFloat(event.target.value);
-    this.setState({textWeight: newWeight});
+    this.setState({textWeight: event.target.value});
   }
 
   handleWeightInputComplete(event) {

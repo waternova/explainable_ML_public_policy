@@ -192,3 +192,7 @@ tbody td {padding: 5px 10px 5px 10px; }
   font-size: 0.9rem;
   font-weight: bold;
 }
+
+input:invalid {
+  border: 1px solid red;
+}
