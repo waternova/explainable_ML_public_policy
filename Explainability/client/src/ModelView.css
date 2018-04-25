@@ -119,7 +119,7 @@ input {
 }
 
 .factor_header_weight {
-    width: 10rem;
+    width: 4rem;
     text-align: center;
 }
 
@@ -129,8 +129,8 @@ input {
 }
 
 .input_weight {
-    text-align: right;
-    width: 10rem;
+    text-align: left;
+    width: 2.7rem;
 }
 
 .factor-odds-ratio {
@@ -202,5 +202,9 @@ input {
     background-color: white;
     color: #507095;
     cursor: pointer;
+    text-align: center;
+}
+
+.center-contents {
     text-align: center;
 }

@@ -25,11 +25,12 @@ class BalanceDescription extends Component {
           ref="target"
           onClick={this.handleClick.bind(this)}>?</button>
         <Popover
-          placement='top'
+          placement='left'
           container={this}
           target={this.refs.target}
           show={this.state.open}
-          onHide={this.handleClose.bind(this)} >
+          onHide={this.handleClose.bind(this)}
+          containerStyle={{zIndex: 1000}} >
           <div>
             <h4>Balance<br /> (Equal Opportunity)</h4>
             <p>

@@ -228,10 +228,10 @@ class ModelView extends Component {
                   <span className="header_likely_center">&nbsp;|</span>
                   <span className="header_likely_right">&rarr; More likely</span>
                 </th>
+                <th className="factor_header_odds_ratio">Odds Ratio <OddsRatioDescription /></th>
                 <th className="factor_header_comment">Comment</th>
                 <th className="factor_header_balance">Balance <BalanceDescription /></th>
                 <th className="factor_header_weight">Weight</th>
-                <th className="factor_header_odds_ratio">Odds Ratio <OddsRatioDescription /></th>
               </tr>
             </thead>
             <tbody>

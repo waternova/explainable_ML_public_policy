@@ -72,6 +72,9 @@ class ModelRow extends Component {
           onChange={this.handleWeightSliderChange}
           onChangeComplete={this.handleWeightSliderComplete}
         /></td>
+        <td>
+          <div className="factor-odds-ratio">{Math.exp(this.props.value.weight).toFixed(2)}</div>
+        </td>
         <td className="comment_column">
           <CommentDropdown className="overlay_img"
             icon_class = {this.state.comments.length > 0 ? "icon_comment" : "icon_comment_empty"}
@@ -89,7 +92,7 @@ class ModelRow extends Component {
             disabled={!(this.state.is_binary && this.state.is_enabled)}
             onClick={this.handleBalanceSelect} />
         </td>
-        <td>
+        <td className="center-contents">
           <input
             pattern='-?[0-9]*\.?[0-9]*'
             className="input_weight"
@@ -97,9 +100,6 @@ class ModelRow extends Component {
             onChange={this.handleWeightInputChange}
             onBlur={this.handleWeightInputComplete}
             />
-        </td>
-        <td>
-          <div className="factor-odds-ratio">{Math.exp(this.props.value.weight).toFixed(2)}</div>
         </td>
       </tr>
     );
