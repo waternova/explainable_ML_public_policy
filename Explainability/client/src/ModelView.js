@@ -55,6 +55,7 @@ class ModelView extends Component {
     this.replaceModelDetails = this.replaceModelDetails.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.updateGraphSizes = this.updateGraphSizes.bind(this);
   }
 
   componentDidMount() {
@@ -112,6 +113,7 @@ class ModelView extends Component {
         clearOtherBalanceSelect={this.clearOtherBalanceSelect}
         resortRows={this.resortRows}
         maxGraphSize={this.state.maxGraphSize}
+        updateGraphSizes={this.updateGraphSizes}
       />);
     });
     const balancedFactor = this.state.rows.find(x => x.is_balanced);
@@ -246,10 +248,11 @@ class ModelView extends Component {
     let newRows = this.state.rows.slice();
     newRows[index][field] = value;
     this.setState({rows: newRows});
-    if (field === 'weight' || field === 'is_enabled') {
-      this.updateGraphSizes(newRows);
-    }
+    // if (field === 'weight' || field === 'is_enabled') {
+    //   this.updateGraphSizes(newRows);
+    // }
     this.setState({untestedModel: true});
+    return(newRows);
   }
 
   updateGraphSizes(rows = this.state.rows.slice()) {
