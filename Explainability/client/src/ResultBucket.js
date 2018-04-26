@@ -11,6 +11,7 @@ class ResultBucket extends Component {
     const target = this.props.target;
     const totalPositive = matrix.true_positive_count + matrix.false_positive_count;
     const totalNegative = matrix.true_negative_count + matrix.false_negative_count;
+    const prevMatrix = this.props.prevMatrix;
     return (
       <div>
         <p>{this.props.totalSize} Test Cases Tested</p>
@@ -28,16 +29,43 @@ class ResultBucket extends Component {
           </tr>
           <tr>
             <td className="label_bucket">
-              {target}:<br/>
+              "{target}"<br/>
               Correctly predicted - {matrix.true_positive_count} / {totalPositive}  <br/>
               Incorrectly predicted - {matrix.false_positive_count} / {totalPositive} <br/>
             </td>
             <td className="label_bucket">
-              Not {target}:<br/>
+              Not "{target}"<br/>
               Correctly predicted - {matrix.true_negative_count} / {totalNegative}  <br/>
               Incorrectly predicted - {matrix.false_negative_count} / {totalNegative} <br/>
             </td>
           </tr>
+        </table>
+        <table className="past-comparison">
+          <thead>
+            <tr>
+              <th></th>
+              <th>True Positive</th>
+              <th>True Negative</th>
+              <th>False Positive</th>
+              <th>False Negative</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Previous</td>
+              <td>{prevMatrix.true_positive_count}</td>
+              <td>{prevMatrix.true_negative_count}</td>
+              <td>{prevMatrix.false_positive_count}</td>
+              <td>{prevMatrix.false_negative_count}</td>
+            </tr>
+            <tr>
+              <td>New</td>
+              <td>{matrix.true_positive_count}</td>
+              <td>{matrix.true_negative_count}</td>
+              <td>{matrix.false_positive_count}</td>
+              <td>{matrix.false_negative_count}</td>
+            </tr>
+          </tbody>
         </table>
       </div>
     );

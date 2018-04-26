@@ -63,3 +63,7 @@
 .ball_false_negative {
   color: #75acff;
 }
+
+.past-comparison th {
+  font-weight: normal;
+}

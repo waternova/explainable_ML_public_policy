@@ -465,31 +465,65 @@ class ModelView extends Component {
       if(res.ok) return res.json(); else return res.text();
     }).then(data => {
       if (typeof data === 'string') throw data;
+      const prevCmxs = this.state.confusionMatrices;
+      const stateCmxs = data.confusion_matrices;
       this.setState({
         accuracy: parseFloat(data.accuracy),
-        confusionMatrices: data.confusion_matrices,
+        confusionMatrices: stateCmxs,
         untestedModel: false,
       });
-      const stateCmxs = this.state.confusionMatrices;
-      let matrix, totalSize;
+      let matrix, totalSize, prevMatrix;
       if ('all' in stateCmxs) {
         matrix = stateCmxs['all'];
+        if ('all' in prevCmxs) {
+          prevMatrix = prevCmxs['all'];
+        } else {
+          const tnc = 'true_negative_count';
+          const tpc = 'true_positive_count';
+          const fnc = 'false_negative_count';
+          const fpc = 'false_positive_count';
+          const prevPosMatrix = prevMatrix['positive_class'];
+          const prevNegMatrix = prevMatrix['negative_class'];
+          prevMatrix = {
+            [tnc]: prevPosMatrix[tnc] + prevNegMatrix[tnc],
+            [tpc]: prevPosMatrix[tpc] + prevNegMatrix[tpc],
+            [fnc]: prevPosMatrix[fnc] + prevNegMatrix[fnc],
+            [fpc]: prevPosMatrix[fpc] + prevNegMatrix[fpc],
+          }
+        }
         totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
         msgs.push(
-          <ResultBucket matrix = {matrix} totalSize = {totalSize} target={this.state.target_var_alias}/>);
+          <ResultBucket 
+            matrix={matrix} 
+            totalSize={totalSize} 
+            target={this.state.target_var_alias}
+            prevMatrix={prevMatrix}
+          />);
       } else if ('positive_class' in stateCmxs && 'negative_class' in stateCmxs) {
         matrix = stateCmxs['positive_class'];
+        prevMatrix = 'positive_class' in prevCmxs ? prevCmxs['positive_class'] : prevCmxs['all'];
         totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
         msgs.push(
           <h4>Predictions for cases where <em>{factorName}</em> is true</h4> );
         msgs.push(
-          <ResultBucket matrix = {matrix} totalSize = {totalSize} target={this.state.target_var_alias}/> );
+          <ResultBucket 
+            matrix={matrix} 
+            totalSize={totalSize} 
+            target={this.state.target_var_alias}
+            prevMatrix={prevMatrix}
+          />);
         matrix = stateCmxs['negative_class'];
+        prevMatrix = 'negative_class' in prevCmxs ? prevCmxs['negative_class'] : prevCmxs['all'];
         totalSize = Object.values(matrix).reduce((a, b) => a + b, 0);
         msgs.push(
           <h4><br/>Predictions for cases where <em>{factorName}</em> is false</h4> );
         msgs.push(
-          <ResultBucket matrix = {matrix} totalSize = {totalSize} target={this.state.target_var_alias}/>);
+          <ResultBucket 
+            matrix={matrix} 
+            totalSize={totalSize} 
+            target={this.state.target_var_alias}
+            prevMatrix={prevMatrix}
+          />);
       }
       this.openModal(msgs, 'Test Result', true);
     }).catch(error => {
