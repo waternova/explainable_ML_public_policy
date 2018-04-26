@@ -247,10 +247,10 @@ class ModelView extends Component {
   updateFactor(index, field, value) {
     let newRows = this.state.rows.slice();
     newRows[index][field] = value;
+    if (field === 'is_enabled' && !value) {
+      newRows[index]['is_balanced'] = false;
+    }
     this.setState({rows: newRows});
-    // if (field === 'weight' || field === 'is_enabled') {
-    //   this.updateGraphSizes(newRows);
-    // }
     this.setState({untestedModel: true});
     return(newRows);
   }
@@ -511,8 +511,10 @@ class ModelView extends Component {
       method: "POST",
       headers: {"Content-Type" : "application/json;charset=UTF-8"},
       body: data_json
-    }).then( res => res.json()).then(data => {
-      this.setState({rows: []});
+    }).then(res => {
+      if(res.ok) return res.json(); else return res.text();
+    }).then(data => {
+      if (typeof data === 'string') throw data;
       this.setState({
         rows: data.factors,
         positiveThreshold: data.positive_threshold,

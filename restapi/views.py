@@ -158,6 +158,8 @@ def retrain_model(request):
        y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
        X = drop_disabled_factors(X, data["factors"])
        if protected_attr is not None:
+           if protected_attr not in X:
+               raise ValueError('missing protected_attr in X, it may have been disabled')
            thresholds = get_fair_thresholds(model, X, y, protected_attr)
            model_description["negative_threshold"] = thresholds[0]
            model_description["positive_threshold"] = thresholds[1]

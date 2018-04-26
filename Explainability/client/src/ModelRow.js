@@ -35,6 +35,16 @@ class ModelRow extends Component {
     this.handleWeightInputComplete = this.handleWeightInputComplete.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const nextWeight = nextProps.value.weight;
+    if (this.props.value.weight !== nextWeight) {
+      this.setState({
+        sliderWeight: nextWeight,
+        textWeight: String(nextWeight),
+      });
+    }
+  }
+
   render() {
     const positiveColor = "#75acff";
     const negativeColor = "#aa6bf9";
