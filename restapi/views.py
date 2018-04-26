@@ -127,6 +127,9 @@ def test_model(request):
         df_data = pd.read_csv(dataFilePath)
         y, X = preparedata(df_data, target_variable, factor_list_wo_categories)
         X = drop_disabled_factors(X, data["factors"])
+        for factor in data["factors"]:
+            if isinstance(factor["weight"], str):
+                raise ValueError('factor weights cannot be strings, but are for ' + factor["name"])
         model = build_model_from_factors(data["factors"], data["intercept"], y, X)
         accuracy, confusion_matrices = test_logreg_model(model, X, y, thresholds, protected_attr)
         res = {'accuracy': accuracy, 'confusion_matrices': confusion_matrices}

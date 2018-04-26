@@ -133,7 +133,7 @@ class ModelRow extends Component {
     if (!isNaN(this.state.textWeight)) {
       const weight = Number(this.state.textWeight);
       this.setState({sliderWeight: weight});
-      const newRows = this.props.onChange(this.props.index, "weight", this.state.textWeight);
+      const newRows = this.props.onChange(this.props.index, "weight", weight);
       if (Math.abs(weight) > this.props.maxGraphSize) {
         this.props.updateGraphSizes(newRows);
       }
