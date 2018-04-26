@@ -77,7 +77,8 @@ class CommentDropdown extends Component {
         floating_text={this.state.comments.length > 0 ? this.state.comments.length : null}
         isOpen={this.state.isOpen}
         handleClose={this.handleClose}
-        handleOpen={this.handleOpen}>
+        handleOpen={this.handleOpen}
+        baseClassName='CommentDropdown'>
         <div className="modal_main">
           <ul>
           {comments}
