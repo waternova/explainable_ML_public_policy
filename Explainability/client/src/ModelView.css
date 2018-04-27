@@ -76,7 +76,7 @@ input {
 }
 
 .icon_comment {
-    width: 1.9rem;
+    width: 1.8rem;
     filter: invert(.4) sepia(1) hue-rotate(160deg) saturate(300%);
 }
 
